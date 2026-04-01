@@ -4,47 +4,77 @@ build-backend = "hatchling.build"
 
 [project]
 name = "semantix-ai"
-version = "0.1.0"
+version = "0.1.2"
 description = "A Semantic Type System for AI outputs — validate intent, not just shape."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
-authors = [{ name = "Akhona Eland" }]
-keywords = ["llm", "validation", "semantic", "type-system", "intent", "ai", "guardrails"]
+license = "MIT"
+authors = [
+    { name = "Akhona Eland", email = "akhonabest7@gmail.com" },
+]
+keywords = [
+    "ai",
+    "guardrails",
+    "intent",
+    "llm",
+    "semantic",
+    "type-system",
+    "validation",
+    "nlp",
+    "pydantic",
+    "openai",
+    "ai-safety",
+    "output-validation",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
     "Typing :: Typed",
 ]
-
-dependencies = []
-
-[project.urls]
-Homepage = "https://github.com/labrat-akhona/semantix-ai"
-Repository = "https://github.com/labrat-akhona/semantix-ai"
-"Bug Tracker" = "https://github.com/labrat-akhona/semantix-ai/issues"
 
 [project.optional-dependencies]
 openai = ["openai>=1.0"]
 embeddings = ["sentence-transformers>=2.2"]
-all = ["openai>=1.0", "sentence-transformers>=2.2"]
+nli = ["sentence-transformers>=2.2"]
+all = [
+    "openai>=1.0",
+    "sentence-transformers>=2.2",
+]
 dev = [
     "openai>=1.0",
     "sentence-transformers>=2.2",
     "pytest>=7.0",
     "pytest-asyncio>=0.21",
+    "ruff>=0.4.0",
 ]
 
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
+[project.urls]
+Homepage = "https://github.com/labrat-akhona/semantix-ai"
+Repository = "https://github.com/labrat-akhona/semantix-ai"
+"Bug Tracker" = "https://github.com/labrat-akhona/semantix-ai/issues"
+Documentation = "https://github.com/labrat-akhona/semantix-ai#readme"
+Changelog = "https://github.com/labrat-akhona/semantix-ai/releases"
 
 [tool.hatch.build.targets.wheel]
 packages = ["semantix"]
-exclude = ["semantix/tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

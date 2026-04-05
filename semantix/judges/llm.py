@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
+import json
 import os
 
 from semantix.judges import Judge, Verdict
 
 _SYSTEM_PROMPT = (
     "You are a strict semantic validator. You will be given a REQUIREMENT "
-    "and a TEXT. Decide whether the TEXT fully satisfies the REQUIREMENT.\n"
-    "Respond with EXACTLY one word: Yes or No."
+    "and a TEXT. Score how well the TEXT satisfies the REQUIREMENT.\n\n"
+    "Respond with ONLY a JSON object (no markdown fences):\n"
+    '{"score": <float 0.0-1.0>, "reason": "<one sentence explanation>"}\n\n'
+    "- 1.0 = fully satisfies the requirement\n"
+    "- 0.0 = completely fails the requirement\n"
+    "- Be precise: use the full range, not just 0 and 1."
 )
 
 
@@ -56,7 +61,7 @@ class LLMJudge(Judge):
         response = self._client.chat.completions.create(
             model=self._model,
             temperature=0,
-            max_tokens=4,
+            max_tokens=100,
             messages=[
                 {"role": "system", "content": _SYSTEM_PROMPT},
                 {
@@ -68,10 +73,29 @@ class LLMJudge(Judge):
                 },
             ],
         )
-        answer = (response.choices[0].message.content or "").strip().lower()
-        passed = answer.startswith("yes")
+        raw = (response.choices[0].message.content or "").strip()
+        score, reason = self._parse_response(raw)
         return Verdict(
-            passed=passed,
-            score=1.0 if passed else 0.0,
-            reason=f"Judge answered: {answer}",
+            passed=score >= threshold,
+            score=score,
+            reason=reason,
         )
+
+    @staticmethod
+    def _parse_response(raw: str) -> tuple[float, str]:
+        """Parse the JSON response from the LLM.
+
+        Falls back gracefully to the legacy Yes/No format if JSON parsing fails.
+        """
+        try:
+            data = json.loads(raw)
+            score = float(data["score"])
+            score = max(0.0, min(1.0, score))
+            reason = str(data.get("reason", ""))
+            return score, reason
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            # Fallback: legacy Yes/No response
+            lower = raw.lower()
+            if lower.startswith("yes"):
+                return 1.0, f"Judge answered: {raw}"
+            return 0.0, f"Judge answered: {raw}"

@@ -20,9 +20,11 @@ class MockJudge(Judge):
         self,
         passed: bool = True,
         score: float = 0.95,
+        reason: str | None = None,
     ) -> None:
         self._passed = passed
         self._score = score
+        self._reason = reason
         self.call_count = 0
         self.last_output: str | None = None
         self.last_description: str | None = None
@@ -39,6 +41,7 @@ class MockJudge(Judge):
         return Verdict(
             passed=self._passed,
             score=self._score,
+            reason=self._reason,
         )
 
 

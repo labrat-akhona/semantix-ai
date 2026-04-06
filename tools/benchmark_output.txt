@@ -1,0 +1,35 @@
+Using HeuristicJudge (fast, local, no dependencies)
+
+==============================================================================
+  SEMANTIX SELF-HEALING BENCHMARK
+==============================================================================
+
+  ActionableSummary
+  --------------------------------------------------------------------------
+  Mode               Success Rate   Avg Attempts     Avg Time
+  --------------------------------------------------------------------------
+  no-healing               13.3%            1.0        0.0ms
+  self-healing             56.7%            2.1        0.0ms
+                   improvement: +43.3%
+
+  ProfessionalDecline
+  --------------------------------------------------------------------------
+  Mode               Success Rate   Avg Attempts     Avg Time
+  --------------------------------------------------------------------------
+  no-healing               13.3%            1.0        0.0ms
+  self-healing             56.7%            2.4        0.0ms
+                   improvement: +43.3%
+
+  TechnicalExplanation
+  --------------------------------------------------------------------------
+  Mode               Success Rate   Avg Attempts     Avg Time
+  --------------------------------------------------------------------------
+  no-healing               36.7%            1.0        0.0ms
+  self-healing             96.7%            1.8        0.0ms
+                   improvement: +60.0%
+
+==============================================================================
+
+  OVERALL: no-healing 21.1% -> self-healing 70.0%
+  Self-healing improves reliability by +48.9%
+

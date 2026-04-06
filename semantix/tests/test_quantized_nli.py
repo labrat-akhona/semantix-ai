@@ -105,8 +105,8 @@ class TestQuantizedNLIJudge:
     @patch("semantix.judges.quantized_nli._load_tokenizer")
     @patch("semantix.judges.quantized_nli._load_session")
     def test_passing_verdict(self, mock_load_session, mock_load_tokenizer):
-        # logits: [contradiction, entailment, neutral] — high entailment
-        mock_load_session.return_value = _mock_session([0.1, 5.0, 0.5])
+        # ONNX label order: [contradiction, neutral, entailment] — high entailment at idx 2
+        mock_load_session.return_value = _mock_session([0.1, 0.5, 5.0])
         mock_load_tokenizer.return_value = _mock_tokenizer()
         judge = QuantizedNLIJudge()
         verdict = judge.evaluate("polite text", "The text must be polite", 0.5)
@@ -116,8 +116,8 @@ class TestQuantizedNLIJudge:
     @patch("semantix.judges.quantized_nli._load_tokenizer")
     @patch("semantix.judges.quantized_nli._load_session")
     def test_failing_verdict(self, mock_load_session, mock_load_tokenizer):
-        # logits: high contradiction
-        mock_load_session.return_value = _mock_session([5.0, 0.1, 0.5])
+        # High contradiction at idx 0, low entailment at idx 2
+        mock_load_session.return_value = _mock_session([5.0, 0.5, 0.1])
         mock_load_tokenizer.return_value = _mock_tokenizer()
         judge = QuantizedNLIJudge()
         verdict = judge.evaluate("rude text", "The text must be polite", 0.5)
@@ -127,7 +127,7 @@ class TestQuantizedNLIJudge:
     @patch("semantix.judges.quantized_nli._load_tokenizer")
     @patch("semantix.judges.quantized_nli._load_session")
     def test_returns_verdict_type(self, mock_load_session, mock_load_tokenizer):
-        mock_load_session.return_value = _mock_session([0.1, 5.0, 0.5])
+        mock_load_session.return_value = _mock_session([0.1, 0.5, 5.0])
         mock_load_tokenizer.return_value = _mock_tokenizer()
         judge = QuantizedNLIJudge()
         verdict = judge.evaluate("text", "intent", 0.5)
@@ -136,7 +136,7 @@ class TestQuantizedNLIJudge:
     @patch("semantix.judges.quantized_nli._load_tokenizer")
     @patch("semantix.judges.quantized_nli._load_session")
     def test_uses_hypothesis_transformation(self, mock_load_session, mock_load_tokenizer):
-        mock_load_session.return_value = _mock_session([0.1, 5.0, 0.5])
+        mock_load_session.return_value = _mock_session([0.1, 0.5, 5.0])
         tok = _mock_tokenizer()
         mock_load_tokenizer.return_value = tok
         judge = QuantizedNLIJudge()
@@ -149,8 +149,8 @@ class TestQuantizedNLIJudge:
     @patch("semantix.judges.quantized_nli._load_tokenizer")
     @patch("semantix.judges.quantized_nli._load_session")
     def test_custom_threshold(self, mock_load_session, mock_load_tokenizer):
-        # Score ~0.73 with these logits after softmax
-        mock_load_session.return_value = _mock_session([0.1, 1.0, 0.0])
+        # ONNX order: [contradiction, neutral, entailment] — entailment at idx 2
+        mock_load_session.return_value = _mock_session([0.1, 0.0, 1.0])
         mock_load_tokenizer.return_value = _mock_tokenizer()
         judge = QuantizedNLIJudge()
         v_low = judge.evaluate("text", "intent", 0.5)

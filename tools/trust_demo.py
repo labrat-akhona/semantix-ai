@@ -58,21 +58,18 @@ class _DemoJudge(Judge):
 # Demo scenarios
 # ---------------------------------------------------------------------------
 
-INTENT = "The text must be a professional legal summary free of hidden liability clauses or unfair penalty terms."
+INTENT = "The text must politely decline an invitation."
 
 SAFE_TEXT = (
-    "This agreement establishes a mutual partnership between both parties. "
-    "Each party retains full intellectual property rights over their contributions. "
-    "Either party may terminate with 30 days written notice. "
-    "All disputes shall be resolved through binding arbitration."
+    "Thank you so much for the invitation. Unfortunately, I will not be "
+    "able to attend due to a scheduling conflict. I truly appreciate you "
+    "thinking of me, and I hope we can connect another time."
 )
 
 DANGEROUS_TEXT = (
-    "This agreement establishes a mutual partnership between both parties. "
-    "By signing, the client agrees to indemnify and hold harmless the provider "
-    "against any and all claims. The client shall forfeit all deposits upon "
-    "early termination and waive the right to legal recourse. "
-    "Provider may penalize client for any breach at provider's sole discretion."
+    "Are you serious? I would rather gouge my eyes out than attend your "
+    "stupid event. Leave me alone and stop sending these ridiculous "
+    "invitations. What a waste of everyone's time."
 )
 
 
@@ -106,14 +103,19 @@ def main() -> None:
 
     detective = ForensicJudge(base_judge, top_k=3)
 
+    # INT8 quantization compresses the score range compared to FP32.
+    # Rank ordering is preserved but absolute scores are lower.
+    # Use 0.30 for ONNX (polite ≈ 0.31, rude ≈ 0.25), 0.5 for heuristic.
+    threshold = 0.30 if has_turbo else 0.5
+
     # ── Scenario 1: Safe text ────────────────────────────────
-    _banner("SCENARIO 1: The Silent Guard — Safe Legal Text")
+    _banner("SCENARIO 1: The Silent Guard — Polite Decline")
 
     print(f"Intent: {INTENT}\n")
     print(f"Text: {SAFE_TEXT[:120]}...\n")
 
     start = time.perf_counter()
-    verdict = detective.evaluate(SAFE_TEXT, INTENT, threshold=0.5)
+    verdict = detective.evaluate(SAFE_TEXT, INTENT, threshold=threshold)
     elapsed_ms = (time.perf_counter() - start) * 1000
 
     engine.record(
@@ -130,13 +132,13 @@ def main() -> None:
     print(f"Reason:  {verdict.reason or '(none — clean pass)'}")
 
     # ── Scenario 2: Dangerous text ───────────────────────────
-    _banner("SCENARIO 2: The Detective — Hidden Liability Clause")
+    _banner("SCENARIO 2: The Detective — Hostile Response")
 
     print(f"Intent: {INTENT}\n")
     print(f"Text: {DANGEROUS_TEXT[:120]}...\n")
 
     start = time.perf_counter()
-    verdict = detective.evaluate(DANGEROUS_TEXT, INTENT, threshold=0.5)
+    verdict = detective.evaluate(DANGEROUS_TEXT, INTENT, threshold=threshold)
     elapsed_ms = (time.perf_counter() - start) * 1000
 
     engine.record(

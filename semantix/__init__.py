@@ -59,5 +59,5 @@ try:
 except ImportError:
     pass
 
-__version__ = "0.1.5.post1"
+__version__ = "0.1.5.post2"
 __author__ = "Akhona Eland"

@@ -119,6 +119,37 @@ Semantix is not a replacement for structural validation — use Pydantic for tha
 
 ---
 
+## Universal Agent Support (MCP)
+
+Semantix ships with a built-in [MCP](https://modelcontextprotocol.io/) server so any AI agent can run semantic intent checks as a tool — no code changes required.
+
+```bash
+pip install "semantix-ai[mcp,nli]"
+mcp run semantix/mcp/server.py
+```
+
+The `verify_text_intent` tool accepts any text and intent description, returns a confidence score, and provides structured correction suggestions when validation fails — enabling **cross-agent self-healing**.
+
+### Add to Claude Desktop
+
+Add this to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "semantix-verify": {
+      "command": "mcp",
+      "args": ["run", "semantix/mcp/server.py"],
+      "cwd": "/path/to/your/semantix-ai"
+    }
+  }
+}
+```
+
+Claude can then call `verify_text_intent` to validate any text against a semantic requirement before responding.
+
+---
+
 ## Features
 
 ### Swappable Judges
@@ -128,39 +159,45 @@ Choose the right speed/accuracy tradeoff for your use case:
 ```python
 from semantix import EmbeddingJudge, LLMJudge, NLIJudge, CachingJudge
 
+# Default — NLI entailment with softmax calibration (no API key, runs locally)
+# Uses correct entailment index + softmax for true 0–1 probability scores
+@validate_intent(judge=NLIJudge())
+def default_fn(x: str) -> MyIntent: ...
+
 # Fast — local cosine similarity (no API key needed)
 @validate_intent(judge=EmbeddingJudge())
 def fast_fn(x: str) -> MyIntent: ...
 
-# Accurate — asks GPT-4o-mini Yes/No
+# Accurate — asks GPT-4o-mini for a 0–1 confidence score + reason
 @validate_intent(judge=LLMJudge(model="gpt-4o-mini"))
 def accurate_fn(x: str) -> MyIntent: ...
 
-# Balanced — local NLI entailment (accurate + no API key)
-@validate_intent(judge=NLIJudge())
-def balanced_fn(x: str) -> MyIntent: ...
-
 # Cached — wraps any judge with LRU cache
-@validate_intent(judge=CachingJudge(LLMJudge(), maxsize=256))
+@validate_intent(judge=CachingJudge(NLIJudge(), maxsize=256))
 def cached_fn(x: str) -> MyIntent: ...
 ```
 
-### Smart Retries
+### Informed Self-Healing Retries
 
-Re-invoke the LLM on failure — and tell it *why* it failed:
+On failure, the decorator injects structured feedback so the LLM knows *exactly* what went wrong — zero boilerplate:
 
 ```python
-from semantix import validate_intent, get_last_failure
+from typing import Optional
+from semantix import validate_intent
 
-@validate_intent(judge=EmbeddingJudge(), retries=3)
-def decline(event: str) -> ProfessionalDecline:
-    hint = ""
-    if failure := get_last_failure():
-        hint = f"\n\nPrevious attempt scored {failure.score:.2f}. Be more polite."
-    return call_llm(f"Decline this invite: {event}{hint}")
+@validate_intent(retries=2)
+def decline(event: str, semantix_feedback: Optional[str] = None) -> ProfessionalDecline:
+    prompt = f"Decline this invite: {event}"
+    if semantix_feedback:
+        prompt += f"\n\n{semantix_feedback}"
+    return call_llm(prompt)
 ```
 
-`get_last_failure()` gives your LLM function access to the previous `SemanticIntentError`, so each retry can be smarter than the last.
+On the first call `semantix_feedback` is `None`. If validation fails, the next retry receives a Markdown report with the score, reason, requirement, and rejected output — so the LLM can self-correct.
+
+**Benchmark result:** Self-healing improves reliability from 21.1% to 70.0% (+48.9%) across 3 intent categories.
+
+The manual `get_last_failure()` API is also still available for custom feedback formatting.
 
 ### Composite Intents
 
@@ -250,7 +287,7 @@ class MyCustomJudge(Judge):
 | `Verdict` | Dataclass — `.passed`, `.score`, `.reason` |
 | `LLMJudge` | OpenAI-based judge (accurate, needs API key) |
 | `EmbeddingJudge` | Sentence-transformers cosine similarity judge (fast, local) |
-| `NLIJudge` | Cross-encoder NLI entailment judge (accurate, local) |
+| `NLIJudge` | Cross-encoder NLI entailment judge (softmax-calibrated, local, **default**) |
 | `CachingJudge` | LRU cache wrapper for any judge |
 | `AllOf(*intents)` | Composite — all intents must be satisfied |
 | `AnyOf(*intents)` | Composite — at least one intent must be satisfied |
@@ -265,16 +302,18 @@ semantix/
 ├── __init__.py          # Public API
 ├── intent.py            # Intent base class + metaclass
 ├── exceptions.py        # SemanticIntentError
-├── decorator.py         # @validate_intent (retries, logging)
+├── decorator.py         # @validate_intent (retries, self-healing)
 ├── composite.py         # AllOf / AnyOf combinators
 ├── observability.py     # Structured logging
 ├── streaming.py         # StreamCollector
-└── judges/
-    ├── __init__.py      # Judge ABC + Verdict
-    ├── embedding.py     # EmbeddingJudge
-    ├── llm.py           # LLMJudge
-    ├── nli.py           # NLIJudge
-    └── caching.py       # CachingJudge
+├── judges/
+│   ├── __init__.py      # Judge ABC + Verdict
+│   ├── embedding.py     # EmbeddingJudge
+│   ├── llm.py           # LLMJudge (granular 0–1 scoring)
+│   ├── nli.py           # NLIJudge (softmax + entailment mapping)
+│   └── caching.py       # CachingJudge
+└── mcp/
+    └── server.py        # MCP server (verify_text_intent tool)
 ```
 
 ---

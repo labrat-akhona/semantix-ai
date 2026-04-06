@@ -150,6 +150,63 @@ Claude can then call `verify_text_intent` to validate any text against a semanti
 
 ---
 
+## Zero-Latency Infrastructure (NEW in v0.1.5)
+
+### Quantized Inference
+
+Semantix ships a quantized NLI judge that runs INT8 ONNX inference — no PyTorch, no GPU, ~50% faster:
+
+```bash
+pip install "semantix-ai[turbo]"
+```
+
+```python
+from semantix import validate_intent
+
+# Automatically uses QuantizedNLIJudge when onnxruntime is installed
+@validate_intent
+def review(text: str) -> LegalCompliance:
+    return call_llm(text)
+```
+
+Total dependency footprint: ~25MB (onnxruntime + tokenizers) vs ~500MB+ for PyTorch.
+
+### Forensic Analysis on Failure
+
+When validation fails, the `ForensicJudge` identifies exactly which tokens caused the contradiction:
+
+```python
+from semantix import ForensicJudge, QuantizedNLIJudge
+
+judge = ForensicJudge(QuantizedNLIJudge())
+
+@validate_intent(judge=judge)
+def review(text: str) -> LegalCompliance:
+    return call_llm(text)
+
+# On failure, Verdict.reason contains:
+# ## Breach Report
+# **Score:** 0.0823
+# ### Token Attribution
+# **indemnify** (0.72), **forfeit** (0.58), **waive** (0.41)
+# ### Summary
+# Intent failed. High contradiction detected. Suspect Tokens: [indemnify, forfeit, waive]
+```
+
+### Immutable Audit Trail
+
+Every validation is logged as a hash-chained JSON-LD certificate:
+
+```python
+from semantix.audit.engine import AuditEngine
+
+engine = AuditEngine()  # singleton
+engine.verify_chain()   # True if no tampering
+engine.flush(Path("audit.jsonl"))
+```
+
+---
+
 ## Features
 
 ### Swappable Judges
@@ -291,6 +348,9 @@ class MyCustomJudge(Judge):
 | `CachingJudge` | LRU cache wrapper for any judge |
 | `AllOf(*intents)` | Composite — all intents must be satisfied |
 | `AnyOf(*intents)` | Composite — at least one intent must be satisfied |
+| `QuantizedNLIJudge` | INT8 ONNX NLI judge — fast, no PyTorch (needs `onnxruntime`) |
+| `ForensicJudge` | Wrapper — token-level attribution Breach Report on failure |
+| `AuditEngine` | Hash-chained JSON-LD audit trail singleton |
 | `StreamCollector` | Validates streamed LLM output once fully assembled |
 
 ---
@@ -306,11 +366,16 @@ semantix/
 ├── composite.py         # AllOf / AnyOf combinators
 ├── observability.py     # Structured logging
 ├── streaming.py         # StreamCollector
+├── audit/
+│   ├── __init__.py      # Package marker
+│   └── engine.py        # AuditEngine (JSON-LD + SHA-256 chain)
 ├── judges/
 │   ├── __init__.py      # Judge ABC + Verdict
 │   ├── embedding.py     # EmbeddingJudge
 │   ├── llm.py           # LLMJudge (granular 0–1 scoring)
 │   ├── nli.py           # NLIJudge (softmax + entailment mapping)
+│   ├── quantized_nli.py # QuantizedNLIJudge (ONNX INT8)
+│   ├── forensic.py      # ForensicJudge (token attribution)
 │   └── caching.py       # CachingJudge
 └── mcp/
     └── server.py        # MCP server (verify_text_intent tool)

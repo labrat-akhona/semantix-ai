@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.5 — The Enterprise Performance Release (2026-04-06)
+
+### Added
+- **QuantizedNLIJudge** (`semantix/judges/quantized_nli.py`) — INT8 ONNX inference using `onnxruntime` + `tokenizers`. No PyTorch required. Auto-detects CPU architecture (AVX-512 VNNI / AVX-512 / AVX2 / ARM64) and downloads the optimal pre-quantized model from HuggingFace Hub.
+- **ForensicJudge** (`semantix/judges/forensic.py`) — Wrapper that runs mask-perturbation saliency on failure to identify the top tokens driving contradiction. Injects a structured Breach Report into `Verdict.reason`.
+- **AuditEngine** (`semantix/audit/engine.py`) — Thread-safe singleton that captures every validation as a JSON-LD Semantic Certificate. SHA-256 hash-linked entries create a tamper-evident audit trail.
+- **`turbo` optional dependency** — Install with `pip install "semantix-ai[turbo]"` for zero-PyTorch inference.
+- **Trust demo** (`tools/trust_demo.py`) — End-to-end demo of the Silent Guard, Detective, and Black Box working together on a legal review scenario.
+
+### Changed
+- **Turbo default** — `@validate_intent` now auto-selects `QuantizedNLIJudge` when `onnxruntime` is installed, falling back to `NLIJudge` otherwise.
+
 ## v0.1.4 — The Universal Standard Release (2026-04-06)
 
 ### Added

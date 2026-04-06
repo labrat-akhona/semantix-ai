@@ -15,6 +15,7 @@ Quick start
 ...     return call_my_llm(event)  # returns a plain string
 """
 
+from semantix.audit.engine import AuditEngine
 from semantix.composite import AllOf, AnyOf
 from semantix.decorator import get_last_failure, validate_intent
 from semantix.exceptions import SemanticIntentError
@@ -22,6 +23,7 @@ from semantix.intent import Intent
 from semantix.judges import Judge, Verdict
 from semantix.judges.caching import CachingJudge
 from semantix.judges.embedding import EmbeddingJudge
+from semantix.judges.forensic import ForensicJudge
 from semantix.judges.llm import LLMJudge
 from semantix.judges.nli import NLIJudge
 from semantix.streaming import StreamCollector
@@ -39,6 +41,9 @@ __all__ = [
     "NLIJudge",
     "LLMJudge",
     "CachingJudge",
+    "ForensicJudge",
+    # Audit
+    "AuditEngine",
     # Composite
     "AllOf",
     "AnyOf",
@@ -46,5 +51,13 @@ __all__ = [
     "StreamCollector",
 ]
 
-__version__ = "0.1.4"
+# QuantizedNLIJudge requires onnxruntime — optional export
+try:
+    from semantix.judges.quantized_nli import QuantizedNLIJudge
+
+    __all__.append("QuantizedNLIJudge")
+except ImportError:
+    pass
+
+__version__ = "0.1.5"
 __author__ = "Akhona Eland"

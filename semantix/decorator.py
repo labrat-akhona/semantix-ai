@@ -227,13 +227,18 @@ def validate_intent(
             return fn
 
         # Choose the judge once at decoration time.
-        # NLIJudge is the default — runs locally, no API key needed,
-        # and entailment is more accurate than cosine similarity.
+        # Prefer QuantizedNLIJudge (ONNX INT8, no PyTorch) when available.
+        # Fall back to NLIJudge (sentence-transformers, needs PyTorch).
         _judge = judge
         if _judge is None:
-            from semantix.judges.nli import NLIJudge
+            try:
+                from semantix.judges.quantized_nli import QuantizedNLIJudge
 
-            _judge = NLIJudge()
+                _judge = QuantizedNLIJudge()
+            except ImportError:
+                from semantix.judges.nli import NLIJudge
+
+                _judge = NLIJudge()
 
         max_attempts = 1 + retries
 

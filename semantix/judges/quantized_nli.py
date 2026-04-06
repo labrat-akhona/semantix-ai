@@ -82,6 +82,9 @@ class QuantizedNLIJudge(Judge):
     Downloads the pre-quantized ONNX model from HuggingFace Hub on first
     use and auto-selects the best variant for the host CPU architecture.
 
+    Default threshold is 0.5 (not 0.8) because NLI entailment probabilities
+    are calibrated differently than cosine similarity scores.
+
     Parameters
     ----------
     model_variant:

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import numpy as np
-import pytest
 from unittest.mock import MagicMock, patch
 
 from semantix.judges import Verdict

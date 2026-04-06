@@ -71,14 +71,21 @@ class TestDetectOnnxVariant:
 # ---------------------------------------------------------------------------
 
 
+def _make_input_mock(input_name):
+    """Create a mock ONNX input with a .name attribute."""
+    m = MagicMock()
+    m.name = input_name
+    return m
+
+
 def _mock_session(logits):
     """Return a mock InferenceSession that returns fixed logits."""
     session = MagicMock()
     session.run.return_value = [np.array([logits], dtype=np.float32)]
     session.get_inputs.return_value = [
-        MagicMock(name="input_ids"),
-        MagicMock(name="attention_mask"),
-        MagicMock(name="token_type_ids"),
+        _make_input_mock("input_ids"),
+        _make_input_mock("attention_mask"),
+        _make_input_mock("token_type_ids"),
     ]
     return session
 

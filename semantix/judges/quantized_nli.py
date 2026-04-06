@@ -97,6 +97,8 @@ class QuantizedNLIJudge(Judge):
         variant = model_variant or _detect_onnx_variant()
         self._session = _load_session(variant)
         self._tokenizer = _load_tokenizer()
+        # Discover which inputs the ONNX graph actually accepts.
+        self._input_names = {inp.name for inp in self._session.get_inputs()}
 
     def evaluate(
         self,
@@ -110,8 +112,10 @@ class QuantizedNLIJudge(Judge):
         feeds = {
             "input_ids": np.array([encoded.ids], dtype=np.int64),
             "attention_mask": np.array([encoded.attention_mask], dtype=np.int64),
-            "token_type_ids": np.array([encoded.type_ids], dtype=np.int64),
         }
+        # Only include token_type_ids if the model expects it.
+        if "token_type_ids" in self._input_names:
+            feeds["token_type_ids"] = np.array([encoded.type_ids], dtype=np.int64)
         logits = self._session.run(None, feeds)[0][0]
         probs = _softmax(logits)
         entailment_score = float(probs[1])

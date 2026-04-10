@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "semantix-ai"
-version = "0.1.8"
+version = "0.1.9"
 description = "A Semantic Type System for AI outputs — validate intent, not just shape."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -91,9 +91,13 @@ packages = ["semantix"]
 [tool.ruff]
 target-version = "py310"
 line-length = 100
+exclude = ["examples", "tools", "articles", "examples.py", "work_demo.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"semantix/__init__.py" = ["F401"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

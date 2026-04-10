@@ -56,7 +56,6 @@ def _detect_onnx_variant() -> str:
 def _load_session(variant: str, repo_id: str = _REPO_ID):
     """Download the ONNX model and create an InferenceSession."""
     import onnxruntime as ort
-
     from huggingface_hub import hf_hub_download
 
     model_path = hf_hub_download(repo_id=repo_id, filename=variant)
@@ -68,9 +67,8 @@ def _load_session(variant: str, repo_id: str = _REPO_ID):
 
 def _load_tokenizer(repo_id: str = _REPO_ID):
     """Load the Rust-based tokenizer from HuggingFace Hub."""
-    from tokenizers import Tokenizer
-
     from huggingface_hub import hf_hub_download
+    from tokenizers import Tokenizer
 
     path = hf_hub_download(repo_id=repo_id, filename="tokenizer.json")
     return Tokenizer.from_file(path)
@@ -92,6 +90,8 @@ class QuantizedNLIJudge(Judge):
         ``"onnx/model_qint8_arm64.onnx"``).  By default the variant
         is auto-detected from CPU flags.
     """
+
+    recommended_threshold = 0.3
 
     def __init__(self, model_variant: str | None = None) -> None:
         variant = model_variant or _detect_onnx_variant()

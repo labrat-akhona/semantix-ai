@@ -28,6 +28,7 @@ class MockJudge(Judge):
         self.call_count = 0
         self.last_output: str | None = None
         self.last_description: str | None = None
+        self.last_threshold: float | None = None
 
     def evaluate(
         self,
@@ -38,6 +39,7 @@ class MockJudge(Judge):
         self.call_count += 1
         self.last_output = output
         self.last_description = intent_description
+        self.last_threshold = threshold
         return Verdict(
             passed=self._passed,
             score=self._score,

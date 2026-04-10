@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
 
 import pytest
 
 from semantix.decorator import validate_intent
+from semantix.exceptions import SemanticIntentError
 from semantix.intent import Intent
 from semantix.tests.conftest import FlipFlopJudge, MockJudge
-from semantix.training import TrainingCollector, get_default_collector, set_default_collector
+from semantix.training import TrainingCollector, set_default_collector
 
 
 class ProfessionalDecline(Intent):
@@ -59,7 +59,7 @@ def test_collector_not_called_when_all_retries_fail(tmp_path: Path):
     def decline(event: str) -> ProfessionalDecline:
         return "No way!"
 
-    with pytest.raises(Exception):
+    with pytest.raises(SemanticIntentError):
         decline("the gala")
     assert not collector.path.exists()
 
@@ -133,7 +133,7 @@ def test_collector_captures_feedback(tmp_path: Path):
     judge = FlipFlopJudge(fail_count=1, fail_score=0.3)
 
     @validate_intent(judge=judge, retries=1, collector=collector)
-    def decline(event: str, semantix_feedback: Optional[str] = None) -> ProfessionalDecline:
+    def decline(event: str, semantix_feedback: str | None = None) -> ProfessionalDecline:
         return f"I must decline {event}."
 
     decline("the gala")

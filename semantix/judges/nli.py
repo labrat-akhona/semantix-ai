@@ -39,7 +39,7 @@ def _to_hypothesis(description: str) -> str:
     d = description.strip()
     for prefix in ("The text must ", "The response must ", "The output must "):
         if d.startswith(prefix):
-            remainder = d[len(prefix):]
+            remainder = d[len(prefix) :]
             words = remainder.split()
             # Skip adverbs (words ending in -ly) to find the verb.
             for i, word in enumerate(words):
@@ -84,9 +84,9 @@ class NLIJudge(Judge):
         Defaults to ``"cross-encoder/nli-MiniLM2-L6-H768"`` (~85 MB, fast).
     """
 
-    def __init__(
-        self, model_name: str = "cross-encoder/nli-MiniLM2-L6-H768"
-    ) -> None:
+    recommended_threshold = 0.3
+
+    def __init__(self, model_name: str = "cross-encoder/nli-MiniLM2-L6-H768") -> None:
         from sentence_transformers import CrossEncoder  # noqa: WPS433
 
         self._model: CrossEncoder = CrossEncoder(model_name)
@@ -104,9 +104,7 @@ class NLIJudge(Judge):
         """
         hypothesis = _to_hypothesis(intent_description)
         # premise = output, hypothesis = what we require it to mean
-        scores = self._model.predict(
-            [(output, hypothesis)], apply_softmax=True
-        )
+        scores = self._model.predict([(output, hypothesis)], apply_softmax=True)
         # Label order: {0: contradiction, 1: entailment, 2: neutral}
         entailment_score = float(scores[0][1])
         return Verdict(

@@ -77,14 +77,18 @@ def test_export_openai_format(populated_collector: TrainingCollector, tmp_path: 
     assert data["messages"][2]["role"] == "assistant"
 
 
-def test_export_openai_system_contains_intent(populated_collector: TrainingCollector, tmp_path: Path):
+def test_export_openai_system_contains_intent(
+    populated_collector: TrainingCollector, tmp_path: Path
+):
     output = tmp_path / "finetune.jsonl"
     export_openai(populated_collector.path, output)
     data = json.loads(output.read_text().strip().split("\n")[0])
     assert "politely decline" in data["messages"][0]["content"]
 
 
-def test_export_openai_assistant_is_accepted_output(populated_collector: TrainingCollector, tmp_path: Path):
+def test_export_openai_assistant_is_accepted_output(
+    populated_collector: TrainingCollector, tmp_path: Path
+):
     output = tmp_path / "finetune.jsonl"
     export_openai(populated_collector.path, output)
     data = json.loads(output.read_text().strip().split("\n")[0])

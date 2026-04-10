@@ -34,6 +34,8 @@ class LLMJudge(Judge):
         Optional base URL for OpenAI-compatible endpoints.
     """
 
+    recommended_threshold = 0.7
+
     def __init__(
         self,
         model: str = "gpt-4o-mini",
@@ -66,10 +68,7 @@ class LLMJudge(Judge):
                 {"role": "system", "content": _SYSTEM_PROMPT},
                 {
                     "role": "user",
-                    "content": (
-                        f"REQUIREMENT:\n{intent_description}\n\n"
-                        f"TEXT:\n{output}"
-                    ),
+                    "content": (f"REQUIREMENT:\n{intent_description}\n\nTEXT:\n{output}"),
                 },
             ],
         )

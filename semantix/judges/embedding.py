@@ -22,6 +22,8 @@ class EmbeddingJudge(Judge):
         Defaults to ``"all-MiniLM-L6-v2"`` (fast, ~80 MB).
     """
 
+    recommended_threshold = 0.8
+
     def __init__(self, model_name: str = "all-MiniLM-L6-v2") -> None:
         # Lazy import so that sentence-transformers is only required when
         # this judge is actually used.

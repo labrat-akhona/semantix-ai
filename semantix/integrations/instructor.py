@@ -53,7 +53,10 @@ def semantic_validator(
     """
     _judge = judge or _default_judge()
     description = intent.description()
-    threshold = intent.threshold
+    if "threshold" not in intent.__dict__ and _judge.recommended_threshold is not None:
+        threshold = _judge.recommended_threshold
+    else:
+        threshold = intent.threshold
 
     def _validate(value: Any) -> Any:
         text = str(value) if not isinstance(value, str) else value
@@ -75,7 +78,7 @@ class _SemanticStrMeta(type):
 
     def __getitem__(cls, params: str | tuple) -> Any:
         if isinstance(params, str):
-            desc, threshold = params, 0.8
+            desc, threshold = params, None
         elif isinstance(params, tuple) and len(params) == 2:
             desc, threshold = params
         else:
@@ -85,10 +88,15 @@ class _SemanticStrMeta(type):
             )
 
         # Create a dynamic Intent subclass from the description string.
+        # Only set threshold in __dict__ when the user explicitly provides one,
+        # so the judge's recommended_threshold can apply for the default case.
+        ns: dict[str, object] = {"__doc__": desc}
+        if threshold is not None:
+            ns["threshold"] = threshold
         dynamic_intent = type(
             f"_SemanticStr_{id(desc)}",
             (Intent,),
-            {"__doc__": desc, "threshold": threshold},
+            ns,
         )
 
         return Annotated[str, AfterValidator(semantic_validator(dynamic_intent))]

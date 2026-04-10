@@ -43,7 +43,10 @@ class SemanticValidator:
     def __init__(self, intent: type[Intent], judge: Judge | None = None) -> None:
         self._judge = judge or _default_judge()
         self._description = intent.description()
-        self._threshold = intent.threshold
+        if "threshold" not in intent.__dict__ and self._judge.recommended_threshold is not None:
+            self._threshold = self._judge.recommended_threshold
+        else:
+            self._threshold = intent.threshold
 
     def _validate(self, value: Any) -> Any:
         text = str(value) if not isinstance(value, str) else value
@@ -60,7 +63,7 @@ class SemanticValidator:
 
                 raise OutputParserException(msg)
             except ImportError:
-                raise ValueError(msg)
+                raise ValueError(msg) from None
         return value
 
     def invoke(self, input: Any, config: Any = None, **kwargs: Any) -> Any:
@@ -82,7 +85,7 @@ class SemanticValidator:
 
             return RunnableSequence(first=self, last=other)
         except ImportError:
-            raise ImportError("langchain-core is required for pipe composition")
+            raise ImportError("langchain-core is required for pipe composition") from None
 
     def __ror__(self, other: Any) -> Any:
         """Support ``prev_step | validator`` pipe syntax."""
@@ -91,4 +94,4 @@ class SemanticValidator:
 
             return RunnableSequence(first=other, last=self)
         except ImportError:
-            raise ImportError("langchain-core is required for pipe composition")
+            raise ImportError("langchain-core is required for pipe composition") from None

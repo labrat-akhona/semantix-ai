@@ -53,7 +53,15 @@ def semantix_validator(
     """
     _judge = None if judge_from_deps else (judge or _default_judge())
     description = intent.description()
-    threshold = intent.threshold
+    # Use the judge's recommended threshold when the Intent doesn't explicitly set one.
+    if (
+        _judge is not None
+        and "threshold" not in intent.__dict__
+        and _judge.recommended_threshold is not None
+    ):
+        threshold = _judge.recommended_threshold
+    else:
+        threshold = intent.threshold
 
     def _validate(ctx: Any, output: Any) -> Any:
         active_judge = ctx.deps if judge_from_deps else _judge
@@ -73,7 +81,7 @@ def semantix_validator(
                 raise ValueError(
                     f"Semantic validation failed (score={score_str}){reason_str}. "
                     f"The text must satisfy: {description}"
-                )
+                ) from None
         return output
 
     return _validate

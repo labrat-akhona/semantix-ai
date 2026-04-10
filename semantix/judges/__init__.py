@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import ClassVar
 
 
 @dataclass(frozen=True)
@@ -27,6 +28,8 @@ class Verdict:
 
 class Judge(ABC):
     """Base interface that all judge backends must implement."""
+
+    recommended_threshold: ClassVar[float | None] = None
 
     @abstractmethod
     def evaluate(

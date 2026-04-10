@@ -5,8 +5,9 @@ from __future__ import annotations
 import functools
 import inspect
 import logging
+from collections.abc import Callable
 from contextvars import ContextVar
-from typing import Any, Callable, TypeVar, get_type_hints, overload
+from typing import Any, TypeVar, get_type_hints, overload
 
 from semantix.exceptions import SemanticIntentError
 from semantix.intent import Intent
@@ -16,9 +17,7 @@ from semantix.training import TrainingCollector, get_default_collector
 
 # Stores the most recent validation failure in the current async/thread context.
 # Set before each retry so the decorated LLM function can read it via get_last_failure().
-_last_failure: ContextVar[SemanticIntentError | None] = ContextVar(
-    "_last_failure", default=None
-)
+_last_failure: ContextVar[SemanticIntentError | None] = ContextVar("_last_failure", default=None)
 
 
 def get_last_failure() -> SemanticIntentError | None:
@@ -117,7 +116,12 @@ def _run_judge(
     Returns a ``(Intent, Verdict)`` tuple on success; raises ``SemanticIntentError`` on failure.
     """
     description = intent_cls.description()
-    threshold = intent_cls.threshold
+    # Use the judge's recommended threshold when the Intent doesn't
+    # explicitly override the default.
+    if "threshold" not in intent_cls.__dict__ and judge.recommended_threshold is not None:
+        threshold = judge.recommended_threshold
+    else:
+        threshold = intent_cls.threshold
 
     with log_validation(
         intent_cls.__name__,

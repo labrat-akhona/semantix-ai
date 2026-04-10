@@ -27,6 +27,10 @@ class CachingJudge(Judge):
         self._maxsize = maxsize
         self._cache: OrderedDict[str, Verdict] = OrderedDict()
 
+    @property
+    def recommended_threshold(self) -> float | None:  # type: ignore[override]
+        return self._judge.recommended_threshold
+
     # ── stats ───────────────────────────────────────────────────
 
     @property

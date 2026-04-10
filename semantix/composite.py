@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import ClassVar
-
 from semantix.intent import Intent
 
 
@@ -23,18 +21,16 @@ def AllOf(*intent_classes: type[Intent]) -> type[Intent]:
 
     names = " & ".join(cls.__name__ for cls in intent_classes)
     descriptions = "\n\nAND\n\n".join(cls.description() for cls in intent_classes)
-    combined_doc = (
-        f"ALL of the following requirements must be satisfied:\n\n"
-        f"{descriptions}"
-    )
-    # Use the minimum threshold across the constituents.
-    min_threshold: float = min(cls.threshold for cls in intent_classes)
-
+    combined_doc = f"ALL of the following requirements must be satisfied:\n\n{descriptions}"
+    # Only set threshold explicitly when at least one component does,
+    # so the judge's recommended_threshold can apply for default intents.
+    explicit = [cls for cls in intent_classes if "threshold" in cls.__dict__]
     ns: dict[str, object] = {
         "__doc__": combined_doc,
-        "threshold": min_threshold,
         "_component_intents": intent_classes,
     }
+    if explicit:
+        ns["threshold"] = min(cls.threshold for cls in explicit)
     return type(f"AllOf[{names}]", (Intent,), ns)
 
 
@@ -55,24 +51,22 @@ def AnyOf(*intent_classes: type[Intent]) -> type[Intent]:
     names = " | ".join(cls.__name__ for cls in intent_classes)
     descriptions = "\n\nOR\n\n".join(cls.description() for cls in intent_classes)
     combined_doc = (
-        f"AT LEAST ONE of the following requirements must be satisfied:\n\n"
-        f"{descriptions}"
+        f"AT LEAST ONE of the following requirements must be satisfied:\n\n{descriptions}"
     )
-    max_threshold: float = max(cls.threshold for cls in intent_classes)
-
+    # Only set threshold explicitly when at least one component does.
+    explicit = [cls for cls in intent_classes if "threshold" in cls.__dict__]
     ns: dict[str, object] = {
         "__doc__": combined_doc,
-        "threshold": max_threshold,
         "_component_intents": intent_classes,
     }
+    if explicit:
+        ns["threshold"] = max(cls.threshold for cls in explicit)
     return type(f"AnyOf[{names}]", (Intent,), ns)
 
 
 def _validate_intent_classes(classes: tuple[type[Intent], ...]) -> None:
     for cls in classes:
         if not isinstance(cls, type) or not issubclass(cls, Intent):
-            raise TypeError(
-                f"Expected an Intent subclass, got {cls!r}"
-            )
+            raise TypeError(f"Expected an Intent subclass, got {cls!r}")
         if cls is Intent:
             raise TypeError("Cannot combine the bare Intent base class.")

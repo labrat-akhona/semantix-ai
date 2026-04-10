@@ -40,9 +40,7 @@ def _mask_perturbation_saliency(
 
     # Filter out special tokens and subword fragments
     candidate_indices = [
-        i
-        for i, t in enumerate(tokens)
-        if t not in _SPECIAL_TOKENS and not t.startswith("##")
+        i for i, t in enumerate(tokens) if t not in _SPECIAL_TOKENS and not t.startswith("##")
     ]
 
     if not candidate_indices:
@@ -132,6 +130,10 @@ class ForensicJudge(Judge):
         self._base = base_judge
         self._top_k = top_k
 
+    @property
+    def recommended_threshold(self) -> float | None:  # type: ignore[override]
+        return self._base.recommended_threshold
+
     def evaluate(
         self,
         output: str,
@@ -144,9 +146,7 @@ class ForensicJudge(Judge):
             return verdict
 
         # Failure path — run forensics
-        breach_tokens = _run_forensics(
-            output, intent_description, self._base, verdict, self._top_k
-        )
+        breach_tokens = _run_forensics(output, intent_description, self._base, verdict, self._top_k)
         report = _build_breach_report(verdict, breach_tokens)
 
         return Verdict(

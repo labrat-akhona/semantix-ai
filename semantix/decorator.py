@@ -12,6 +12,7 @@ from semantix.exceptions import SemanticIntentError
 from semantix.intent import Intent
 from semantix.judges import Judge, Verdict
 from semantix.observability import log_validation
+from semantix.training import TrainingCollector, get_default_collector
 
 # Stores the most recent validation failure in the current async/thread context.
 # Set before each retry so the decorated LLM function can read it via get_last_failure().
@@ -110,10 +111,10 @@ def _run_judge(
     raw_output: str,
     intent_cls: type[Intent],
     attempt: int = 1,
-) -> Intent:
+) -> tuple[Intent, Verdict]:
     """Validate *raw_output* against *intent_cls* using *judge*.
 
-    Returns an ``Intent`` instance on success; raises ``SemanticIntentError`` on failure.
+    Returns a ``(Intent, Verdict)`` tuple on success; raises ``SemanticIntentError`` on failure.
     """
     description = intent_cls.description()
     threshold = intent_cls.threshold
@@ -136,7 +137,7 @@ def _run_judge(
             score=verdict.score,
             reason=verdict.reason,
         )
-    return intent_cls(raw_output)
+    return intent_cls(raw_output), verdict
 
 
 # ---------------------------------------------------------------------------
@@ -153,6 +154,7 @@ def validate_intent(
     *,
     judge: Judge,
     retries: int = ...,
+    collector: TrainingCollector | None = ...,
 ) -> Callable[[F], F]: ...
 
 
@@ -161,6 +163,7 @@ def validate_intent(
     *,
     judge: Judge | None = None,
     retries: int = 0,
+    collector: TrainingCollector | None = None,
 ) -> F | Callable[[F], F]:
     """Decorator that validates an LLM call's return value against its Intent.
 
@@ -241,6 +244,7 @@ def validate_intent(
                 _judge = NLIJudge()
 
         max_attempts = 1 + retries
+        _collector = collector
 
         # Detect feedback support once — avoids inspect overhead on every call.
         _fn_accepts_feedback: bool = _accepts_feedback(fn)
@@ -250,26 +254,43 @@ def validate_intent(
             @functools.wraps(fn)
             async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
                 last_err: SemanticIntentError | None = None
+                _last_feedback: str | None = None
 
                 for attempt in range(1, max_attempts + 1):
                     raw = await fn(*args, **kwargs)
                     raw_str = str(raw) if not isinstance(raw, str) else raw
 
                     try:
-                        result = _run_judge(_judge, raw_str, intent_cls, attempt)  # type: ignore[arg-type]
+                        result, verdict = _run_judge(_judge, raw_str, intent_cls, attempt)  # type: ignore[arg-type]
                         # Success — clean up any injected state.
                         _last_failure.set(None)
                         kwargs.pop("semantix_feedback", None)
+                        # Record training pair if this was a retry after failure.
+                        if last_err is not None:
+                            active_collector = _collector or get_default_collector()
+                            if active_collector is not None:
+                                active_collector.record(
+                                    intent=intent_cls.__name__,  # type: ignore[union-attr]
+                                    intent_description=intent_cls.description(),  # type: ignore[union-attr]
+                                    rejected_output=last_err.output,
+                                    rejected_score=last_err.score,
+                                    rejected_reason=last_err.reason,
+                                    accepted_output=raw_str,
+                                    accepted_score=verdict.score,
+                                    feedback=_last_feedback,
+                                    attempts=attempt,
+                                )
                         return result
 
                     except SemanticIntentError as err:
                         last_err = err
+                        _last_feedback = _build_feedback(err, attempt)
                         if attempt < max_attempts:
                             # Keep ContextVar for backward-compat manual access.
                             _last_failure.set(err)
                             # Direct injection if function opted in.
                             if _fn_accepts_feedback:
-                                kwargs["semantix_feedback"] = _build_feedback(err, attempt)
+                                kwargs["semantix_feedback"] = _last_feedback
                             logger.info(
                                 "Retry %d/%d for %s (score=%.4f)",
                                 attempt,
@@ -287,26 +308,43 @@ def validate_intent(
         @functools.wraps(fn)
         def sync_wrapper(*args: Any, **kwargs: Any) -> Any:
             last_err: SemanticIntentError | None = None
+            _last_feedback: str | None = None
 
             for attempt in range(1, max_attempts + 1):
                 raw = fn(*args, **kwargs)
                 raw_str = str(raw) if not isinstance(raw, str) else raw
 
                 try:
-                    result = _run_judge(_judge, raw_str, intent_cls, attempt)  # type: ignore[arg-type]
+                    result, verdict = _run_judge(_judge, raw_str, intent_cls, attempt)  # type: ignore[arg-type]
                     # Success — clean up any injected state.
                     _last_failure.set(None)
                     kwargs.pop("semantix_feedback", None)
+                    # Record training pair if this was a retry after failure.
+                    if last_err is not None:
+                        active_collector = _collector or get_default_collector()
+                        if active_collector is not None:
+                            active_collector.record(
+                                intent=intent_cls.__name__,  # type: ignore[union-attr]
+                                intent_description=intent_cls.description(),  # type: ignore[union-attr]
+                                rejected_output=last_err.output,
+                                rejected_score=last_err.score,
+                                rejected_reason=last_err.reason,
+                                accepted_output=raw_str,
+                                accepted_score=verdict.score,
+                                feedback=_last_feedback,
+                                attempts=attempt,
+                            )
                     return result
 
                 except SemanticIntentError as err:
                     last_err = err
+                    _last_feedback = _build_feedback(err, attempt)
                     if attempt < max_attempts:
                         # Keep ContextVar for backward-compat manual access.
                         _last_failure.set(err)
                         # Direct injection if function opted in.
                         if _fn_accepts_feedback:
-                            kwargs["semantix_feedback"] = _build_feedback(err, attempt)
+                            kwargs["semantix_feedback"] = _last_feedback
                         logger.info(
                             "Retry %d/%d for %s (score=%.4f)",
                             attempt,

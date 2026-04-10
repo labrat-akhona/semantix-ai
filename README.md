@@ -150,7 +150,17 @@ validator = SemanticValidator(Polite)
 chain = prompt | llm | StrOutputParser() | validator
 ```
 
-Install extras: `pip install "semantix-ai[instructor]"`, `"semantix-ai[pydantic-ai]"`, `"semantix-ai[langchain]"`, `"semantix-ai[guardrails]"`
+### DSPy
+
+```python
+import dspy
+from semantix.integrations.dspy import semantic_reward
+
+qa = dspy.ChainOfThought("question -> answer")
+refined = dspy.Refine(module=qa, N=3, reward_fn=semantic_reward(Polite))
+```
+
+Install extras: `pip install "semantix-ai[instructor]"`, `"semantix-ai[pydantic-ai]"`, `"semantix-ai[langchain]"`, `"semantix-ai[guardrails]"`, `"semantix-ai[dspy]"`
 
 ---
 
@@ -252,6 +262,7 @@ pip install "semantix-ai[instructor]"      # Instructor integration
 pip install "semantix-ai[pydantic-ai]"     # Pydantic AI integration
 pip install "semantix-ai[langchain]"       # LangChain integration
 pip install "semantix-ai[guardrails]"      # Guardrails AI integration
+pip install "semantix-ai[dspy]"            # DSPy integration
 pip install "semantix-ai[all]"             # Everything
 ```
 

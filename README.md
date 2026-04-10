@@ -53,6 +53,11 @@ pip install "semantix-ai[embeddings]"
 # With NLI judge (cross-encoder entailment — accurate, runs locally)
 pip install "semantix-ai[nli]"
 
+# Framework integrations
+pip install "semantix-ai[instructor]"   # Instructor
+pip install "semantix-ai[pydantic-ai]"  # Pydantic AI
+pip install "semantix-ai[langchain]"    # LangChain
+
 # Everything
 pip install "semantix-ai[all]"
 ```
@@ -147,6 +152,69 @@ Add this to your `claude_desktop_config.json`:
 ```
 
 Claude can then call `verify_text_intent` to validate any text against a semantic requirement before responding.
+
+---
+
+## Framework Integrations (NEW in v0.1.6)
+
+Drop semantix into your existing LLM framework — retries are handled natively by each framework.
+
+### Instructor
+
+```python
+from typing import Annotated
+from pydantic import AfterValidator, BaseModel
+from semantix.integrations.instructor import semantic_validator, SemanticStr
+from semantix import Intent
+
+class Polite(Intent):
+    """The text must be polite and professional."""
+
+# Option 1: Explicit Intent class
+class Response(BaseModel):
+    reply: Annotated[str, AfterValidator(semantic_validator(Polite))]
+
+# Option 2: Inline shorthand
+class QuickResponse(BaseModel):
+    reply: SemanticStr["must be polite and professional", 0.85]
+```
+
+Validation failures raise `ValueError` — Instructor catches this and retries automatically with `max_retries`.
+
+### Pydantic AI
+
+```python
+from pydantic_ai import Agent
+from semantix.integrations.pydantic_ai import semantix_validator
+from semantix import Intent
+
+class Polite(Intent):
+    """The text must be polite and professional."""
+
+agent = Agent("openai:gpt-4o", output_type=str)
+agent.output_validator(semantix_validator(Polite))
+
+result = agent.run_sync("Decline the meeting invitation")
+```
+
+Validation failures raise `ModelRetry` — Pydantic AI retries automatically.
+
+### LangChain
+
+```python
+from langchain_core.output_parsers import StrOutputParser
+from semantix.integrations.langchain import SemanticValidator
+from semantix import Intent
+
+class Polite(Intent):
+    """The text must be polite and professional."""
+
+validator = SemanticValidator(Polite)
+chain = prompt | llm | StrOutputParser() | validator
+result = chain.invoke({"event": "the company retreat"})
+```
+
+Validation failures raise `OutputParserException` — compatible with LangChain's `RetryWithErrorOutputParser`.
 
 ---
 
@@ -352,6 +420,10 @@ class MyCustomJudge(Judge):
 | `ForensicJudge` | Wrapper — token-level attribution Breach Report on failure |
 | `AuditEngine` | Hash-chained JSON-LD audit trail singleton |
 | `StreamCollector` | Validates streamed LLM output once fully assembled |
+| `semantic_validator` | Instructor adapter — Pydantic `AfterValidator` for Intent checking |
+| `SemanticStr` | Instructor shorthand — `SemanticStr["must be polite", 0.85]` |
+| `semantix_validator` | Pydantic AI adapter — `@agent.output_validator` compatible |
+| `SemanticValidator` | LangChain adapter — Runnable with `invoke`/`batch`/pipe support |
 
 ---
 
@@ -377,6 +449,11 @@ semantix/
 │   ├── quantized_nli.py # QuantizedNLIJudge (ONNX INT8)
 │   ├── forensic.py      # ForensicJudge (token attribution)
 │   └── caching.py       # CachingJudge
+├── integrations/
+│   ├── __init__.py      # Package marker
+│   ├── instructor.py    # Instructor adapter (semantic_validator, SemanticStr)
+│   ├── pydantic_ai.py   # Pydantic AI adapter (semantix_validator)
+│   └── langchain.py     # LangChain adapter (SemanticValidator)
 └── mcp/
     └── server.py        # MCP server (verify_text_intent tool)
 ```

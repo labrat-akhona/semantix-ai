@@ -52,6 +52,7 @@ turbo = ["onnxruntime>=1.16", "tokenizers>=0.15", "huggingface-hub>=0.20"]
 instructor = ["instructor>=1.0"]
 pydantic-ai = ["pydantic-ai>=0.1"]
 langchain = ["langchain-core>=0.3"]
+guardrails = ["guardrails-ai>=0.5.0"]
 all = [
     "openai>=1.0",
     "sentence-transformers>=2.2",
@@ -62,6 +63,7 @@ all = [
     "instructor>=1.0",
     "pydantic-ai>=0.1",
     "langchain-core>=0.3",
+    "guardrails-ai>=0.5.0",
 ]
 dev = [
     "openai>=1.0",
@@ -76,6 +78,7 @@ dev = [
     "instructor>=1.0",
     "pydantic-ai>=0.1",
     "langchain-core>=0.3",
+    "guardrails-ai>=0.5.0",
 ]
 
 [project.urls]

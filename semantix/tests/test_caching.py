@@ -1,6 +1,5 @@
 """Tests for CachingJudge."""
 
-from semantix.judges import Verdict
 from semantix.judges.caching import CachingJudge
 from semantix.tests.conftest import MockJudge
 

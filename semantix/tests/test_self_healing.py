@@ -8,7 +8,6 @@ the parameter continue to work unchanged.
 from __future__ import annotations
 
 import asyncio
-from typing import Optional
 
 import pytest
 
@@ -16,7 +15,6 @@ from semantix import Intent, SemanticIntentError, validate_intent
 from semantix.decorator import _accepts_feedback, _build_feedback
 
 from .conftest import FlipFlopJudge, MockJudge
-
 
 # ---------------------------------------------------------------------------
 # Shared fixtures
@@ -34,19 +32,23 @@ class SimpleIntent(Intent):
 
 class TestAcceptsFeedback:
     def test_detects_parameter(self):
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> None: ...
+        def fn(x: str, semantix_feedback: str | None = None) -> None: ...
+
         assert _accepts_feedback(fn) is True
 
     def test_returns_false_without_parameter(self):
         def fn(x: str) -> None: ...
+
         assert _accepts_feedback(fn) is False
 
     def test_returns_false_for_wrong_param_name(self):
-        def fn(x: str, feedback: Optional[str] = None) -> None: ...
+        def fn(x: str, feedback: str | None = None) -> None: ...
+
         assert _accepts_feedback(fn) is False
 
     def test_works_on_async_function(self):
-        async def fn(x: str, semantix_feedback: Optional[str] = None) -> None: ...
+        async def fn(x: str, semantix_feedback: str | None = None) -> None: ...
+
         assert _accepts_feedback(fn) is True
 
 
@@ -104,10 +106,10 @@ class TestBuildFeedback:
 class TestSyncInjection:
     def test_feedback_is_none_on_first_attempt(self):
         """First call must never receive feedback."""
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=MockJudge(passed=True), retries=1)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
@@ -116,23 +118,23 @@ class TestSyncInjection:
 
     def test_feedback_injected_on_retry(self):
         """Second attempt must receive a non-None feedback string."""
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=FlipFlopJudge(fail_count=1), retries=1)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
         fn("hello")
         assert len(calls) == 2
-        assert calls[0] is None       # first attempt — no feedback
-        assert calls[1] is not None   # retry — feedback injected
+        assert calls[0] is None  # first attempt — no feedback
+        assert calls[1] is not None  # retry — feedback injected
 
     def test_feedback_contains_intent_name(self):
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=FlipFlopJudge(fail_count=1), retries=1)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
@@ -140,10 +142,10 @@ class TestSyncInjection:
         assert "SimpleIntent" in calls[1]
 
     def test_feedback_contains_score(self):
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=FlipFlopJudge(fail_count=1, fail_score=0.1234), retries=1)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
@@ -165,8 +167,9 @@ class TestSyncInjection:
 
     def test_no_feedback_after_exhausted_retries(self):
         """kwargs must be cleaned up even when all retries fail."""
+
         @validate_intent(judge=MockJudge(passed=False), retries=1)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             return "bad output"
 
         with pytest.raises(SemanticIntentError):
@@ -174,20 +177,20 @@ class TestSyncInjection:
 
     def test_feedback_cleared_after_success(self):
         """After a successful call, a second call must start with feedback=None."""
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=FlipFlopJudge(fail_count=1), retries=2)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
-        fn("first")   # fails once then passes
+        fn("first")  # fails once then passes
         calls.clear()
         fn("second")  # fresh call — judge already passed from attempt 1
         assert calls[0] is None  # no feedback bleeds into fresh call
 
     def test_reason_in_feedback_when_judge_provides_it(self):
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         failing_judge = MockJudge(passed=False, score=0.2, reason="too vague")
         passing_judge = MockJudge(passed=True, score=0.9)
@@ -203,7 +206,7 @@ class TestSyncInjection:
                 return passing_judge.evaluate(output, intent_description, threshold)
 
         @validate_intent(judge=AlternatingJudge(), retries=1)
-        def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
@@ -219,10 +222,10 @@ class TestSyncInjection:
 
 class TestAsyncInjection:
     def test_async_feedback_is_none_on_first_attempt(self):
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=MockJudge(passed=True), retries=1)
-        async def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        async def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 
@@ -230,10 +233,10 @@ class TestAsyncInjection:
         assert calls[0] is None
 
     def test_async_feedback_injected_on_retry(self):
-        calls: list[Optional[str]] = []
+        calls: list[str | None] = []
 
         @validate_intent(judge=FlipFlopJudge(fail_count=1), retries=1)
-        async def fn(x: str, semantix_feedback: Optional[str] = None) -> SimpleIntent:
+        async def fn(x: str, semantix_feedback: str | None = None) -> SimpleIntent:
             calls.append(semantix_feedback)
             return "confirmed"
 

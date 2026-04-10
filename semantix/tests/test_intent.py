@@ -14,7 +14,7 @@ class NoDoc(Intent):
 
 
 class EmptyDoc(Intent):
-    """   """
+    """ """
 
 
 def test_description_returns_docstring():
@@ -55,6 +55,7 @@ def test_default_threshold():
 def test_custom_threshold():
     class Strict(Intent):
         """Must be very strict."""
+
         threshold = 0.95
 
     assert Strict.threshold == 0.95

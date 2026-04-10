@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import Generator
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass, field
-from typing import Any, Generator
+from dataclasses import asdict, dataclass
+from typing import Any
 
 logger = logging.getLogger("semantix")
 
@@ -67,8 +68,7 @@ def log_validation(
         level = logging.INFO if event.passed else logging.WARNING
         logger.log(
             level,
-            "semantix.validation | intent=%s passed=%s score=%s "
-            "latency_ms=%.2f attempt=%d",
+            "semantix.validation | intent=%s passed=%s score=%s latency_ms=%.2f attempt=%d",
             event.intent_name,
             event.passed,
             event.score,

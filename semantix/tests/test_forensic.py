@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch, call
-
-import pytest
+from unittest.mock import patch
 
 from semantix.judges import Judge, Verdict
 from semantix.judges.forensic import ForensicJudge, _mask_perturbation_saliency
-
 
 # ---------------------------------------------------------------------------
 # Unit: mask perturbation saliency

@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import numpy as np
 from unittest.mock import MagicMock, patch
+
+import numpy as np
 
 from semantix.judges import Verdict
 from semantix.judges.quantized_nli import (
@@ -11,7 +12,6 @@ from semantix.judges.quantized_nli import (
     _detect_onnx_variant,
     _softmax,
 )
-
 
 # ---------------------------------------------------------------------------
 # Unit: softmax

@@ -11,10 +11,12 @@ class _IntentMeta(type):
 
     def __and__(cls, other: type) -> type:
         from semantix.composite import AllOf  # noqa: WPS433
+
         return AllOf(cls, other)  # type: ignore[arg-type]
 
     def __or__(cls, other: type) -> type:
         from semantix.composite import AnyOf  # noqa: WPS433
+
         return AnyOf(cls, other)  # type: ignore[arg-type]
 
 
@@ -51,8 +53,7 @@ class Intent(metaclass=_IntentMeta):
         doc = cls.__doc__
         if not doc or not doc.strip():
             raise TypeError(
-                f"{cls.__name__} must have a non-empty docstring describing "
-                "the semantic intent."
+                f"{cls.__name__} must have a non-empty docstring describing the semantic intent."
             )
         return doc.strip()
 

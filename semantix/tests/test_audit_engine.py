@@ -84,7 +84,7 @@ class TestCertificateSchema:
         engine = AuditEngine()
         engine.record(intent="X", output="hello world", score=0.5, passed=True)
         entry = engine.entries[0]
-        expected = hashlib.sha256("hello world".encode()).hexdigest()
+        expected = hashlib.sha256(b"hello world").hexdigest()
         assert entry["output_hash"] == expected
 
     def test_has_score_and_passed(self):

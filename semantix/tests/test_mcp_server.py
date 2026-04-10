@@ -7,10 +7,7 @@ without requiring the NLI model to be loaded.
 from __future__ import annotations
 
 import json
-from typing import Any
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from semantix.judges import Verdict
 from semantix.mcp.server import (
@@ -18,7 +15,6 @@ from semantix.mcp.server import (
     mcp,
     verify_text_intent,
 )
-
 
 # ---------------------------------------------------------------------------
 # Tool registration
@@ -86,9 +82,7 @@ class TestResponseSchema:
 
     @patch("semantix.mcp.server._get_judge")
     def test_reason_forwarded_from_verdict(self, mock_get):
-        mock_get.return_value = _mock_judge(
-            passed=False, score=0.2, reason="entailment too low"
-        )
+        mock_get.return_value = _mock_judge(passed=False, score=0.2, reason="entailment too low")
         result = json.loads(verify_text_intent("text", "intent"))
         assert result["reason"] == "entailment too low"
 

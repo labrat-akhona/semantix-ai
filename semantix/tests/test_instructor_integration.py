@@ -5,7 +5,6 @@ from __future__ import annotations
 import pytest
 
 from semantix.intent import Intent
-from semantix.judges import Verdict
 from semantix.tests.conftest import MockJudge
 
 
@@ -15,6 +14,7 @@ class Polite(Intent):
 
 class Helpful(Intent):
     """The text must be helpful and informative."""
+
     threshold = 0.9
 
 

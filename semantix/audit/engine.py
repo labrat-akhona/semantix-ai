@@ -92,7 +92,6 @@ class AuditEngine:
 
     def flush(self, path: Path) -> None:
         """Write all entries to a JSONL file."""
-        with self._lock:
-            with open(path, "w") as f:
-                for entry in self._entries:
-                    f.write(json.dumps(entry, sort_keys=True) + "\n")
+        with self._lock, open(path, "w") as f:
+            for entry in self._entries:
+                f.write(json.dumps(entry, sort_keys=True) + "\n")

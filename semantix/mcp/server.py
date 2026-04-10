@@ -18,9 +18,7 @@ def _get_judge():
     return NLIJudge()
 
 
-def _build_correction(
-    text: str, intent_description: str, score: float, threshold: float
-) -> str:
+def _build_correction(text: str, intent_description: str, score: float, threshold: float) -> str:
     """Structured feedback mirroring decorator.py:79-105 _build_feedback()."""
     score_str = f"{score:.4f}"
     return (
@@ -36,9 +34,7 @@ def _build_correction(
 
 
 @mcp.tool()
-def verify_text_intent(
-    text: str, intent_description: str, threshold: float = 0.5
-) -> str:
+def verify_text_intent(text: str, intent_description: str, threshold: float = 0.5) -> str:
     """Check whether text satisfies a semantic intent using NLI.
 
     Args:
@@ -52,10 +48,12 @@ def verify_text_intent(
     try:
         judge = _get_judge()
     except ImportError:
-        return json.dumps({
-            "error": "sentence-transformers not installed. Run: pip install semantix-ai[nli]",
-            "passed": False,
-        })
+        return json.dumps(
+            {
+                "error": "sentence-transformers not installed. Run: pip install semantix-ai[nli]",
+                "passed": False,
+            }
+        )
 
     verdict = judge.evaluate(text, intent_description, threshold)
     result = {"score": verdict.score, "passed": verdict.passed, "reason": verdict.reason}

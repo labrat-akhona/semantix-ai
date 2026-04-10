@@ -14,11 +14,13 @@ class Polite(Intent):
 
 class Positive(Intent):
     """The text must be positive."""
+
     threshold = 0.9
 
 
 class Formal(Intent):
     """The text must be formal."""
+
     threshold = 0.7
 
 

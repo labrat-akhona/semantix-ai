@@ -16,7 +16,7 @@ Quick start
 """
 
 from semantix.audit.engine import AuditEngine
-from semantix.composite import AllOf, AnyOf
+from semantix.composite import AllOf, AnyOf, Not
 from semantix.decorator import get_last_failure, validate_intent
 from semantix.exceptions import SemanticIntentError
 from semantix.intent import Intent
@@ -49,6 +49,7 @@ __all__ = [
     # Composite
     "AllOf",
     "AnyOf",
+    "Not",
     # Streaming
     "StreamCollector",
 ]

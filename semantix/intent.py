@@ -19,6 +19,11 @@ class _IntentMeta(type):
 
         return AnyOf(cls, other)  # type: ignore[arg-type]
 
+    def __invert__(cls) -> type:
+        from semantix.composite import Not  # noqa: WPS433
+
+        return Not(cls)  # type: ignore[arg-type]
+
 
 class Intent(metaclass=_IntentMeta):
     """Base class for semantic intent types.

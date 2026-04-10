@@ -64,6 +64,36 @@ def AnyOf(*intent_classes: type[Intent]) -> type[Intent]:
     return type(f"AnyOf[{names}]", (Intent,), ns)
 
 
+def Not(intent_class: type[Intent]) -> type[Intent]:
+    """Create a new Intent that requires the output to **NOT** satisfy the
+    given intent.
+
+    Example
+    -------
+    >>> Safe = Not(MedicalAdvice)
+    >>> @validate_intent
+    ... def chatbot(msg: str) -> Safe: ...
+
+    Can also use the ``~`` operator::
+
+    >>> Safe = ~MedicalAdvice
+    """
+    if not isinstance(intent_class, type) or not issubclass(intent_class, Intent):
+        raise TypeError(f"Expected an Intent subclass, got {intent_class!r}")
+    if intent_class is Intent:
+        raise TypeError("Cannot negate the bare Intent base class.")
+
+    original_description = intent_class.description()
+    negated_doc = f"The text must NOT satisfy the following:\n\n{original_description}"
+    ns: dict[str, object] = {
+        "__doc__": negated_doc,
+        "_negated_intent": intent_class,
+    }
+    if "threshold" in intent_class.__dict__:
+        ns["threshold"] = intent_class.threshold
+    return type(f"Not[{intent_class.__name__}]", (Intent,), ns)
+
+
 def _validate_intent_classes(classes: tuple[type[Intent], ...]) -> None:
     for cls in classes:
         if not isinstance(cls, type) or not issubclass(cls, Intent):

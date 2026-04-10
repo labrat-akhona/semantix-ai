@@ -218,6 +218,42 @@ Validation failures raise `OutputParserException` — compatible with LangChain'
 
 ---
 
+## Self-Training Loop (NEW in v0.1.7)
+
+Every guardrail with retry logic produces perfect fine-tuning data — a rejected output, a reason, and a corrected output. Semantix captures these correction pairs automatically.
+
+```python
+from semantix import validate_intent, Intent
+from semantix.training import TrainingCollector
+
+collector = TrainingCollector("training_data.jsonl")
+
+@validate_intent(retries=2, collector=collector)
+def decline(event: str) -> ProfessionalDecline:
+    return call_my_llm(event)
+```
+
+Every time a retry succeeds after a failure, the collector appends the (rejected, accepted) pair. Export to OpenAI fine-tuning format in one call:
+
+```python
+from semantix.training.exporters import export_openai
+
+export_openai("training_data.jsonl", "finetune.jsonl")
+# Upload: openai api fine_tuning.jobs.create -t finetune.jsonl -m gpt-4o-mini
+```
+
+The fine-tuned model fails less. When it does fail, new pairs are captured. **Your guardrail becomes your training pipeline.**
+
+```
+Validate -> Fail -> Correct -> Capture -> Fine-tune -> Validate (fewer failures)
+    ^                                                       |
+    +-------------------------------------------------------+
+```
+
+**Try it:** `python examples/flywheel_demo.py` — runs the full loop locally with no API keys.
+
+---
+
 ## Zero-Latency Infrastructure (NEW in v0.1.5)
 
 ### Quantized Inference
@@ -424,6 +460,9 @@ class MyCustomJudge(Judge):
 | `SemanticStr` | Instructor shorthand — `SemanticStr["must be polite", 0.85]` |
 | `semantix_validator` | Pydantic AI adapter — `@agent.output_validator` compatible |
 | `SemanticValidator` | LangChain adapter — Runnable with `invoke`/`batch`/pipe support |
+| `TrainingCollector` | Captures correction pairs from retries to append-only JSONL |
+| `export_openai` | Converts training JSONL to OpenAI fine-tuning chat format |
+| `export_generic` | Copies/filters training JSONL with optional intent filter |
 
 ---
 
@@ -454,6 +493,10 @@ semantix/
 │   ├── instructor.py    # Instructor adapter (semantic_validator, SemanticStr)
 │   ├── pydantic_ai.py   # Pydantic AI adapter (semantix_validator)
 │   └── langchain.py     # LangChain adapter (SemanticValidator)
+├── training/
+│   ├── __init__.py      # Global collector management
+│   ├── collector.py     # TrainingCollector (append-only JSONL)
+│   └── exporters.py     # OpenAI & generic JSONL exporters
 └── mcp/
     └── server.py        # MCP server (verify_text_intent tool)
 ```

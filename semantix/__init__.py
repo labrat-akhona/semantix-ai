@@ -27,6 +27,7 @@ from semantix.judges.forensic import ForensicJudge
 from semantix.judges.llm import LLMJudge
 from semantix.judges.nli import NLIJudge
 from semantix.streaming import StreamCollector
+from semantix.testing import assert_semantic
 
 __all__ = [
     # Core
@@ -34,6 +35,7 @@ __all__ = [
     "SemanticIntentError",
     "validate_intent",
     "get_last_failure",
+    "assert_semantic",
     # Judges
     "Judge",
     "Verdict",

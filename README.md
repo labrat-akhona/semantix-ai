@@ -62,7 +62,7 @@ result = decline_invite("the company retreat")
 - **Local inference** — NLI model runs on CPU, no data leaves your machine
 - **~15ms per check** — negligible overhead on any LLM call
 - **Zero API cost** — no tokens burned for validation
-- **212 tests** — well-tested, MIT licensed
+- **248 tests** — well-tested, MIT licensed
 
 ---
 

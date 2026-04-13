@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "semantix-ai"
-version = "0.1.11"
+version = "0.1.12"
 description = "A Semantic Type System for AI outputs — validate intent, not just shape."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -86,6 +86,9 @@ dev = [
 docs = [
     "mkdocs-material>=9.0",
 ]
+
+[project.scripts]
+semantix = "semantix.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/labrat-akhona/semantix-ai"

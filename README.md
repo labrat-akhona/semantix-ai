@@ -8,6 +8,7 @@
   <a href="https://pypi.org/project/semantix-ai/"><img src="https://img.shields.io/pypi/pyversions/semantix-ai" alt="Python versions"></a>
   <a href="https://github.com/labrat-akhona/semantix-ai/blob/master/LICENSE"><img src="https://img.shields.io/github/license/labrat-akhona/semantix-ai" alt="License"></a>
   <a href="https://pypi.org/project/semantix-ai/"><img src="https://img.shields.io/pypi/dm/semantix-ai?color=green" alt="Downloads"></a>
+  <a href="https://labrat-akhona.github.io/semantix-ai/"><img src="https://img.shields.io/badge/docs-mkdocs-blue" alt="Docs"></a>
 </p>
 
 ---
@@ -163,6 +164,16 @@ refined = dspy.Refine(module=qa, N=3, reward_fn=semantic_reward(Polite))
 ```
 
 Install extras: `pip install "semantix-ai[instructor]"`, `"semantix-ai[pydantic-ai]"`, `"semantix-ai[langchain]"`, `"semantix-ai[guardrails]"`, `"semantix-ai[dspy]"`
+
+### GitHub Actions
+
+```yaml
+- uses: labrat-akhona/semantic-test-action@v1
+  with:
+    test-path: tests/
+```
+
+Posts a semantic test report as a PR comment. See [semantic-test-action](https://github.com/labrat-akhona/semantic-test-action).
 
 ---
 

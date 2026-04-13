@@ -26,6 +26,8 @@ def test_chatbot_is_polite():
 
 Runs locally. ~15ms. No API key. Works in pytest, unittest, or any test runner.
 
+**pytest plugin:** `pip install pytest-semantix` for fixtures, markers, and CI reporting. [See pytest-semantix](https://github.com/labrat-akhona/pytest-semantix).
+
 On failure:
 
 ```

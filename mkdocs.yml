@@ -1,0 +1,83 @@
+site_name: semantix-ai
+site_description: Validate what your LLM outputs mean, not just their shape.
+site_url: https://labrat-akhona.github.io/semantix-ai/
+repo_url: https://github.com/labrat-akhona/semantix-ai
+repo_name: labrat-akhona/semantix-ai
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - content.code.copy
+    - content.code.annotate
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - toc.follow
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Core Concepts:
+    - Intents: concepts/intents.md
+    - Composition: concepts/composition.md
+  - Testing:
+    - assert_semantic: testing/assert-semantic.md
+    - pytest-semantix Plugin: testing/pytest-plugin.md
+  - Integrations:
+    - Guardrails AI: integrations/guardrails.md
+    - Instructor: integrations/instructor.md
+    - Pydantic AI: integrations/pydantic-ai.md
+    - LangChain: integrations/langchain.md
+    - DSPy: integrations/dspy.md
+  - Judges: judges.md
+  - Training: training.md
+  - Advanced: advanced.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/labrat-akhona/semantix-ai
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/semantix-ai/

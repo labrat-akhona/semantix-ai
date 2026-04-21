@@ -164,3 +164,30 @@ Also supports:
 - --semantic-report for CI summaries
 - Negation (~MedicalAdvice) for compliance
 - Guardrails, LangChain, Instructor, Pydantic AI, DSPy integrations
+
+---
+
+## 2026-04 — DSPy benchmark
+
+### X / Twitter (1/2)
+> We ran semantix-ai as a DSPy reward function against Groq Llama 3.3 70B across 2 benchmark tasks.
+>
+> Headline: ~25× faster, $0 to run, comparable quality.
+>
+> Full benchmark + article: [DEV.TO LINK]
+
+### X / Twitter (2/2)
+> What this means: if you're iterating DSPy programs with BestOfN or Refine, your reward loop can be local, free, and 15ms per eval.
+>
+> [PR to stanfordnlp/dspy: LINK]
+
+### LinkedIn
+> Spent the last week benchmarking semantix-ai against LLM-judge reward functions inside DSPy. Two tasks — a custom customer-support QA and a 200-example HotpotQA subset. Four judges: semantix local NLI, Groq Llama 3.3 70B, Gemini 2.5 Flash (proxy ground truth), Gemini 2.5 Pro (verification slice).
+>
+> Full article: [DEV.TO LINK]
+> Reproducibility: [GITHUB LINK]
+> DSPy PR: [PR LINK]
+
+### Hacker News (Show HN)
+> Title: Show HN: Free, local DSPy reward function — benchmark vs. LLM-judge
+> Body: [BRIEF 2-PARAGRAPH SUMMARY + LINK TO DEV.TO]

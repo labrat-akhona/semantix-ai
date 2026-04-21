@@ -57,3 +57,116 @@ class SemantixJudge:
             cost_usd=0.0,
             paid_equivalent_usd=0.0,
         )
+
+
+import os
+import re
+
+import httpx
+
+_SYSTEM_PROMPT = (
+    "You are a strict semantic judge. Respond ONLY with a single number "
+    "between 0.0 and 1.0 representing the probability the given TEXT "
+    "fulfills the given INTENT. No other output."
+)
+
+_NUMBER_RE = re.compile(r"\b(0(?:\.\d+)?|1(?:\.0+)?|\.\d+)\b")
+
+# Paid-tier rates (Groq Llama 3.3 70B as of 2026-04): $0.59/M input, $0.79/M output.
+_GROQ_INPUT_PER_TOKEN_USD = 0.59 / 1_000_000
+_GROQ_OUTPUT_PER_TOKEN_USD = 0.79 / 1_000_000
+
+
+class GroqJudge:
+    name = "groq-llama-3.3-70b"
+
+    def __init__(
+        self,
+        *,
+        model: str = "llama-3.3-70b-versatile",
+        max_retries: int = 2,
+        timeout: float = 30.0,
+    ) -> None:
+        self._model = model
+        self._max_retries = max_retries
+        self._timeout = timeout
+        self._api_key = os.environ.get("GROQ_API_KEY")
+        if not self._api_key:
+            raise RuntimeError("GROQ_API_KEY not set")
+
+    def evaluate(self, text: str, intent: str) -> JudgeResult:
+        user = f"INTENT: {intent}\n\nTEXT: {text}"
+        body = {
+            "model": self._model,
+            "messages": [
+                {"role": "system", "content": _SYSTEM_PROMPT},
+                {"role": "user", "content": user},
+            ],
+            "temperature": 0,
+            "max_tokens": 10,
+        }
+        headers = {
+            "Authorization": f"Bearer {self._api_key}",
+            "Content-Type": "application/json",
+        }
+        url = "https://api.groq.com/openai/v1/chat/completions"
+
+        last_error: str | None = None
+        backoff = 1.0
+        for attempt in range(self._max_retries + 1):
+            start = time.perf_counter()
+            try:
+                resp = httpx.post(url, headers=headers, json=body, timeout=self._timeout)
+            except httpx.HTTPError as exc:
+                last_error = f"HTTPError: {exc}"
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+            latency_ms = (time.perf_counter() - start) * 1000
+
+            if resp.status_code == 429:
+                retry_after = float(resp.headers.get("Retry-After", backoff))
+                last_error = "429"
+                time.sleep(retry_after)
+                backoff *= 2
+                continue
+            if resp.status_code != 200:
+                last_error = f"HTTP {resp.status_code}: {resp.text[:200]}"
+                time.sleep(backoff)
+                backoff *= 2
+                continue
+
+            data = resp.json()
+            content = data["choices"][0]["message"]["content"].strip()
+            match = _NUMBER_RE.search(content)
+            if not match:
+                return JudgeResult(
+                    score=float("nan"),
+                    latency_ms=latency_ms,
+                    cost_usd=0.0,
+                    paid_equivalent_usd=_cost(data.get("usage", {})),
+                    raw=content,
+                    error=f"non-numeric response: {content!r}",
+                )
+            score = max(0.0, min(1.0, float(match.group(1))))
+            return JudgeResult(
+                score=score,
+                latency_ms=latency_ms,
+                cost_usd=0.0,
+                paid_equivalent_usd=_cost(data.get("usage", {})),
+                raw=content,
+            )
+
+        return JudgeResult(
+            score=float("nan"),
+            latency_ms=0.0,
+            cost_usd=0.0,
+            paid_equivalent_usd=0.0,
+            error=last_error or "exhausted retries",
+        )
+
+
+def _cost(usage: dict) -> float:
+    prompt = usage.get("prompt_tokens", 0)
+    completion = usage.get("completion_tokens", 0)
+    return prompt * _GROQ_INPUT_PER_TOKEN_USD + completion * _GROQ_OUTPUT_PER_TOKEN_USD

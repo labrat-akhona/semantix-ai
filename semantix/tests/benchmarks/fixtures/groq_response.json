@@ -1,0 +1,18 @@
+{
+  "id": "chatcmpl-test",
+  "object": "chat.completion",
+  "created": 1776758155,
+  "model": "llama-3.3-70b-versatile",
+  "choices": [
+    {
+      "index": 0,
+      "message": {"role": "assistant", "content": "0.9"},
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 115,
+    "completion_tokens": 4,
+    "total_tokens": 119
+  }
+}

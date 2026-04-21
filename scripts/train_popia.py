@@ -18,6 +18,7 @@ from pathlib import Path
 
 BASE_MODEL = "cross-encoder/nli-MiniLM2-L6-H768"
 TRAIN_PATH = Path("data/popia_train.jsonl")
+SEEDS_PATH = Path("data/popia_seeds.jsonl")
 EVAL_PATH = Path("data/popia_eval.jsonl")
 EVAL_HASH_PATH = Path("scripts/_popia_eval_hash.txt")
 OUT_DIR = Path("out/nli-popia-v1")
@@ -63,11 +64,16 @@ def main() -> int:
     from optimum.onnxruntime import ORTModelForSequenceClassification, ORTQuantizer
     from optimum.onnxruntime.configuration import AutoQuantizationConfig
 
-    if not TRAIN_PATH.exists():
-        sys.exit(f"missing {TRAIN_PATH} -- run Task 6 first")
+    if TRAIN_PATH.exists():
+        source = TRAIN_PATH
+    elif SEEDS_PATH.exists():
+        source = SEEDS_PATH
+        print(f"no {TRAIN_PATH} -- falling back to seeds-only training from {SEEDS_PATH}")
+    else:
+        sys.exit(f"missing both {TRAIN_PATH} and {SEEDS_PATH}")
 
-    rows = [json.loads(l) for l in TRAIN_PATH.read_text().splitlines() if l.strip()]
-    print(f"loaded {len(rows)} training rows")
+    rows = [json.loads(l) for l in source.read_text().splitlines() if l.strip()]
+    print(f"loaded {len(rows)} training rows from {source}")
 
     split_idx = int(len(rows) * 0.9)
     train_rows, dev_rows = rows[:split_idx], rows[split_idx:]

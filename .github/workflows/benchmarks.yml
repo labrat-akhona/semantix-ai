@@ -1,0 +1,28 @@
+name: benchmarks-smoke
+
+on:
+  push:
+    paths:
+      - 'benchmarks/**'
+      - 'semantix/tests/benchmarks/**'
+      - '.github/workflows/benchmarks.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/**'
+      - 'semantix/tests/benchmarks/**'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          pip install -e ".[all]"
+          pip install -r benchmarks/requirements.txt
+      - name: Run benchmark unit tests (mocked HTTP only)
+        run: |
+          pytest semantix/tests/benchmarks/ -v

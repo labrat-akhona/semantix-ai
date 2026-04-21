@@ -33,22 +33,28 @@ def run_optimization(
     program_fn,            # Callable: (input_dict, reward_fn) -> final_text
     reward_judges: list[Judge],
     final_judge: Judge,
+    on_example_done=None,  # Optional callback(ex_rows: list[Row]) after each example completes
 ) -> list[Row]:
     """Run BestOfN via `program_fn` for each reward judge; final output scored by final_judge.
 
     program_fn receives an example's input dict and a reward_fn(output) -> float,
     and returns the selected final text. This indirection keeps DSPy out of the
     runner's import surface so the module stays testable without DSPy installed.
+
+    If ``on_example_done`` is provided, it is invoked with the rows produced for each
+    example after that example completes — enabling incremental disk writes so a
+    mid-flight crash only loses the current example's work.
     """
     rows: list[Row] = []
     for ex in examples:
+        ex_rows: list[Row] = []
         for reward_judge in reward_judges:
             def reward_fn(output: str, *, _judge=reward_judge, _intent=ex.intent) -> float:
                 score = _judge.evaluate(output, _intent).score
                 return 0.0 if score != score else float(score)  # NaN-safe for DSPy
             final_text = program_fn(ex.input or {}, reward_fn)
             result = final_judge.evaluate(final_text, ex.intent)
-            rows.append(
+            ex_rows.append(
                 _row(
                     "optimization",
                     Example(example_id=ex.example_id, text=final_text, intent=ex.intent),
@@ -56,6 +62,9 @@ def run_optimization(
                     result,
                 )
             )
+        rows.extend(ex_rows)
+        if on_example_done is not None:
+            on_example_done(ex_rows)
     return rows
 
 

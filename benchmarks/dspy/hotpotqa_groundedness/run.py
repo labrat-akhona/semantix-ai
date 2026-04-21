@@ -83,13 +83,17 @@ def main() -> None:
         return pred.answer
 
     opt_rows: list = []
+    def _on_example_done(ex_rows):
+        opt_rows.extend(ex_rows)
+        write_csv(agreement_rows + opt_rows, RESULTS / "raw.csv")
     try:
-        opt_rows = run_optimization(
+        run_optimization(
             generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
+            on_example_done=_on_example_done,
         )
         print(f"[4/4] optimization: {len(opt_rows)} rows", flush=True)
     except Exception as exc:  # noqa: BLE001
-        print(f"[4/4] optimization FAILED: {exc}", flush=True)
+        print(f"[4/4] optimization FAILED at {len(opt_rows)} rows: {exc}", flush=True)
 
     rows = agreement_rows + opt_rows
     write_csv(rows, RESULTS / "raw.csv")

@@ -54,6 +54,7 @@ nav:
   - Judges: judges.md
   - Training: training.md
   - Advanced: advanced.md
+  - Where semantix fits: competitive.md
 
 plugins:
   - search

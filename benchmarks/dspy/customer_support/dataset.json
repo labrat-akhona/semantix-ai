@@ -1,0 +1,1202 @@
+[
+  {
+    "example_id": "polite-066",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-053",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-034",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-060",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-044",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-054",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-013",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-002",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-064",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-044",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-002",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-036",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-061",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-009",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-024",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-033",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-045",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-063",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-030",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-003",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-025",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-015",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-042",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-059",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-052",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-028",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-047",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-043",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-005",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-061",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-037",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-055",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-012",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-036",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-019",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-002",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-061",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-062",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-032",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-038",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-037",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-060",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-010",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-010",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-026",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-052",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-058",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-039",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-006",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-046",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-038",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-028",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-036",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-011",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-043",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-000",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-027",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-059",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-016",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-013",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-035",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-038",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-022",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-042",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-001",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-011",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-048",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-019",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-014",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-043",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-012",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-045",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-065",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-017",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-031",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-046",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-037",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-012",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-054",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-056",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-018",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-051",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-042",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-066",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-008",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-033",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-018",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-006",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-056",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-041",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-063",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-016",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-014",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-033",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-021",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-005",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-027",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-050",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-045",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-051",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-040",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-004",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-029",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-049",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-032",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-031",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-064",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-057",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-065",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-000",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-044",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-053",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-034",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-048",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-035",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-004",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-015",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-065",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-060",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-021",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-014",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-010",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-009",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-015",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-030",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-052",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-022",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-001",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-053",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-023",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-027",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-041",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-026",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-049",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-066",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-023",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-025",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-046",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-013",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-007",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-058",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-018",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-017",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-049",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-025",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-008",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-007",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-020",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-029",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-031",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-003",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-050",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-011",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-000",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-021",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "on_topic-024",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-024",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-030",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-048",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-057",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-019",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-047",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-039",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-034",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-020",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-051",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-040",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-001",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-004",
+    "customer_message": "I need a refund for the duplicate charge on my card.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-016",
+    "customer_message": "Will you give me a full refund plus a coupon for my trouble?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-047",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-056",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-040",
+    "customer_message": "What's the return policy for a laptop I bought last week?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-058",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-032",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-050",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-009",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-064",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-020",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "on_topic-062",
+    "customer_message": "How do I cancel my subscription?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "polite-059",
+    "customer_message": "The delivery driver left my package in the rain.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-055",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-023",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-007",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-008",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-041",
+    "customer_message": "Can I change the delivery address on order #12345?",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-017",
+    "customer_message": "Can you ship this overnight for free?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-022",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-005",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-063",
+    "customer_message": "I'd like to cancel my order after it's already been delivered.",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "declines_without_being_rude-039",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-026",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "declines_without_being_rude-054",
+    "customer_message": "Can you waive the restocking fee?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-035",
+    "customer_message": "My package hasn't arrived and I'm very frustrated.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-057",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-062",
+    "customer_message": "This is the third time your service has failed.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "on_topic-003",
+    "customer_message": "The charger I received doesn't match my device.",
+    "intent_name": "on_topic",
+    "intent_description": "The response must directly address the customer's specific question."
+  },
+  {
+    "example_id": "declines_without_being_rude-055",
+    "customer_message": "Can I return this item even though it's past the 30-day window?",
+    "intent_name": "declines_without_being_rude",
+    "intent_description": "The response must decline the request without being rude or dismissive."
+  },
+  {
+    "example_id": "polite-006",
+    "customer_message": "I've been on hold for 30 minutes and still no answer.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  },
+  {
+    "example_id": "polite-028",
+    "customer_message": "Your app crashed in the middle of my order.",
+    "intent_name": "polite",
+    "intent_description": "The response must be polite and professional."
+  }
+]

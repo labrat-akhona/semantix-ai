@@ -43,8 +43,9 @@ def run_optimization(
     rows: list[Row] = []
     for ex in examples:
         for reward_judge in reward_judges:
-            def reward_fn(output: str, _judge=reward_judge, _intent=ex.intent) -> float:
-                return _judge.evaluate(output, _intent).score
+            def reward_fn(output: str, *, _judge=reward_judge, _intent=ex.intent) -> float:
+                score = _judge.evaluate(output, _intent).score
+                return 0.0 if score != score else float(score)  # NaN-safe for DSPy
             final_text = program_fn(ex.input or {}, reward_fn)
             result = final_judge.evaluate(final_text, ex.intent)
             rows.append(

@@ -21,6 +21,9 @@ from benchmarks.dspy.hotpotqa_groundedness.task import generate_all, load_exampl
 HERE = Path(__file__).parent
 RESULTS = HERE / "results"
 
+N_EXAMPLES = 50
+N_PRO_SLICE = 25
+
 
 def _dspy_lm_from_env() -> dspy.LM:
     api_key = os.environ["GROQ_API_KEY"]
@@ -52,12 +55,12 @@ def main() -> None:
     RESULTS.mkdir(exist_ok=True)
     cache = JudgeCache(Path(__file__).parents[2] / ".cache.sqlite")
 
-    examples = load_examples()
-    print(f"[1/4] loaded {len(examples)} HotpotQA examples")
+    examples = load_examples()[:N_EXAMPLES]
+    print(f"[1/4] loaded {len(examples)} HotpotQA examples", flush=True)
 
     program = make_program()
     generated = generate_all(examples, program)
-    print(f"[2/4] generated {len(generated)} answers")
+    print(f"[2/4] generated {len(generated)} answers", flush=True)
 
     semantix = _cached(SemantixJudge(), cache)
     groq = _cached(GroqJudge(), cache)
@@ -65,18 +68,28 @@ def main() -> None:
     pro = _cached(GeminiProJudge(), cache)
 
     agreement_rows = run_agreement(generated, [semantix, groq, flash])
-    agreement_rows.extend(run_agreement(generated[:25], [pro]))
-    print(f"[3/4] agreement: {len(agreement_rows)} rows")
+    agreement_rows.extend(run_agreement(generated[:N_PRO_SLICE], [pro]))
+    print(f"[3/4] agreement: {len(agreement_rows)} rows", flush=True)
+
+    # Checkpoint agreement before optimization
+    write_csv(agreement_rows, RESULTS / "raw.csv")
+    print(f"[3.5/4] checkpointed {len(agreement_rows)} agreement rows", flush=True)
 
     def program_fn(input_dict, reward_fn):
-        best = dspy.BestOfN(module=program, N=5, reward_fn=reward_fn, threshold=1.0)
+        def adapted(_kwargs, pred):
+            return reward_fn(pred.answer)
+        best = dspy.BestOfN(module=program, N=5, reward_fn=adapted, threshold=1.0)
         pred = best(**input_dict)
         return pred.answer
 
-    opt_rows = run_optimization(
-        generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
-    )
-    print(f"[4/4] optimization: {len(opt_rows)} rows")
+    opt_rows: list = []
+    try:
+        opt_rows = run_optimization(
+            generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
+        )
+        print(f"[4/4] optimization: {len(opt_rows)} rows", flush=True)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[4/4] optimization FAILED: {exc}", flush=True)
 
     rows = agreement_rows + opt_rows
     write_csv(rows, RESULTS / "raw.csv")

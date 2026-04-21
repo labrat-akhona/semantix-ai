@@ -21,6 +21,9 @@ from benchmarks.dspy.customer_support.task import generate_all, load_examples, m
 HERE = Path(__file__).parent
 RESULTS = HERE / "results"
 
+N_EXAMPLES = 50         # Full dataset is 200; 50 gives tight CIs on free-tier Flash quota
+N_PRO_SLICE = 25        # Gemini Pro verification slice (25 RPD limit)
+
 
 def _dspy_lm_from_env() -> dspy.LM:
     """DSPy LM configured to use Groq as the generator (free tier)."""
@@ -56,12 +59,12 @@ def main() -> None:
     RESULTS.mkdir(exist_ok=True)
     cache = JudgeCache(Path(__file__).parents[2] / ".cache.sqlite")
 
-    examples = load_examples()
-    print(f"[1/4] loaded {len(examples)} examples")
+    examples = load_examples()[:N_EXAMPLES]
+    print(f"[1/4] loaded {len(examples)} examples", flush=True)
 
     program = make_program()
     generated = generate_all(examples, program)
-    print(f"[2/4] generated {len(generated)} responses")
+    print(f"[2/4] generated {len(generated)} responses", flush=True)
 
     semantix = _cached(SemantixJudge(), cache)
     groq = _cached(GroqJudge(), cache)
@@ -69,21 +72,31 @@ def main() -> None:
     pro = _cached(GeminiProJudge(), cache)
 
     agreement_rows = run_agreement(generated, [semantix, groq, flash])
-    print(f"[3/4] agreement: {len(agreement_rows)} rows")
+    print(f"[3/4] agreement: {len(agreement_rows)} rows", flush=True)
 
-    # Pro verification slice: first 25 examples, Pro judge only
-    slice_rows = run_agreement(generated[:25], [pro])
+    # Pro verification slice: first N_PRO_SLICE examples, Pro judge only
+    slice_rows = run_agreement(generated[:N_PRO_SLICE], [pro])
     agreement_rows.extend(slice_rows)
 
+    # Checkpoint: write agreement results immediately so we don't lose them if optimization crashes
+    write_csv(agreement_rows, RESULTS / "raw.csv")
+    print(f"[3.5/4] checkpointed {len(agreement_rows)} agreement rows", flush=True)
+
     def program_fn(input_dict, reward_fn):
-        best = dspy.BestOfN(module=program, N=5, reward_fn=reward_fn, threshold=1.0)
+        def adapted(_kwargs, pred):
+            return reward_fn(pred.response)
+        best = dspy.BestOfN(module=program, N=5, reward_fn=adapted, threshold=1.0)
         pred = best(**input_dict)
         return pred.response
 
-    opt_rows = run_optimization(
-        generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
-    )
-    print(f"[4/4] optimization: {len(opt_rows)} rows")
+    opt_rows: list = []
+    try:
+        opt_rows = run_optimization(
+            generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
+        )
+        print(f"[4/4] optimization: {len(opt_rows)} rows", flush=True)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[4/4] optimization FAILED: {exc}", flush=True)
 
     rows = agreement_rows + opt_rows
     write_csv(rows, RESULTS / "raw.csv")

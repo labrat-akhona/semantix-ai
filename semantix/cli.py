@@ -15,6 +15,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 import time
@@ -175,7 +176,69 @@ def _build_parser() -> argparse.ArgumentParser:
         "--no-color", action="store_true", help="Disable ANSI colour output",
     )
 
+    eval_parser = sub.add_parser("eval", help="Run release-gate evaluations.")
+    eval_sub = eval_parser.add_subparsers(dest="eval_target", required=True)
+    popia_eval = eval_sub.add_parser("popia", help="Evaluate POPIAJudge vs stock NLI.")
+    popia_eval.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
+
     return parser
+
+
+def _download_popia_eval():
+    """Download eval.jsonl from HF and return the local cached path."""
+    from huggingface_hub import hf_hub_download
+    return hf_hub_download(
+        repo_id="labrat-aiko/nli-popia-v1",
+        filename="eval.jsonl",
+    )
+
+
+def _load_popia_judges():
+    """Instantiate POPIAJudge and stock QuantizedNLIJudge."""
+    from semantix.judges.popia import POPIAJudge
+    from semantix.judges.quantized_nli import QuantizedNLIJudge
+    return POPIAJudge(), QuantizedNLIJudge()
+
+
+def evaluate_popia(*args, **kwargs):
+    """Indirection so tests can monkeypatch semantix.cli.evaluate_popia."""
+    from semantix.eval.popia import evaluate_popia as _impl
+    return _impl(*args, **kwargs)
+
+
+def _run_eval_popia(args) -> int:
+    from dataclasses import asdict
+
+    try:
+        eval_path = _download_popia_eval()
+    except Exception as e:
+        print(f"failed to download eval set: {e}", file=sys.stderr)
+        return 2
+
+    popia, stock = _load_popia_judges()
+    report = evaluate_popia(eval_path, popia, stock)
+
+    if args.json:
+        out = asdict(report)
+        out["per_clause"] = {k: list(v) for k, v in out["per_clause"].items()}
+        print(json.dumps(out, indent=2))
+    else:
+        print(f"\n                    stock    POPIA    Delta")
+        print(
+            f"Accuracy           {report.stock_accuracy:.2f}     "
+            f"{report.popia_accuracy:.2f}     "
+            f"{report.popia_accuracy - report.stock_accuracy:+.2f}"
+        )
+        print(
+            f"F1 (macro)         {report.stock_f1_macro:.2f}     "
+            f"{report.popia_f1_macro:.2f}     {report.delta_f1:+.2f}"
+        )
+        for clause, (stock_f, popia_f) in report.per_clause.items():
+            print(f"  {clause:<30} {stock_f:.2f}     {popia_f:.2f}     {popia_f - stock_f:+.2f}")
+        verdict = "PASS" if report.release_gate_passed else "FAIL"
+        print(f"\nRelease gate (>= 0.10 F1 delta, no per-clause regression): {verdict}")
+
+    return 0 if report.release_gate_passed else 1
 
 
 def _run_check(args) -> int:
@@ -483,6 +546,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "demo":
         return _run_demo(args)
+
+    if args.command == "eval":
+        if args.eval_target == "popia":
+            return _run_eval_popia(args)
 
     return 0
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "semantix-ai"
-version = "0.1.13"
+version = "0.2.0"
 description = "A Semantic Type System for AI outputs — validate intent, not just shape."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -49,6 +49,14 @@ embeddings = ["sentence-transformers>=2.2"]
 nli = ["sentence-transformers>=2.2"]
 mcp = ["mcp[cli]>=1.0"]
 turbo = ["onnxruntime>=1.16", "tokenizers>=0.15", "huggingface-hub>=0.20"]
+popia = ["semantix-ai[turbo]"]
+train = [
+    "transformers>=4.40",
+    "torch>=2.0",
+    "datasets>=2.14",
+    "accelerate>=0.30",
+    "optimum[onnxruntime]>=1.20",
+]
 instructor = ["instructor>=1.0"]
 pydantic-ai = ["pydantic-ai>=0.1"]
 langchain = ["langchain-core>=0.3"]
@@ -113,3 +121,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+markers = [
+    "integration: tests that require network access and real HF downloads (deselect with '-m \"not integration\"')",
+]
+addopts = "-m 'not integration'"

@@ -1,0 +1,47 @@
+name: POPIA release gate
+
+on:
+  push:
+    tags:
+      - 'v*-popia'
+    paths:
+      - 'semantix/judges/popia.py'
+      - 'semantix/presets/popia.py'
+      - 'semantix/eval/popia.py'
+  pull_request:
+    paths:
+      - 'semantix/judges/popia.py'
+      - 'semantix/presets/popia.py'
+      - 'semantix/eval/popia.py'
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache HuggingFace hub
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: hf-${{ runner.os }}-nli-popia-v1
+
+      - name: Install
+        run: pip install -e ".[popia]"
+
+      - name: Run release gate
+        run: |
+          python -m semantix.cli eval popia --json | tee report.json
+          python -c "import json; r=json.load(open('report.json')); import sys; sys.exit(0 if r['release_gate_passed'] else 1)"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: popia-eval-report
+          path: report.json

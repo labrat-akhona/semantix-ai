@@ -62,5 +62,13 @@ try:
 except ImportError:
     pass
 
-__version__ = "0.1.11"
+# POPIAJudge shares the quantized-NLI deps; available when [popia] extras installed
+try:
+    from semantix.judges.popia import POPIAJudge  # noqa: F401
+
+    __all__.append("POPIAJudge")
+except ImportError:
+    pass
+
+__version__ = "0.2.0"
 __author__ = "Akhona Eland"

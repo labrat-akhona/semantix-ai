@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.2.0 — The POPIA Release (2026-04-21)
+
+### Added
+- **POPIAJudge** (`semantix/judges/popia.py`) — NLI judge fine-tuned on South
+  Africa's Protection of Personal Information Act. Loads the quantized ONNX
+  model `labrat-aiko/nli-popia-v1` from HuggingFace Hub. 7 canonical POPIA
+  clauses: consent, minimality, security safeguards, breach notification,
+  cross-border transfers, general processing, data subject rights. Measured
+  **macro F1 0.813** on a pinned 150-pair holdout (vs 0.517 stock), **+29.6pp**
+  — every clause improved, no regressions.
+- **POPIA presets** (`semantix/presets/popia.py`) — 7 pre-wired `Intent`
+  instances, each pointing at `POPIAJudge` and the clause-specific threshold.
+  Import as `from semantix.presets.popia import POPIA_CONSENT, ...`.
+- **`semantix.eval` package** (`semantix/eval/popia.py`) — `evaluate_popia()`
+  harness emits an `EvalReport` with per-clause F1, macro F1 delta, and a
+  release gate (`delta >= 0.10` AND no per-clause regression).
+- **`semantix eval popia` CLI subcommand** — Runs the release gate against
+  the HF-bundled eval set and exits non-zero on failure. Used by CI to block
+  regressions in the model artifact.
+- **GitHub Actions release-gate workflow** (`.github/workflows/popia-gate.yml`)
+  enforcing the 10pp macro-F1 delta on every push to `master`.
+- **Training script** (`scripts/train_popia.py`) — Reproducible fine-tune
+  from `cross-encoder/nli-MiniLM2-L6-H768` plus ONNX export with four CPU
+  variants (AVX2, AVX512, AVX512-VNNI, ARM64). Requires `pip install
+  'semantix-ai[train]'`.
+- **`[popia]` and `[train]` extras** in `pyproject.toml` — Install the POPIA
+  runtime with `pip install 'semantix-ai[popia]'` or training deps with
+  `[train]`.
+
+### Fixed
+- **QuantizedNLIJudge label-order bug** — Since v0.1.5 the judge was reading
+  `probs[2]` (neutral) as the entailment score instead of `probs[1]`. Scores
+  now match the base model's `config.id2label` (`{0: contradiction, 1:
+  entailment, 2: neutral}`). All four ONNX variants are bit-identical to
+  before; only the Python-side label index changed.
+
+### Notes
+- POPIAJudge is the first compliance-specific model in the semantix
+  ecosystem. The same fine-tune recipe (hand-authored seeds + paraphrases +
+  release gate) is reusable for other regulatory frameworks (GDPR, HIPAA,
+  EU AI Act clause libraries).
+
 ## v0.1.13 — 2026-04-21
 
 ### Added

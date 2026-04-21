@@ -188,7 +188,7 @@ class _GeminiJudgeBase:
     _rate_in: float = 0.0
     _rate_out: float = 0.0
 
-    def __init__(self, *, max_retries: int = 2, timeout: float = 60.0) -> None:
+    def __init__(self, *, max_retries: int = 6, timeout: float = 60.0) -> None:
         self._max_retries = max_retries
         self._timeout = timeout
         self._api_key = os.environ.get("GEMINI_API_KEY")
@@ -216,7 +216,7 @@ class _GeminiJudgeBase:
         )
 
         last_error: str | None = None
-        backoff = 1.0
+        backoff = 4.0
         for attempt in range(self._max_retries + 1):
             start = time.perf_counter()
             try:
@@ -224,20 +224,20 @@ class _GeminiJudgeBase:
             except httpx.HTTPError as exc:
                 last_error = f"HTTPError: {exc}"
                 time.sleep(backoff)
-                backoff *= 2
+                backoff = min(backoff * 2, 60.0)
                 continue
             latency_ms = (time.perf_counter() - start) * 1000
 
             if resp.status_code == 429:
                 retry_after = float(resp.headers.get("Retry-After", backoff))
                 last_error = "429"
-                time.sleep(retry_after)
-                backoff *= 2
+                time.sleep(max(retry_after, backoff))
+                backoff = min(backoff * 2, 60.0)
                 continue
             if resp.status_code != 200:
                 last_error = f"HTTP {resp.status_code}: {resp.text[:200]}"
                 time.sleep(backoff)
-                backoff *= 2
+                backoff = min(backoff * 2, 60.0)
                 continue
 
             data = resp.json()

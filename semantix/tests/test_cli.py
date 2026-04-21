@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from semantix.cli import _build_parser, _resolve_threshold, _run_check, main
+from semantix.cli import _build_parser, _percentile, _resolve_threshold, _run_check, _run_prove, main
 
 # ---------------------------------------------------------------------------
 # _resolve_threshold
@@ -171,6 +171,107 @@ class TestMain:
 # ---------------------------------------------------------------------------
 # _resolve_judge
 # ---------------------------------------------------------------------------
+
+class TestPercentile:
+    def test_empty_returns_zero(self):
+        assert _percentile([], 50) == 0.0
+
+    def test_single_value(self):
+        assert _percentile([5.0], 99) == 5.0
+
+    def test_interpolation(self):
+        # p50 of [0, 10] is 5.0
+        assert _percentile([0.0, 10.0], 50) == 5.0
+
+    def test_p99_of_uniform(self):
+        vals = sorted(float(x) for x in range(1, 101))
+        # p99 is near 99.0
+        assert abs(_percentile(vals, 99) - 99.01) < 0.1
+
+
+class TestRunProve:
+    def _make_args(self, **overrides):
+        defaults = {
+            "text": "hello",
+            "intent": "greeting",
+            "n": 10,
+            "threshold": None,
+            "judge": None,
+            "no_color": True,  # tests expect plain output
+        }
+        defaults.update(overrides)
+        return MagicMock(**defaults)
+
+    @patch("semantix.cli._resolve_judge")
+    def test_deterministic_returns_zero(self, mock_resolve, capsys):
+        from semantix.judges import Verdict
+
+        judge = MagicMock()
+        judge.recommended_threshold = None
+        judge.evaluate.return_value = Verdict(passed=True, score=0.87654, reason=None)
+        mock_resolve.return_value = judge
+
+        code = _run_prove(self._make_args(n=25))
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "DETERMINISM VERIFIED" in out
+        assert "25/25" in out
+        assert "0.87654" in out
+
+    @patch("semantix.cli._resolve_judge")
+    def test_non_deterministic_returns_one(self, mock_resolve, capsys):
+        from semantix.judges import Verdict
+
+        judge = MagicMock()
+        judge.recommended_threshold = None
+        # Alternate between two scores to force non-determinism.
+        judge.evaluate.side_effect = [
+            Verdict(passed=True, score=0.90, reason=None),
+            Verdict(passed=True, score=0.91, reason=None),
+        ] * 5
+        mock_resolve.return_value = judge
+
+        code = _run_prove(self._make_args(n=10))
+        assert code == 1
+        out = capsys.readouterr().out
+        assert "NON-DETERMINISTIC" in out
+        assert "2 distinct scores" in out
+
+    @patch("semantix.cli._resolve_judge")
+    def test_forwards_threshold(self, mock_resolve):
+        from semantix.judges import Verdict
+
+        judge = MagicMock()
+        judge.recommended_threshold = None
+        judge.evaluate.return_value = Verdict(passed=True, score=0.9, reason=None)
+        mock_resolve.return_value = judge
+
+        _run_prove(self._make_args(n=3, threshold=0.7))
+        # Each of the 3 calls should use threshold=0.7.
+        for call in judge.evaluate.call_args_list:
+            assert call.kwargs.get("threshold") == 0.7
+
+    def test_parser_prove_defaults(self):
+        parser = _build_parser()
+        args = parser.parse_args(["prove"])
+        assert args.command == "prove"
+        assert args.n == 100
+        assert args.text  # has a default
+        assert args.intent  # has a default
+
+    def test_parser_prove_custom(self):
+        parser = _build_parser()
+        args = parser.parse_args([
+            "prove", "--text", "x", "--intent", "y", "--n", "5",
+            "--judge", "nli", "--threshold", "0.5", "--no-color",
+        ])
+        assert args.text == "x"
+        assert args.intent == "y"
+        assert args.n == 5
+        assert args.judge == "nli"
+        assert args.threshold == 0.5
+        assert args.no_color is True
+
 
 class TestResolveJudge:
     @patch("semantix.cli._default_judge")

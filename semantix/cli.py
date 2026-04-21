@@ -188,7 +188,7 @@ def _download_popia_eval():
     """Download eval.jsonl from HF and return the local cached path."""
     from huggingface_hub import hf_hub_download
     return hf_hub_download(
-        repo_id="labrat-akhona/nli-popia-v1",
+        repo_id="labrat-aiko/nli-popia-v1",
         filename="eval.jsonl",
     )
 

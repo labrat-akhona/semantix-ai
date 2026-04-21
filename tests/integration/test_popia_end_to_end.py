@@ -1,7 +1,7 @@
 """End-to-end integration test: download real POPIAJudge and validate semantics.
 
 This test:
-  - downloads the real labrat-akhona/nli-popia-v1 model from HuggingFace
+  - downloads the real labrat-aiko/nli-popia-v1 model from HuggingFace
   - runs 3 POPIA presets against hand-chosen outputs
   - verifies verdicts match the expected POPIA semantics
 

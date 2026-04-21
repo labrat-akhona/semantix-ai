@@ -31,7 +31,7 @@ def main() -> int:
 
     if args.use_hf:
         from huggingface_hub import hf_hub_download
-        eval_path = hf_hub_download(repo_id="labrat-akhona/nli-popia-v1", filename="eval.jsonl")
+        eval_path = hf_hub_download(repo_id="labrat-aiko/nli-popia-v1", filename="eval.jsonl")
     else:
         if not LOCAL_EVAL.exists():
             print(f"missing {LOCAL_EVAL}", file=sys.stderr)

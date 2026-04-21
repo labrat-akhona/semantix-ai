@@ -47,7 +47,7 @@ def mocked_onnx(monkeypatch):
 
 def test_repo_id_is_popia(mocked_onnx):
     from semantix.judges.popia import POPIAJudge
-    assert POPIAJudge._REPO_ID == "labrat-akhona/nli-popia-v1"
+    assert POPIAJudge._REPO_ID == "labrat-aiko/nli-popia-v1"
 
 
 def test_recommended_threshold_is_pinned(mocked_onnx):

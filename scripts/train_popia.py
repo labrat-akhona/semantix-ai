@@ -157,7 +157,7 @@ def main() -> int:
     shutil.copy(str(EVAL_PATH), str(OUT_DIR / "eval.jsonl"))
     print(f"bundled eval set -> {OUT_DIR / 'eval.jsonl'}")
 
-    print(f"\nDONE. Upload {OUT_DIR} to HuggingFace as labrat-akhona/nli-popia-v1")
+    print(f"\nDONE. Upload {OUT_DIR} to HuggingFace as labrat-aiko/nli-popia-v1")
     return 0
 
 

@@ -1,6 +1,6 @@
 """POPIA-fine-tuned NLI judge.
 
-Loads the ``labrat-akhona/nli-popia-v1`` quantized ONNX model from
+Loads the ``labrat-aiko/nli-popia-v1`` quantized ONNX model from
 HuggingFace. Inherits inference, CPU variant detection, and caching logic
 from :class:`semantix.judges.quantized_nli.QuantizedNLIJudge`; this subclass
 overrides the model identity and pins a different recommended threshold.
@@ -19,7 +19,7 @@ from semantix.judges.quantized_nli import QuantizedNLIJudge
 class POPIAJudge(QuantizedNLIJudge):
     """Semantic judge fine-tuned on POPIA (Protection of Personal Information Act)."""
 
-    _REPO_ID: ClassVar[str] = "labrat-akhona/nli-popia-v1"
+    _REPO_ID: ClassVar[str] = "labrat-aiko/nli-popia-v1"
     recommended_threshold: ClassVar[float | None] = 0.75
 
     def __init__(self, model_variant: str | None = None) -> None:

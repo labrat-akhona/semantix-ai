@@ -163,6 +163,8 @@ qa = dspy.ChainOfThought("question -> answer")
 refined = dspy.Refine(module=qa, N=3, reward_fn=semantic_reward(Polite))
 ```
 
+`semantic_reward` / `semantic_metric` also plug into `dspy.BestOfN`, `dspy.Evaluate`, and MIPROv2 — local, no API calls, ~15 ms per eval. See [`benchmarks/`](benchmarks/) for reproducible comparisons against LLM-judge reward functions.
+
 Install extras: `pip install "semantix-ai[instructor]"`, `"semantix-ai[pydantic-ai]"`, `"semantix-ai[langchain]"`, `"semantix-ai[guardrails]"`, `"semantix-ai[dspy]"`
 
 ### GitHub Actions

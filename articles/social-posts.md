@@ -190,4 +190,11 @@ Also supports:
 
 ### Hacker News (Show HN)
 > Title: Show HN: Free, local DSPy reward function — benchmark vs. LLM-judge
-> Body: [BRIEF 2-PARAGRAPH SUMMARY + LINK TO DEV.TO]
+>
+> Body:
+> DSPy's `BestOfN` and `Refine` need a `reward_fn` that scores candidates 0–1. Almost everyone wires up an LLM — cheap per call, but 300–1000 ms and a few cents per optimization run. If you're iterating, that's a real tax.
+>
+> `semantix-ai` ships a drop-in reward function powered by a local quantized NLI model: ~15 ms on CPU, zero API cost. I benchmarked it against Groq Llama 3.3 70B as the reward judge across two tasks (a synthetic customer-support QA set and a 200-example HotpotQA subset), using Gemini 2.5 Flash as proxy-ground-truth and Gemini 2.5 Pro as a verification slice. Reward-agreement (Pearson r vs. Flash), optimization-impact (paired BestOfN win-rate), latency, and cost are all reported. Full code, datasets, raw CSVs, and notebooks in the repo — free-tier APIs only, fully reproducible.
+>
+> Dev.to: [DEV.TO LINK]
+> GitHub: https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks

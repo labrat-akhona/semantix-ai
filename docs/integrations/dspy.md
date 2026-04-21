@@ -99,6 +99,10 @@ Same parameters as `semantic_reward`. The returned function has the signature `m
 
 The reward/metric function extracts text from the prediction's specified field (or the last field by default), evaluates it against the intent using a local NLI judge, and returns the entailment score as a float between 0.0 and 1.0.
 
+## Benchmarks
+
+The repo ships reproducible benchmarks comparing `semantic_reward` against an LLM-judge baseline (Groq Llama 3.3 70B) across two tasks (synthetic customer-support QA and a 200-example HotpotQA subset). Gemini 2.5 Flash is used as operational proxy-ground-truth, with Gemini 2.5 Pro as a verification slice. See [`benchmarks/`](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks) for raw CSVs, summary tables, and notebooks.
+
 ## Related
 
 - [LangChain](langchain.md) -- chain-level validation

@@ -25,6 +25,9 @@ htmlcov/
 .idea/
 *.swp
 
+# Worktrees
+.worktrees/
+
 # HuggingFace cache
 .cache/
 

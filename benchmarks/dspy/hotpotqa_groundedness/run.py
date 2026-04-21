@@ -22,7 +22,7 @@ HERE = Path(__file__).parent
 RESULTS = HERE / "results"
 
 N_EXAMPLES = 50
-N_PRO_SLICE = 25
+N_PRO_SLICE = int(os.environ.get("N_PRO_SLICE", "25"))
 
 
 def _dspy_lm_from_env() -> dspy.LM:

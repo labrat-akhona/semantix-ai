@@ -22,7 +22,7 @@ HERE = Path(__file__).parent
 RESULTS = HERE / "results"
 
 N_EXAMPLES = 50         # Full dataset is 200; 50 gives tight CIs on free-tier Flash quota
-N_PRO_SLICE = 25        # Gemini Pro verification slice (25 RPD limit)
+N_PRO_SLICE = int(os.environ.get("N_PRO_SLICE", "25"))  # Set 0 to skip Pro slice when daily quota (25 RPD) is exhausted
 
 
 def _dspy_lm_from_env() -> dspy.LM:

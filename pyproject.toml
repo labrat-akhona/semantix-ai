@@ -108,6 +108,15 @@ Changelog = "https://github.com/labrat-akhona/semantix-ai/releases"
 [tool.hatch.build.targets.wheel]
 packages = ["semantix"]
 
+[tool.hatch.build.targets.sdist]
+include = [
+    "/semantix",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
+
 [tool.ruff]
 target-version = "py310"
 line-length = 100

@@ -31,6 +31,8 @@ htmlcov/
 # Environment variables
 .env
 .env.*
+!.env.example
+!benchmarks/.env.example
 
 # Benchmark cache (opt-in, resumable runs)
 benchmarks/.cache.sqlite

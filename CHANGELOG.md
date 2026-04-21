@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.13 — 2026-04-21
+
+### Added
+- `benchmarks/` folder with a reproducible DSPy benchmark harness comparing semantix's local NLI judge against Groq Llama 3.3 70B, Gemini 2.5 Flash, and Gemini 2.5 Pro across two tasks (custom customer-support QA and a HotpotQA subset).
+- Judge adapters, metrics (Cohen's kappa, Pearson r), SQLite cache, and runners live under `benchmarks/common/`.
+- CI smoke test on `benchmarks/**` changes.
+
+### Notes
+- No public API changes in the `semantix` package itself.
+
 ## v0.1.5 — The Enterprise Performance Release (2026-04-06)
 
 ### Added

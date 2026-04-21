@@ -42,8 +42,29 @@ class Intent(metaclass=_IntentMeta):
     # Optional per-subclass override of the similarity threshold (0‒1).
     threshold: ClassVar[float] = 0.8
 
-    def __init__(self, text: str) -> None:
-        self._text = text
+    def __init__(
+        self,
+        text: str | None = None,
+        *,
+        description: str | None = None,
+        clause: str | None = None,
+        negate: bool = False,
+        threshold: float | None = None,
+    ) -> None:
+        if text is not None and description is not None:
+            raise TypeError("Intent() accepts text positional OR description kwarg, not both")
+        if description is not None:
+            # Preset-instance form: Intent(description=..., clause=..., negate=..., threshold=...)
+            self._text = description
+            self.description = description
+            self.clause = clause
+            self.negate = negate
+            self.threshold = threshold
+        elif text is not None:
+            # Traditional wrapper form: MyIntentSubclass("text")
+            self._text = text
+        else:
+            raise TypeError("Intent() requires either text or description")
 
     # ── public API ──────────────────────────────────────────────
 

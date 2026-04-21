@@ -1,14 +1,19 @@
 ---
-title: "A Free, Local DSPy Reward Function — Benchmarking semantix-ai vs. LLM-Judge"
-description: "Comparing a local NLI judge against Groq Llama 3.3 70B as a DSPy reward function across two benchmark tasks."
+title: <!-- write after results; the title should state the actual finding, not a prediction -->
+description: <!-- same -->
 tags: dspy, llm, python, benchmarking
 published: false
 ---
 
 ## TL;DR
 
+<!-- Written after inspecting results. Each bullet must be a measured fact, not a prediction:
+ - What is semantic_reward? (factual, not result-dependent — OK to pre-write)
+ - What did the benchmark find? (LEAVE BLANK until data lands)
+ - Where to reproduce? (factual — OK to pre-write) -->
+
 - semantix-ai's `semantic_reward` is a drop-in DSPy reward function powered by local NLI inference.
-- On two tasks (custom customer-support QA and a 200-example HotpotQA subset) it matches Groq Llama 3.3 70B's reward-agreement with a strong proxy judge — at **~25× lower latency** and **zero API cost**.
+- <!-- RESULT BULLET(S) — fill from actual data, not expectations -->
 - Full reproducibility: code, datasets, raw CSVs, and notebooks live at [github.com/labrat-akhona/semantix-ai](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks).
 
 ## Why another reward function?
@@ -55,9 +60,12 @@ Two experiments per task:
 
 ## What this means in practice
 
-- Iterating on DSPy programs with `BestOfN(N=5)` over 100 examples goes from several minutes of API calls to seconds of local compute.
-- No API key, no cost.
-- Trade-off: semantix is a *specialized* judge (entailment-based), not a general-purpose reasoner. For open-ended judgments that require world knowledge, LLM-judges still win.
+<!-- Write based on what the data supports:
+ - If reward-agreement parity: recommend as drop-in for iteration loops
+ - If reward-agreement regression: narrow the recommendation (e.g., "for binary polite/not-polite intents"), and name the task where it underperformed
+ - If win-rate on BestOfN is a tie or loss: don't claim it improves selection; claim it matches selection at lower cost
+ - Always keep the trade-off bullet: semantix is a specialized entailment judge, not a general reasoner -->
+
 
 ## Reproducing
 

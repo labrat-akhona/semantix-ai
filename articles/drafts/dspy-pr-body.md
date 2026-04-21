@@ -63,7 +63,12 @@ Reproducible benchmark in the [semantix-ai repo](https://github.com/labrat-akhon
 
 <!-- PASTE semantix vs Groq win/loss/tie counts -->
 
-Headline: semantix-ai matches a 70B LLM-judge's reward agreement on both tasks, at ~25× lower latency and $0 per run.
+<!-- HEADLINE: written only after inspecting actual results. Candidate framings, to be kept or dropped based on the data:
+ - "semantix-ai matches Groq on X, trails on Y, at Z× lower latency"
+ - "semantix-ai wins on latency, trails on reward-agreement — suitable for iteration loops, not final scoring"
+ - "Parity on [task], regression on [other task]"
+Refuse to write a headline that the measured numbers don't support. -->
+
 
 ## Full writeup
 

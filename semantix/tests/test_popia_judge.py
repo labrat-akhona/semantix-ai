@@ -10,10 +10,10 @@ from semantix.judges import Judge, Verdict
 
 
 def _fake_logits():
-    # ONNX label order: {0: contradiction, 1: neutral, 2: entailment}.
-    # Use a logit vector where entailment (index 2) dominates after softmax.
+    # Label order: {0: contradiction, 1: entailment, 2: neutral}.
+    # Use a logit vector where entailment (index 1) dominates after softmax.
     import numpy as np
-    return np.array([[0.2, 0.5, 3.0]], dtype=np.float32)
+    return np.array([[0.2, 3.0, 0.5]], dtype=np.float32)
 
 
 @pytest.fixture

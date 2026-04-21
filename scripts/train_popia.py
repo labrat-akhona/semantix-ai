@@ -41,7 +41,9 @@ def verify_eval_integrity() -> None:
 
 
 def label_to_id(label: str) -> int:
-    return {"entailment": 0, "neutral": 1, "contradiction": 2}[label]
+    # Must match the base model's config.id2label (contradiction=0, entailment=1,
+    # neutral=2) so fine-tuning reinforces -- not scrambles -- the inherited labels.
+    return {"contradiction": 0, "entailment": 1, "neutral": 2}[label]
 
 
 def main() -> int:

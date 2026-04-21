@@ -118,9 +118,9 @@ class QuantizedNLIJudge(Judge):
             feeds["token_type_ids"] = np.array([encoded.type_ids], dtype=np.int64)
         logits = self._session.run(None, feeds)[0][0]
         probs = _softmax(logits)
-        # ONNX export label order: {0: contradiction, 1: neutral, 2: entailment}
-        # (differs from PyTorch model's {0: contradiction, 1: entailment, 2: neutral})
-        entailment_score = float(probs[2])
+        # Label order: {0: contradiction, 1: entailment, 2: neutral} -- matches
+        # the base model's config.id2label and is preserved verbatim on ONNX export.
+        entailment_score = float(probs[1])
 
         return Verdict(
             passed=entailment_score >= threshold,

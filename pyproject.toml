@@ -49,6 +49,14 @@ embeddings = ["sentence-transformers>=2.2"]
 nli = ["sentence-transformers>=2.2"]
 mcp = ["mcp[cli]>=1.0"]
 turbo = ["onnxruntime>=1.16", "tokenizers>=0.15", "huggingface-hub>=0.20"]
+popia = ["semantix-ai[turbo]"]
+train = [
+    "transformers>=4.40",
+    "torch>=2.0",
+    "datasets>=2.14",
+    "accelerate>=0.30",
+    "optimum[onnxruntime]>=1.20",
+]
 instructor = ["instructor>=1.0"]
 pydantic-ai = ["pydantic-ai>=0.1"]
 langchain = ["langchain-core>=0.3"]

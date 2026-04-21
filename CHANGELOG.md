@@ -42,7 +42,7 @@
   release gate) is reusable for other regulatory frameworks (GDPR, HIPAA,
   EU AI Act clause libraries).
 
-## v0.1.13 — 2026-04-21
+## v0.1.13 — 2026-04-21 (never published to PyPI; contents ship in v0.2.0)
 
 ### Added
 - `benchmarks/` folder with a reproducible DSPy benchmark harness comparing semantix's local NLI judge against Groq Llama 3.3 70B, Gemini 2.5 Flash, and Gemini 2.5 Pro across two tasks (custom customer-support QA and a HotpotQA subset).
@@ -51,6 +51,7 @@
 
 ### Notes
 - No public API changes in the `semantix` package itself.
+- v0.1.13 was version-bumped internally but never uploaded to PyPI; install v0.2.0 to get this work.
 
 ## v0.1.5 — The Enterprise Performance Release (2026-04-06)
 

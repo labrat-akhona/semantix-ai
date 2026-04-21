@@ -1,0 +1,9 @@
+dspy-ai>=2.6
+requests>=2.31
+pandas>=2.0
+matplotlib>=3.7
+jupyter>=1.0
+respx>=0.20
+pytest>=7.4
+datasets>=2.14
+python-dotenv>=1.0

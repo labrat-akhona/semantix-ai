@@ -1,0 +1,1 @@
+"""HotpotQA groundedness benchmark."""

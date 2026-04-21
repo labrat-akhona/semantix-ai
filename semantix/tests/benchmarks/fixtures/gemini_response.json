@@ -1,0 +1,19 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [{"text": "0.85"}],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 43,
+    "candidatesTokenCount": 3,
+    "totalTokenCount": 103,
+    "thoughtsTokenCount": 57
+  },
+  "modelVersion": "gemini-2.5-flash"
+}

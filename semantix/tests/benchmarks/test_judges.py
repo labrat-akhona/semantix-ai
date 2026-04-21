@@ -84,3 +84,37 @@ def test_groq_judge_records_error_on_non_numeric_response(monkeypatch):
     result = judge.evaluate("test", "test")
     assert result.score != result.score  # NaN
     assert result.error is not None
+
+
+from benchmarks.common.judges import GeminiFlashJudge, GeminiProJudge
+
+
+@respx.mock
+def test_gemini_flash_judge_parses_response(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    respx.post(
+        url__regex=r"https://generativelanguage\.googleapis\.com/v1beta/models/gemini-2\.5-flash:generateContent.*"
+    ).mock(
+        return_value=Response(200, json=json.loads((FIXTURES / "gemini_response.json").read_text()))
+    )
+    judge = GeminiFlashJudge()
+    result = judge.evaluate("Text", "Intent")
+    assert result.score == 0.85
+    assert result.cost_usd == 0.0
+    assert result.paid_equivalent_usd > 0
+    assert judge.name == "gemini-2.5-flash"
+
+
+@respx.mock
+def test_gemini_pro_judge_uses_pro_endpoint(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    route = respx.post(
+        url__regex=r"https://generativelanguage\.googleapis\.com/v1beta/models/gemini-2\.5-pro:generateContent.*"
+    ).mock(
+        return_value=Response(200, json=json.loads((FIXTURES / "gemini_response.json").read_text()))
+    )
+    judge = GeminiProJudge()
+    result = judge.evaluate("Text", "Intent")
+    assert result.score == 0.85
+    assert route.called
+    assert judge.name == "gemini-2.5-pro"

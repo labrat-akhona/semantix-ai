@@ -84,12 +84,14 @@ class POPIAJudge(QuantizedNLIJudge):
             "POPIA §19 security safeguards",
             "POPIA §22 breach notification",
             "POPIA §71 cross-border transfers",
+            "POPIA general processing",
+            "POPIA data subject rights",
         ]
 ```
 
 #### `semantix/presets/__init__.py`
 
-Empty re-exports module; establishes `semantix.presets` as a namespace for future preset families.
+Empty (package marker only). Establishes `semantix.presets` as a namespace for future preset families. Users import directly from submodules: `from semantix.presets.popia import POPIA_71_CROSS_BORDER`.
 
 #### `semantix/presets/popia.py` (~80 LOC)
 
@@ -99,7 +101,14 @@ Empty re-exports module; establishes `semantix.presets` as a namespace for futur
 - A `negate` flag where the clause is negation-shaped (e.g. §22 breach notification)
 - An optional `threshold` override where the clause warrants stricter matching (e.g. §19 security at 0.85)
 
-Presets: `POPIA_11_CONSENT`, `POPIA_18_MINIMALITY`, `POPIA_19_SECURITY`, `POPIA_22_BREACH`, `POPIA_71_CROSS_BORDER`, `POPIA_PROCESSING`, `POPIA_DATA_SUBJECT_RIGHTS`.
+Presets (7 total, aligned 1:1 with `POPIAJudge.clauses()`):
+- `POPIA_11_CONSENT` → clause `"POPIA §11 consent"`
+- `POPIA_18_MINIMALITY` → clause `"POPIA §18 minimality / purpose limitation"`
+- `POPIA_19_SECURITY` → clause `"POPIA §19 security safeguards"` (threshold 0.85)
+- `POPIA_22_BREACH` → clause `"POPIA §22 breach notification"` (negate=True)
+- `POPIA_71_CROSS_BORDER` → clause `"POPIA §71 cross-border transfers"`
+- `POPIA_PROCESSING` → clause `"POPIA general processing"`
+- `POPIA_DATA_SUBJECT_RIGHTS` → clause `"POPIA data subject rights"`
 
 #### `semantix/eval/popia.py` (~60 LOC)
 

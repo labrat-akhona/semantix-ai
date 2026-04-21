@@ -78,12 +78,15 @@ class POPIAJudge(QuantizedNLIJudge):
 
     @classmethod
     def clauses(cls) -> list[str]:
+        # Exact section numbers verified against POPIA Act 4 of 2013
+        # during seed authoring (Data flow step 1). Labels below are
+        # the canonical values the model ships with.
         return [
-            "POPIA §11 consent",
-            "POPIA §18 minimality / purpose limitation",
-            "POPIA §19 security safeguards",
-            "POPIA §22 breach notification",
-            "POPIA §71 cross-border transfers",
+            "POPIA consent",
+            "POPIA minimality / purpose limitation",
+            "POPIA security safeguards",
+            "POPIA breach notification",
+            "POPIA cross-border transfers",
             "POPIA general processing",
             "POPIA data subject rights",
         ]
@@ -91,22 +94,23 @@ class POPIAJudge(QuantizedNLIJudge):
 
 #### `semantix/presets/__init__.py`
 
-Empty (package marker only). Establishes `semantix.presets` as a namespace for future preset families. Users import directly from submodules: `from semantix.presets.popia import POPIA_71_CROSS_BORDER`.
+Empty (package marker only). Establishes `semantix.presets` as a namespace for future preset families. Users import directly from submodules: `from semantix.presets.popia import POPIA_CROSS_BORDER`.
 
 #### `semantix/presets/popia.py` (~80 LOC)
 
 5-7 module-level `Intent` constants, one per POPIA section plus 1-2 broader ones. Each preset carries:
 - A description in POPIA language
-- A `clause` attribute (e.g. `"POPIA §71"`)
+- A `clause` attribute (e.g. `"POPIA cross-border transfers"`; section numbers appended post-verification)
 - A `negate` flag where the clause is negation-shaped (e.g. §22 breach notification)
 - An optional `threshold` override where the clause warrants stricter matching (e.g. §19 security at 0.85)
 
-Presets (7 total, aligned 1:1 with `POPIAJudge.clauses()`):
-- `POPIA_11_CONSENT` → clause `"POPIA §11 consent"`
-- `POPIA_18_MINIMALITY` → clause `"POPIA §18 minimality / purpose limitation"`
-- `POPIA_19_SECURITY` → clause `"POPIA §19 security safeguards"` (threshold 0.85)
-- `POPIA_22_BREACH` → clause `"POPIA §22 breach notification"` (negate=True)
-- `POPIA_71_CROSS_BORDER` → clause `"POPIA §71 cross-border transfers"`
+Presets (7 total, aligned 1:1 with `POPIAJudge.clauses()`). Constant names use POPIA section numbers verified against POPIA Act 4 of 2013 during seed authoring; placeholder names `POPIA_CONSENT`, `POPIA_MINIMALITY` etc. are used during development until verified, then renamed to include the correct section number (e.g. `POPIA_11_CONSENT`):
+
+- `POPIA_CONSENT` → clause `"POPIA consent"`
+- `POPIA_MINIMALITY` → clause `"POPIA minimality / purpose limitation"`
+- `POPIA_SECURITY` → clause `"POPIA security safeguards"` (threshold 0.85)
+- `POPIA_BREACH` → clause `"POPIA breach notification"` (negate=True)
+- `POPIA_CROSS_BORDER` → clause `"POPIA cross-border transfers"`
 - `POPIA_PROCESSING` → clause `"POPIA general processing"`
 - `POPIA_DATA_SUBJECT_RIGHTS` → clause `"POPIA data subject rights"`
 
@@ -161,8 +165,8 @@ Loading POPIAJudge...                 ok
                    stock    POPIA    Δ
 Accuracy           0.62     0.78     +0.16
 F1 (macro)         0.59     0.76     +0.17
-POPIA §71          0.55     0.82     +0.27
-POPIA §18          0.64     0.74     +0.10
+POPIA cross-border 0.55     0.82     +0.27
+POPIA minimality   0.64     0.74     +0.10
 ...
 
 Release gate (≥0.10 F1 delta, no per-clause regression): PASS
@@ -191,7 +195,7 @@ train = [
 
 ~60 hand-authored NLI pairs, ~10 per clause, balanced across entailment/neutral/contradiction. Every row has:
 ```json
-{"clause":"POPIA §71","premise":"...","hypothesis":"...","label":"entailment","scenario":"cross-border-saas"}
+{"clause":"POPIA cross-border transfers","premise":"...","hypothesis":"...","label":"entailment","scenario":"cross-border-saas"}
 ```
 This file is the load-bearing artifact for the "SA dev hand-authored the seeds" narrative. Reviewers can read it in 10 minutes.
 
@@ -305,6 +309,8 @@ Workflow steps:
 Expected runtime: ~90 seconds on `ubuntu-latest` (no GPU).
 
 **Public-claim discipline:** no performance claim in any announcement, README, or PR body may exceed the numbers in the most recent release `report.json`. This is enforceable by PR review.
+
+**Gate-failure policy:** if the 10 pp gate fails at release time, we do **not** ship publicly and we do **not** relax the gate to match the achieved delta. We iterate on training data (more seeds, better synthetic prompts, more expansion volume) or base-model choice until the gate is met. This preserves the "beats base by double digits" narrative and prevents drift toward "we shipped what we got."
 
 ## Eval-set integrity
 

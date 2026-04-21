@@ -8,6 +8,8 @@ Usage
     semantix check "I recommend aspirin" --intent "medical advice" --negate
     semantix prove
     semantix prove --text "..." --intent "..." --n 100
+    semantix demo                        # 3 canned scenarios in under a second
+    semantix verify audit.jsonl          # check a tamper-evident audit trail
 """
 
 from __future__ import annotations
@@ -145,6 +147,34 @@ def _build_parser() -> argparse.ArgumentParser:
         "--no-color", action="store_true", help="Disable ANSI colour output",
     )
 
+    demo = sub.add_parser(
+        "demo",
+        help="Run a 3-scenario live demo — pass, fail, and negated-fail in under a second",
+    )
+    demo.add_argument(
+        "--judge",
+        default=None,
+        choices=["nli", "embedding", "quantized"],
+        help="Judge backend (default: quantized with nli fallback)",
+    )
+    demo.add_argument(
+        "--no-color", action="store_true", help="Disable ANSI colour output",
+    )
+
+    verify = sub.add_parser(
+        "verify",
+        help="Verify a semantix audit trail (JSONL file) — check hash chain and summarise",
+    )
+    verify.add_argument(
+        "path", help="Path to a JSONL audit trail (written by AuditEngine.flush)",
+    )
+    verify.add_argument(
+        "--top", type=int, default=5, help="Number of top intents to display (default: 5)",
+    )
+    verify.add_argument(
+        "--no-color", action="store_true", help="Disable ANSI colour output",
+    )
+
     return parser
 
 
@@ -243,6 +273,196 @@ def _run_prove(args) -> int:
     return 0 if deterministic else 1
 
 
+_DEMO_SCENARIOS = [
+    {
+        "label": "polite response",
+        "intent": "polite and professional customer service",
+        "text": "Thank you for reaching out. I've reviewed your complaint and I'm issuing a full refund today.",
+        "negate": False,
+        "expect": "PASS",
+    },
+    {
+        "label": "rude response (should fail)",
+        "intent": "polite and professional customer service",
+        "text": "Stop wasting my time with this nonsense. Figure it out yourself.",
+        "negate": False,
+        "expect": "FAIL",
+    },
+    {
+        "label": "chatbot giving medical advice (negated -- must NOT)",
+        "intent": "the text recommends a specific medication and dosage",
+        "text": "Based on your symptoms you have a migraine. Take ibuprofen and rest for 24 hours.",
+        "negate": True,
+        "expect": "FAIL",
+    },
+]
+
+
+def _run_demo(args) -> int:
+    """Run three canned scenarios showcasing pass, fail, and negated-fail."""
+    if getattr(args, "no_color", False):
+        _disable_color()
+
+    judge = _resolve_judge(args.judge)
+    threshold = _resolve_threshold(None, judge)
+
+    print(f"{_BOLD}Semantix demo{_RESET}  (judge={type(judge).__name__}, threshold={threshold})")
+    print(f"{_DIM}Local NLI. No API keys. No tokens burned.{_RESET}")
+    print()
+
+    # Warm the judge so scenario #1 isn't inflated by model-load time.
+    judge.evaluate("warm up", "warm up", threshold=threshold)
+
+    all_as_expected = True
+    total_ms = 0.0
+
+    for i, s in enumerate(_DEMO_SCENARIOS, start=1):
+        t0 = time.perf_counter()
+        verdict = judge.evaluate(s["text"], s["intent"], threshold=threshold)
+        elapsed_ms = (time.perf_counter() - t0) * 1000
+        total_ms += elapsed_ms
+
+        effective_pass = (not verdict.passed) if s["negate"] else verdict.passed
+        effective_tag = "PASS" if effective_pass else "FAIL"
+        colour = _GREEN if effective_tag == "PASS" else _RED
+        tag = f"{_BOLD}{colour}{effective_tag}{_RESET}"
+
+        as_expected = effective_tag == s["expect"]
+        if not as_expected:
+            all_as_expected = False
+
+        intent_display = f"NOT {s['intent']!r}" if s["negate"] else repr(s["intent"])
+        score_str = f"{verdict.score:.3f}" if verdict.score is not None else "n/a"
+
+        print(f"{_BOLD}[{i}/{len(_DEMO_SCENARIOS)}] {s['label']}{_RESET}")
+        print(f"  intent: {intent_display}")
+        print(f"  output: {s['text']!r}")
+        print(f"  -> {tag}  score={score_str}  ({elapsed_ms:.1f} ms)")
+        if effective_tag == "FAIL" and verdict.reason:
+            print(f"     reason: {verdict.reason}")
+        print()
+
+    print(f"{_DIM}Total inference: {total_ms:.1f} ms across {len(_DEMO_SCENARIOS)} checks.{_RESET}")
+    print(f"{_DIM}0 API calls. 0 tokens burned. Scores are deterministic (`semantix prove`).{_RESET}")
+    print()
+    print("Try your own:")
+    print(f"  {_BOLD}semantix check{_RESET} \"your output\" --intent \"what you want\"")
+    print(f"  {_BOLD}semantix prove{_RESET}    # verify determinism across 100 runs")
+    print(f"  {_BOLD}semantix verify{_RESET} audit.jsonl    # check a tamper-evident audit trail")
+
+    return 0 if all_as_expected else 1
+
+
+def _load_audit_entries(path: str) -> list[dict]:
+    """Load audit entries from a JSONL file. Raises FileNotFoundError / ValueError."""
+    import json
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.exists():
+        raise FileNotFoundError(f"Audit file not found: {path}")
+
+    entries: list[dict] = []
+    with open(p) as f:
+        for lineno, line in enumerate(f, start=1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entries.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                raise ValueError(f"Malformed JSON on line {lineno}: {e.msg}") from e
+    return entries
+
+
+def _verify_chain(entries: list[dict]) -> tuple[bool, int | None]:
+    """Re-run the hash-chain verification on loaded entries.
+
+    Returns (ok, first_broken_index). If ok is True, first_broken_index is None.
+    """
+    import hashlib
+    import json
+
+    for i, entry in enumerate(entries):
+        if i == 0:
+            if entry.get("previous_hash") != "GENESIS":
+                return False, i
+        else:
+            expected = hashlib.sha256(
+                json.dumps(entries[i - 1], sort_keys=True).encode()
+            ).hexdigest()
+            if entry.get("previous_hash") != expected:
+                return False, i
+    return True, None
+
+
+def _run_verify(args) -> int:
+    """Load a JSONL audit trail, verify the hash chain, print a summary."""
+    if getattr(args, "no_color", False):
+        _disable_color()
+
+    try:
+        entries = _load_audit_entries(args.path)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"{_BOLD}{_RED}ERROR{_RESET} {e}", file=sys.stderr)
+        return 2
+
+    print(f"{_BOLD}Audit trail{_RESET}  {args.path}")
+    if not entries:
+        print(f"  {_DIM}(no entries){_RESET}")
+        return 0
+
+    timestamps = [e.get("timestamp", "") for e in entries if e.get("timestamp")]
+    if timestamps:
+        first = min(timestamps)
+        last = max(timestamps)
+        print(f"  Entries: {len(entries):,}")
+        print(f"  Range:   {first} -> {last}")
+    else:
+        print(f"  Entries: {len(entries):,}")
+
+    passed_count = sum(1 for e in entries if e.get("passed") is True)
+    failed_count = sum(1 for e in entries if e.get("passed") is False)
+    total_verdicts = passed_count + failed_count
+    if total_verdicts > 0:
+        pass_pct = 100 * passed_count / total_verdicts
+        fail_pct = 100 * failed_count / total_verdicts
+        print()
+        print(
+            f"Verdicts: {_GREEN}{passed_count:,} PASS{_RESET} ({pass_pct:.1f}%) "
+            f"- {_RED}{failed_count:,} FAIL{_RESET} ({fail_pct:.1f}%)"
+        )
+
+    intent_counts: dict[str, int] = {}
+    for e in entries:
+        intent = e.get("intent")
+        if intent:
+            intent_counts[intent] = intent_counts.get(intent, 0) + 1
+    if intent_counts:
+        print()
+        top = sorted(intent_counts.items(), key=lambda kv: -kv[1])[: args.top]
+        print(f"Intents (top {len(top)}):")
+        for name, count in top:
+            print(f"  {count:>6,}  {name}")
+
+    print()
+    ok, broken_at = _verify_chain(entries)
+    if ok:
+        print(
+            f"{_BOLD}{_GREEN}CHAIN VERIFIED{_RESET}  "
+            f"{len(entries):,}/{len(entries):,} links intact."
+        )
+        return 0
+
+    print(f"{_BOLD}{_RED}CHAIN BROKEN{_RESET} at entry #{broken_at}")
+    print(
+        f"  {_DIM}previous_hash on entry #{broken_at} does not match the hash "
+        f"of entry #{(broken_at - 1) if broken_at else 'GENESIS'}.{_RESET}"
+    )
+    print(f"  {_DIM}Everything from entry #{broken_at} onward is suspect.{_RESET}")
+    return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     """Entry point for the CLI."""
     parser = _build_parser()
@@ -257,6 +477,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "prove":
         return _run_prove(args)
+
+    if args.command == "verify":
+        return _run_verify(args)
+
+    if args.command == "demo":
+        return _run_demo(args)
 
     return 0
 

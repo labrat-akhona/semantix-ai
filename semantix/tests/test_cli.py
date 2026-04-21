@@ -6,7 +6,18 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from semantix.cli import _build_parser, _percentile, _resolve_threshold, _run_check, _run_prove, main
+from semantix.cli import (
+    _build_parser,
+    _load_audit_entries,
+    _percentile,
+    _resolve_threshold,
+    _run_check,
+    _run_demo,
+    _run_prove,
+    _run_verify,
+    _verify_chain,
+    main,
+)
 
 # ---------------------------------------------------------------------------
 # _resolve_threshold
@@ -301,3 +312,208 @@ class TestResolveJudge:
         with pytest.raises(SystemExit) as exc_info:
             _resolve_judge("bogus")
         assert exc_info.value.code == 2
+
+
+# ---------------------------------------------------------------------------
+# verify subcommand
+# ---------------------------------------------------------------------------
+
+
+def _write_audit(path, *, tamper_index: int | None = None, tamper_field: str = "score"):
+    """Helper: write a valid 4-entry hash-chained trail, optionally tampered."""
+    import hashlib
+    import json
+    from datetime import datetime, timezone
+
+    entries = []
+    prev = "GENESIS"
+    records = [
+        ("Polite", True, 0.92),
+        ("NoMedicalAdvice", True, 0.88),
+        ("Polite", False, 0.12),
+        ("Polite", True, 0.85),
+    ]
+    for i, (intent, passed, score) in enumerate(records):
+        cert = {
+            "@context": "https://schema.semantix.ai/v1",
+            "@type": "SemanticCertificate",
+            "id": f"urn:semantix:cert:test-{i}",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "intent": intent,
+            "score": score,
+            "passed": passed,
+            "reason": None,
+            "output_hash": hashlib.sha256(f"out{i}".encode()).hexdigest(),
+            "previous_hash": prev,
+        }
+        entries.append(cert)
+        prev = hashlib.sha256(json.dumps(cert, sort_keys=True).encode()).hexdigest()
+
+    if tamper_index is not None:
+        entries[tamper_index][tamper_field] = 0.999
+
+    with open(path, "w") as f:
+        for e in entries:
+            f.write(json.dumps(e, sort_keys=True) + "\n")
+    return entries
+
+
+class TestLoadAuditEntries:
+    def test_missing_file_raises(self, tmp_path):
+        with pytest.raises(FileNotFoundError):
+            _load_audit_entries(str(tmp_path / "nope.jsonl"))
+
+    def test_malformed_raises(self, tmp_path):
+        p = tmp_path / "bad.jsonl"
+        p.write_text("{not json\n")
+        with pytest.raises(ValueError) as exc:
+            _load_audit_entries(str(p))
+        assert "line 1" in str(exc.value)
+
+    def test_skips_blank_lines(self, tmp_path):
+        p = tmp_path / "ok.jsonl"
+        p.write_text('{"a":1}\n\n{"a":2}\n')
+        entries = _load_audit_entries(str(p))
+        assert entries == [{"a": 1}, {"a": 2}]
+
+
+class TestVerifyChain:
+    def test_valid_chain(self, tmp_path):
+        entries = _write_audit(tmp_path / "audit.jsonl")
+        ok, broken = _verify_chain(entries)
+        assert ok is True
+        assert broken is None
+
+    def test_tamper_detected(self, tmp_path):
+        entries = _write_audit(tmp_path / "audit.jsonl", tamper_index=1)
+        ok, broken = _verify_chain(entries)
+        assert ok is False
+        # Tampering entry 1 invalidates entry 2's previous_hash.
+        assert broken == 2
+
+    def test_empty_list_is_valid(self):
+        ok, broken = _verify_chain([])
+        assert ok is True
+        assert broken is None
+
+
+class TestRunVerify:
+    def _make_args(self, path, **overrides):
+        defaults = {"path": str(path), "top": 5, "no_color": True}
+        defaults.update(overrides)
+        return MagicMock(**defaults)
+
+    def test_valid_trail_returns_zero(self, tmp_path, capsys):
+        p = tmp_path / "audit.jsonl"
+        _write_audit(p)
+        code = _run_verify(self._make_args(p))
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "CHAIN VERIFIED" in out
+        assert "4/4" in out
+        assert "Polite" in out
+
+    def test_tampered_trail_returns_one(self, tmp_path, capsys):
+        p = tmp_path / "audit.jsonl"
+        _write_audit(p, tamper_index=1)
+        code = _run_verify(self._make_args(p))
+        assert code == 1
+        out = capsys.readouterr().out
+        assert "CHAIN BROKEN" in out
+        assert "#2" in out
+
+    def test_missing_file_returns_two(self, tmp_path, capsys):
+        code = _run_verify(self._make_args(tmp_path / "nope.jsonl"))
+        assert code == 2
+        err = capsys.readouterr().err
+        assert "ERROR" in err
+
+    def test_empty_file_returns_zero(self, tmp_path, capsys):
+        p = tmp_path / "empty.jsonl"
+        p.write_text("")
+        code = _run_verify(self._make_args(p))
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "no entries" in out
+
+    def test_top_flag_limits_intents(self, tmp_path, capsys):
+        p = tmp_path / "audit.jsonl"
+        _write_audit(p)
+        code = _run_verify(self._make_args(p, top=1))
+        assert code == 0
+        out = capsys.readouterr().out
+        # "Polite" appears 3x, should be the only one shown.
+        assert "Polite" in out
+        assert "NoMedicalAdvice" not in out.split("top 1")[1].split("CHAIN")[0]
+
+    def test_parser_verify(self):
+        parser = _build_parser()
+        args = parser.parse_args(["verify", "/tmp/x.jsonl", "--top", "3", "--no-color"])
+        assert args.command == "verify"
+        assert args.path == "/tmp/x.jsonl"
+        assert args.top == 3
+        assert args.no_color is True
+
+
+# ---------------------------------------------------------------------------
+# demo subcommand
+# ---------------------------------------------------------------------------
+
+
+class TestRunDemo:
+    def _make_args(self, **overrides):
+        defaults = {"judge": None, "no_color": True}
+        defaults.update(overrides)
+        return MagicMock(**defaults)
+
+    @patch("semantix.cli._resolve_judge")
+    def test_all_expected_returns_zero(self, mock_resolve, capsys):
+        from semantix.cli import _DEMO_SCENARIOS
+        from semantix.judges import Verdict
+
+        judge = MagicMock()
+        judge.recommended_threshold = 0.3
+        # Tailor return values so each scenario hits its expected verdict.
+        # warmup + 3 scenarios = 4 evaluate() calls.
+        scenario_scores = []
+        for s in _DEMO_SCENARIOS:
+            if s["expect"] == "PASS" and not s["negate"]:
+                scenario_scores.append(Verdict(passed=True, score=0.9))
+            elif s["expect"] == "FAIL" and not s["negate"]:
+                scenario_scores.append(Verdict(passed=False, score=0.05, reason="nope"))
+            else:  # negated FAIL: raw check must pass (so negation flips it)
+                scenario_scores.append(Verdict(passed=True, score=0.7, reason="entailed"))
+        judge.evaluate.side_effect = [Verdict(passed=True, score=1.0)] + scenario_scores
+        mock_resolve.return_value = judge
+
+        code = _run_demo(self._make_args())
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "Semantix demo" in out
+        assert "PASS" in out
+        assert "FAIL" in out
+        assert "0 API calls" in out
+
+    @patch("semantix.cli._resolve_judge")
+    def test_unexpected_result_returns_one(self, mock_resolve, capsys):
+        from semantix.cli import _DEMO_SCENARIOS
+        from semantix.judges import Verdict
+
+        judge = MagicMock()
+        judge.recommended_threshold = 0.3
+        # Force all scenarios to PASS regardless of expected verdict.
+        judge.evaluate.side_effect = [
+            Verdict(passed=True, score=0.9)
+        ] * (1 + len(_DEMO_SCENARIOS))
+        mock_resolve.return_value = judge
+
+        code = _run_demo(self._make_args())
+        # Some scenarios expect FAIL, so all-PASS is wrong.
+        assert code == 1
+
+    def test_parser_demo(self):
+        parser = _build_parser()
+        args = parser.parse_args(["demo", "--judge", "nli", "--no-color"])
+        assert args.command == "demo"
+        assert args.judge == "nli"
+        assert args.no_color is True

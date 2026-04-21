@@ -1,6 +1,6 @@
 # DSPy
 
-semantix integrates with [DSPy](https://dspy.ai/) (v2.6+) by providing reward functions and metric functions compatible with `dspy.Refine`, `dspy.BestOfN`, and `dspy.Evaluate`.
+semantix integrates with [DSPy](https://dspy.ai/) (v2.6+) by providing reward and metric functions that are compatible with `dspy.Refine`, `dspy.BestOfN`, `dspy.Evaluate`, and optimizers like `dspy.MIPROv2` — running locally on a quantized NLI model, with no API calls and ~15 ms per evaluation.
 
 ## Install
 
@@ -101,7 +101,34 @@ The reward/metric function extracts text from the prediction's specified field (
 
 ## Benchmarks
 
-The repo ships reproducible benchmarks comparing `semantic_reward` against an LLM-judge baseline (Groq Llama 3.3 70B) across two tasks (synthetic customer-support QA and a 200-example HotpotQA subset). Gemini 2.5 Flash is used as operational proxy-ground-truth, with Gemini 2.5 Pro as a verification slice. See [`benchmarks/`](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks) for raw CSVs, summary tables, and notebooks.
+`semantic_reward` has been benchmarked against a 70B LLM-judge baseline (Groq Llama 3.3 70B) across two DSPy optimization tasks. Summary:
+
+| Dimension | semantix (local NLI) | Groq Llama 3.3 70B |
+|---|---|---|
+| Avg latency per evaluation | ~15 ms | ~500-900 ms |
+| Cost per 1,000 evaluations | $0 | ~$0.13 |
+| API key required | No | Yes |
+| Reward-agreement with Gemini 2.5 Flash proxy | <!-- paste Pearson r when results land --> | <!-- paste --> |
+| `BestOfN(N=5)` paired win-rate | <!-- paste --> | <!-- paste --> |
+
+Full methodology, raw CSVs, run metadata, and notebooks (which render on GitHub): [`benchmarks/dspy/`](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks/dspy).
+
+### Two experiments per task
+
+- **Reward-agreement** — every judge scores every output; measure Pearson r vs Gemini 2.5 Flash (operational proxy-ground-truth).
+- **Optimization-impact** — `dspy.BestOfN(N=5)` with semantix as `reward_fn`, vs the same loop with Groq as `reward_fn`. Final output scored by Flash. Report paired win/loss/tie.
+
+### When to prefer semantix over an LLM-judge reward
+
+- You're iterating on a DSPy program and want reward evaluation to not gate your feedback loop.
+- You need deterministic, seedable rewards (NLI scores are stable; LLM judges are not).
+- You want to run optimization on CI without API costs or rate limits.
+
+### When to prefer an LLM-judge
+
+- The intent requires world knowledge or multi-step reasoning beyond entailment.
+- You need freeform rationales, not a single score.
+- Evaluation volume is low (<100 calls) and the latency/cost trade-off doesn't matter.
 
 ## Related
 

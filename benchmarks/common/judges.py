@@ -188,7 +188,11 @@ class _GeminiJudgeBase:
     _rate_in: float = 0.0
     _rate_out: float = 0.0
 
-    def __init__(self, *, max_retries: int = 6, timeout: float = 60.0) -> None:
+    def __init__(self, *, max_retries: int | None = None, timeout: float = 60.0) -> None:
+        # Default 6 retries; override via GEMINI_MAX_RETRIES env var (set low e.g. 0 when
+        # daily quota is exhausted so calls fail fast rather than burning backoff sleep).
+        if max_retries is None:
+            max_retries = int(os.environ.get("GEMINI_MAX_RETRIES", "6"))
         self._max_retries = max_retries
         self._timeout = timeout
         self._api_key = os.environ.get("GEMINI_API_KEY")

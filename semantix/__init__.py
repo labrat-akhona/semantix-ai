@@ -70,5 +70,15 @@ try:
 except ImportError:
     pass
 
+# GDPRJudge shares the quantized-NLI deps; available when [gdpr] extras installed.
+# The fine-tuned weights are not yet published — GDPRJudge falls back to the
+# POPIA weights at runtime with a warning until labrat-aiko/nli-gdpr-v1 ships.
+try:
+    from semantix.judges.gdpr import GDPRJudge  # noqa: F401
+
+    __all__.append("GDPRJudge")
+except ImportError:
+    pass
+
 __version__ = "0.2.0"
 __author__ = "Akhona Eland"

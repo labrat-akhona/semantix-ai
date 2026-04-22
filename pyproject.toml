@@ -50,6 +50,7 @@ nli = ["sentence-transformers>=2.2"]
 mcp = ["mcp[cli]>=1.0"]
 turbo = ["onnxruntime>=1.16", "tokenizers>=0.15", "huggingface-hub>=0.20"]
 popia = ["semantix-ai[turbo]"]
+gdpr = ["semantix-ai[turbo]"]
 train = [
     "transformers>=4.40",
     "torch>=2.0",

@@ -82,7 +82,7 @@ what didn't run.
 
 ## Full writeup
 
-Dev.to article: <!-- PASTE LINK ONCE PUBLISHED -->
+Dev.to article: https://dev.to/akhona_eland_072dac9e0c2c/a-70ms-local-nli-judge-hits-0596-pearson-r-with-groq-llama-33-70b-on-dspy-reward-scoring-1d76
 
 ## This PR
 

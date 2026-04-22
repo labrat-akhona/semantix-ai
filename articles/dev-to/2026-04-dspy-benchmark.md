@@ -101,7 +101,7 @@ Results land in `benchmarks/dspy/customer_support/results/` (`raw.csv`, `summary
 
 ## What's next
 
-Same minimal-first methodology will be applied to [outlines](https://github.com/dottxt-ai/outlines), [marvin](https://github.com/PrefectHQ/marvin), and [llama_index](https://github.com/run-llama/llama_index) — one paired comparison, no holes, real numbers. Open PR at stanfordnlp/dspy referencing this work: [link TBD once PR is open].
+Same minimal-first methodology will be applied to [outlines](https://github.com/dottxt-ai/outlines), [marvin](https://github.com/PrefectHQ/marvin), and [llama_index](https://github.com/run-llama/llama_index) — one paired comparison, no holes, real numbers. A PR at stanfordnlp/dspy referencing this work is open: [stanfordnlp/dspy#9653](https://github.com/stanfordnlp/dspy/pull/9653).
 
 ---
 

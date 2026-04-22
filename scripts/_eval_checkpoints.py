@@ -6,7 +6,6 @@ softmax over logits, take index 2 (entailment) for the score.
 
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -34,8 +33,14 @@ class PyTorchPopiaJudge(Judge):
     @torch.no_grad()
     def evaluate(self, output, intent_description, threshold=0.5):
         hypothesis = _to_hypothesis(intent_description)
-        enc = self.tokenizer(output, hypothesis, return_tensors="pt",
-                             truncation=True, padding="max_length", max_length=256)
+        enc = self.tokenizer(
+            output,
+            hypothesis,
+            return_tensors="pt",
+            truncation=True,
+            padding="max_length",
+            max_length=256,
+        )
         logits = self.model(**enc).logits[0].numpy()
         probs = np.exp(logits - logits.max())
         probs = probs / probs.sum()
@@ -47,9 +52,12 @@ class PyTorchPopiaJudge(Judge):
     @classmethod
     def clauses(cls):
         return [
-            "POPIA consent", "POPIA minimality / purpose limitation",
-            "POPIA security safeguards", "POPIA breach notification",
-            "POPIA cross-border transfers", "POPIA general processing",
+            "POPIA consent",
+            "POPIA minimality / purpose limitation",
+            "POPIA security safeguards",
+            "POPIA breach notification",
+            "POPIA cross-border transfers",
+            "POPIA general processing",
             "POPIA data subject rights",
         ]
 
@@ -68,13 +76,19 @@ def main():
             continue
         report = evaluate_popia(EVAL_PATH, judge, stock)
         regressions = sum(1 for s, p in report.per_clause.values() if p < s)
-        results.append((name, report.popia_f1_macro, report.delta_f1, regressions,
-                        report.release_gate_passed))
-        print(f"{name:22s}  POPIA F1={report.popia_f1_macro:.3f}  "
-              f"delta={report.delta_f1:+.3f}  regressions={regressions}  "
-              f"gate={'PASS' if report.release_gate_passed else 'FAIL'}")
+        results.append(
+            (name, report.popia_f1_macro, report.delta_f1, regressions, report.release_gate_passed)
+        )
+        print(
+            f"{name:22s}  POPIA F1={report.popia_f1_macro:.3f}  "
+            f"delta={report.delta_f1:+.3f}  regressions={regressions}  "
+            f"gate={'PASS' if report.release_gate_passed else 'FAIL'}"
+        )
     print()
-    print(f"stock reference      POPIA F1={stock.__class__.__name__}  stock F1={report.stock_f1_macro:.3f}")
+    print(
+        f"stock reference      POPIA F1={stock.__class__.__name__}  "
+        f"stock F1={report.stock_f1_macro:.3f}"
+    )
     best = max(results, key=lambda r: (r[4], r[2]))
     print(f"best: {best[0]}")
 

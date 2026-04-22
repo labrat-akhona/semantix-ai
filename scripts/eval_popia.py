@@ -31,6 +31,7 @@ def main() -> int:
 
     if args.use_hf:
         from huggingface_hub import hf_hub_download
+
         eval_path = hf_hub_download(repo_id="labrat-aiko/nli-popia-v1", filename="eval.jsonl")
     else:
         if not LOCAL_EVAL.exists():
@@ -42,6 +43,7 @@ def main() -> int:
 
     if args.json:
         import json
+
         out = asdict(report)
         out["per_clause"] = {k: list(v) for k, v in out["per_clause"].items()}
         print(json.dumps(out, indent=2))

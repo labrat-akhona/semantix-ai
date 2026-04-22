@@ -38,7 +38,9 @@ def test_eval_popia_exits_zero_when_gate_passes(tmp_path, capsys, monkeypatch):
 def test_eval_popia_exits_one_when_gate_fails(tmp_path, capsys, monkeypatch):
     monkeypatch.setattr("semantix.cli._download_popia_eval", lambda: tmp_path / "eval.jsonl")
     monkeypatch.setattr("semantix.cli._load_popia_judges", lambda: (object(), object()))
-    monkeypatch.setattr("semantix.cli.evaluate_popia", lambda *a, **k: _fake_report(False, delta=0.05))
+    monkeypatch.setattr(
+        "semantix.cli.evaluate_popia", lambda *a, **k: _fake_report(False, delta=0.05)
+    )
 
     rc = cli_main(["eval", "popia"])
     assert rc == 1
@@ -63,6 +65,7 @@ def test_eval_popia_json_flag_emits_valid_json(tmp_path, capsys, monkeypatch):
 def test_eval_popia_download_failure_exits_two(capsys, monkeypatch):
     def boom():
         raise FileNotFoundError("HF unreachable")
+
     monkeypatch.setattr("semantix.cli._download_popia_eval", boom)
 
     rc = cli_main(["eval", "popia"])

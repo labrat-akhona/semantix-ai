@@ -7,8 +7,15 @@ Errors never raise — they are recorded on the row and the run continues.
 
 from __future__ import annotations
 
+import os
+import re
+import time
 from dataclasses import dataclass
 from typing import Protocol
+
+import httpx
+
+from semantix.judges.quantized_nli import QuantizedNLIJudge
 
 
 @dataclass(frozen=True)
@@ -25,11 +32,6 @@ class Judge(Protocol):
     name: str
 
     def evaluate(self, text: str, intent: str) -> JudgeResult: ...
-
-
-import time
-
-from semantix.judges.quantized_nli import QuantizedNLIJudge
 
 
 class SemantixJudge:
@@ -58,11 +60,6 @@ class SemantixJudge:
             paid_equivalent_usd=0.0,
         )
 
-
-import os
-import re
-
-import httpx
 
 _SYSTEM_PROMPT = (
     "You are a strict semantic judge. Respond ONLY with a single number "
@@ -113,7 +110,7 @@ class GroqJudge:
 
         last_error: str | None = None
         backoff = 1.0
-        for attempt in range(self._max_retries + 1):
+        for _attempt in range(self._max_retries + 1):
             start = time.perf_counter()
             try:
                 resp = httpx.post(url, headers=headers, json=body, timeout=self._timeout)
@@ -221,7 +218,7 @@ class _GeminiJudgeBase:
 
         last_error: str | None = None
         backoff = 4.0
-        for attempt in range(self._max_retries + 1):
+        for _attempt in range(self._max_retries + 1):
             start = time.perf_counter()
             try:
                 resp = httpx.post(url, json=body, timeout=self._timeout)

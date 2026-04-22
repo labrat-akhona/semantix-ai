@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-import pytest
-
 from benchmarks.common.judges import JudgeResult
 from benchmarks.common.runner import Example, run_agreement
 
@@ -15,7 +11,10 @@ class StubJudge:
     def evaluate(self, text: str, intent: str) -> JudgeResult:
         self.calls.append((text, intent))
         return JudgeResult(
-            score=self._score, latency_ms=1.0, cost_usd=0.0, paid_equivalent_usd=0.0,
+            score=self._score,
+            latency_ms=1.0,
+            cost_usd=0.0,
+            paid_equivalent_usd=0.0,
         )
 
 

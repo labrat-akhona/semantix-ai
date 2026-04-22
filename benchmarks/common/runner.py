@@ -12,7 +12,7 @@ from benchmarks.common.judges import Judge, JudgeResult
 @dataclass(frozen=True)
 class Example:
     example_id: str
-    text: str           # The generated output to be judged
+    text: str  # The generated output to be judged
     intent: str
     input: dict[str, Any] | None = None  # DSPy program input, used in optimization mode
 
@@ -30,7 +30,7 @@ def run_agreement(examples: list[Example], judges: list[Judge]) -> list[Row]:
 def run_optimization(
     examples: list[Example],
     *,
-    program_fn,            # Callable: (input_dict, reward_fn) -> final_text
+    program_fn,  # Callable: (input_dict, reward_fn) -> final_text
     reward_judges: list[Judge],
     final_judge: Judge,
     on_example_done=None,  # Optional callback(ex_rows: list[Row]) after each example completes
@@ -49,9 +49,11 @@ def run_optimization(
     for ex in examples:
         ex_rows: list[Row] = []
         for reward_judge in reward_judges:
+
             def reward_fn(output: str, *, _judge=reward_judge, _intent=ex.intent) -> float:
                 score = _judge.evaluate(output, _intent).score
                 return 0.0 if score != score else float(score)  # NaN-safe for DSPy
+
             final_text = program_fn(ex.input or {}, reward_fn)
             result = final_judge.evaluate(final_text, ex.intent)
             ex_rows.append(

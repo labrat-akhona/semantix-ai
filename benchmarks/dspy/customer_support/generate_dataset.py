@@ -44,16 +44,23 @@ def main() -> None:
     for intent in INTENTS:
         templates = TEMPLATES[intent]
         for i in range(target_per_intent):
-            dataset.append({
-                "example_id": f"{intent}-{i:03d}",
-                "customer_message": templates[i % len(templates)],
-                "intent_name": intent,
-                "intent_description": {
-                    "polite": "The response must be polite and professional.",
-                    "on_topic": "The response must directly address the customer's specific question.",
-                    "declines_without_being_rude": "The response must decline the request without being rude or dismissive.",
-                }[intent],
-            })
+            dataset.append(
+                {
+                    "example_id": f"{intent}-{i:03d}",
+                    "customer_message": templates[i % len(templates)],
+                    "intent_name": intent,
+                    "intent_description": {
+                        "polite": "The response must be polite and professional.",
+                        "on_topic": (
+                            "The response must directly address the customer's specific question."
+                        ),
+                        "declines_without_being_rude": (
+                            "The response must decline the request without being rude "
+                            "or dismissive."
+                        ),
+                    }[intent],
+                }
+            )
     random.shuffle(dataset)
     dataset = dataset[:200]  # exactly 200
 

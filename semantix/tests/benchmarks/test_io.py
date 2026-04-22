@@ -6,14 +6,30 @@ from benchmarks.common.io import Row, write_csv, write_summary_md
 def _rows() -> list[Row]:
     return [
         Row(
-            example_id="ex-1", experiment="agreement", judge="semantix",
-            intent="polite", text="hello", score=0.9, latency_ms=15,
-            cost_usd=0.0, paid_equivalent_usd=0.0, raw=None, error=None,
+            example_id="ex-1",
+            experiment="agreement",
+            judge="semantix",
+            intent="polite",
+            text="hello",
+            score=0.9,
+            latency_ms=15,
+            cost_usd=0.0,
+            paid_equivalent_usd=0.0,
+            raw=None,
+            error=None,
         ),
         Row(
-            example_id="ex-1", experiment="agreement", judge="groq-llama-3.3-70b",
-            intent="polite", text="hello", score=0.85, latency_ms=300,
-            cost_usd=0.0, paid_equivalent_usd=0.0001, raw="0.85", error=None,
+            example_id="ex-1",
+            experiment="agreement",
+            judge="groq-llama-3.3-70b",
+            intent="polite",
+            text="hello",
+            score=0.85,
+            latency_ms=300,
+            cost_usd=0.0,
+            paid_equivalent_usd=0.0001,
+            raw="0.85",
+            error=None,
         ),
     ]
 

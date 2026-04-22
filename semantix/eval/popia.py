@@ -56,7 +56,7 @@ def evaluate_popia(
     if not eval_path.exists():
         raise FileNotFoundError(str(eval_path))
 
-    rows = [json.loads(l) for l in eval_path.read_text().splitlines() if l.strip()]
+    rows = [json.loads(line) for line in eval_path.read_text().splitlines() if line.strip()]
 
     all_popia: list[tuple[bool, bool]] = []
     all_stock: list[tuple[bool, bool]] = []

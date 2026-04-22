@@ -9,20 +9,22 @@ import sys
 import time
 from pathlib import Path
 
-import dspy
 from dotenv import load_dotenv
 
+import dspy
 from benchmarks.common.cache import JudgeCache
 from benchmarks.common.io import write_csv, write_summary_md
 from benchmarks.common.judges import GeminiFlashJudge, GeminiProJudge, GroqJudge, SemantixJudge
-from benchmarks.common.runner import Example, run_agreement, run_optimization
+from benchmarks.common.runner import run_agreement, run_optimization
 from benchmarks.dspy.customer_support.task import generate_all, load_examples, make_program
 
 HERE = Path(__file__).parent
 RESULTS = HERE / "results"
 
-N_EXAMPLES = 50         # Full dataset is 200; 50 gives tight CIs on free-tier Flash quota
-N_PRO_SLICE = int(os.environ.get("N_PRO_SLICE", "25"))  # Set 0 to skip Pro slice when daily quota (25 RPD) is exhausted
+N_EXAMPLES = 50  # Full dataset is 200; 50 gives tight CIs on free-tier Flash quota
+N_PRO_SLICE = int(
+    os.environ.get("N_PRO_SLICE", "25")
+)  # Set 0 to skip Pro slice when daily quota (25 RPD) is exhausted
 
 
 def _dspy_lm_from_env() -> dspy.LM:
@@ -37,6 +39,7 @@ def _dspy_lm_from_env() -> dspy.LM:
 
 def _cached(judge, cache: JudgeCache):
     """Wrap a judge so get/put hits the cache."""
+
     class Cached:
         name = judge.name
 
@@ -85,17 +88,23 @@ def main() -> None:
     def program_fn(input_dict, reward_fn):
         def adapted(_kwargs, pred):
             return reward_fn(pred.response)
+
         best = dspy.BestOfN(module=program, N=5, reward_fn=adapted, threshold=1.0)
         pred = best(**input_dict)
         return pred.response
 
     opt_rows: list = []
+
     def _on_example_done(ex_rows):
         opt_rows.extend(ex_rows)
         write_csv(agreement_rows + opt_rows, RESULTS / "raw.csv")
+
     try:
         run_optimization(
-            generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
+            generated,
+            program_fn=program_fn,
+            reward_judges=[semantix, groq],
+            final_judge=flash,
             on_example_done=_on_example_done,
         )
         print(f"[4/4] optimization: {len(opt_rows)} rows", flush=True)
@@ -107,14 +116,22 @@ def main() -> None:
     write_summary_md(rows, RESULTS / "summary.md", task_name="customer_support_qa")
 
     git_sha = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True,
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True,
     ).stdout.strip()
-    (RESULTS / "run_metadata.json").write_text(json.dumps({
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "git_sha": git_sha,
-        "examples": len(examples),
-        "judges": [semantix.name, groq.name, flash.name, pro.name],
-    }, indent=2))
+    (RESULTS / "run_metadata.json").write_text(
+        json.dumps(
+            {
+                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "git_sha": git_sha,
+                "examples": len(examples),
+                "judges": [semantix.name, groq.name, flash.name, pro.name],
+            },
+            indent=2,
+        )
+    )
 
     cache.close()
     print(f"done -> {RESULTS}/")

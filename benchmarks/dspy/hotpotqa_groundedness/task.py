@@ -5,9 +5,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import dspy
 from datasets import load_dataset
 
+import dspy
 from benchmarks.common.runner import Example
 
 INDICES = Path(__file__).parent / "indices.json"
@@ -30,12 +30,14 @@ def load_examples() -> list[Example]:
         item = ds[i]
         paras = item["context"]["sentences"]
         context = "\n\n".join(" ".join(s) for s in paras)
-        out.append(Example(
-            example_id=f"hotpot-{i}",
-            text="",
-            intent=INTENT,
-            input={"context": context, "question": item["question"]},
-        ))
+        out.append(
+            Example(
+                example_id=f"hotpot-{i}",
+                text="",
+                intent=INTENT,
+                input={"context": context, "question": item["question"]},
+            )
+        )
     return out
 
 
@@ -51,7 +53,12 @@ def generate_all(examples: list[Example], program: dspy.Module) -> list[Example]
             text = pred.answer
         except Exception as exc:  # noqa: BLE001
             text = f"__GENERATION_ERROR__:{type(exc).__name__}:{exc}"
-        out.append(Example(
-            example_id=ex.example_id, text=text, intent=ex.intent, input=ex.input,
-        ))
+        out.append(
+            Example(
+                example_id=ex.example_id,
+                text=text,
+                intent=ex.intent,
+                input=ex.input,
+            )
+        )
     return out

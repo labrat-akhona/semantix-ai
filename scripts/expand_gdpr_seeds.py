@@ -47,6 +47,7 @@ Output ONLY a JSON array of {n} objects, each with keys "premise" and
 
 def call_anthropic(prompt: str) -> str:
     import anthropic
+
     client = anthropic.Anthropic()
     msg = client.messages.create(
         model="claude-sonnet-4-6",
@@ -58,6 +59,7 @@ def call_anthropic(prompt: str) -> str:
 
 def call_openai(prompt: str) -> str:
     from openai import OpenAI
+
     client = OpenAI()
     resp = client.chat.completions.create(
         model="gpt-4o",
@@ -87,13 +89,15 @@ def expand_seed(seed: dict, provider: str) -> list[dict]:
     for v in data:
         if not isinstance(v, dict) or "premise" not in v or "hypothesis" not in v:
             continue
-        rows.append({
-            "clause": seed["clause"],
-            "premise": v["premise"],
-            "hypothesis": v["hypothesis"],
-            "label": seed["label"],
-            "scenario": seed.get("scenario", "synthetic"),
-        })
+        rows.append(
+            {
+                "clause": seed["clause"],
+                "premise": v["premise"],
+                "hypothesis": v["hypothesis"],
+                "label": seed["label"],
+                "scenario": seed.get("scenario", "synthetic"),
+            }
+        )
     return rows
 
 
@@ -106,7 +110,7 @@ def main() -> int:
         print(f"missing {SEEDS_PATH}", file=sys.stderr)
         return 1
 
-    seeds = [json.loads(l) for l in SEEDS_PATH.read_text().splitlines() if l.strip()]
+    seeds = [json.loads(line) for line in SEEDS_PATH.read_text().splitlines() if line.strip()]
     print(f"expanding {len(seeds)} seeds -> target ~{len(seeds) * VARIANTS_PER_SEED} rows")
 
     seen: set[str] = set()

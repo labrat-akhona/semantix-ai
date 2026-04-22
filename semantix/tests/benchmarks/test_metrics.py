@@ -35,5 +35,7 @@ def test_cohen_kappa_perfect_disagreement():
 
 
 def test_cohen_kappa_handles_zero_variance():
-    # Both raters agree trivially (all True) — chance agreement = observed, kappa undefined -> 0.0 by convention
+    # Both raters agree trivially (all True) — chance agreement = observed,
+    # kappa undefined -> 0.0 by convention
+
     assert cohen_kappa_binary([True, True], [True, True]) == pytest.approx(0.0)

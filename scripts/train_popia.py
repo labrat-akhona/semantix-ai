@@ -55,16 +55,15 @@ def main() -> int:
 
     verify_eval_integrity()
 
-    import torch
     from datasets import Dataset
+    from optimum.onnxruntime import ORTModelForSequenceClassification, ORTQuantizer
+    from optimum.onnxruntime.configuration import AutoQuantizationConfig
     from transformers import (
         AutoModelForSequenceClassification,
         AutoTokenizer,
         Trainer,
         TrainingArguments,
     )
-    from optimum.onnxruntime import ORTModelForSequenceClassification, ORTQuantizer
-    from optimum.onnxruntime.configuration import AutoQuantizationConfig
 
     if TRAIN_PATH.exists():
         source = TRAIN_PATH
@@ -74,7 +73,7 @@ def main() -> int:
     else:
         sys.exit(f"missing both {TRAIN_PATH} and {SEEDS_PATH}")
 
-    rows = [json.loads(l) for l in source.read_text().splitlines() if l.strip()]
+    rows = [json.loads(line) for line in source.read_text().splitlines() if line.strip()]
     print(f"loaded {len(rows)} training rows from {source}")
 
     split_idx = int(len(rows) * 0.9)
@@ -85,15 +84,24 @@ def main() -> int:
 
     def tokenize(batch):
         return tokenizer(
-            batch["premise"], batch["hypothesis"],
-            truncation=True, padding="max_length", max_length=256,
+            batch["premise"],
+            batch["hypothesis"],
+            truncation=True,
+            padding="max_length",
+            max_length=256,
         )
 
     def to_ds(rows):
-        ds = Dataset.from_list([
-            {"premise": r["premise"], "hypothesis": r["hypothesis"], "labels": label_to_id(r["label"])}
-            for r in rows
-        ])
+        ds = Dataset.from_list(
+            [
+                {
+                    "premise": r["premise"],
+                    "hypothesis": r["hypothesis"],
+                    "labels": label_to_id(r["label"]),
+                }
+                for r in rows
+            ]
+        )
         return ds.map(tokenize, batched=True, remove_columns=["premise", "hypothesis"])
 
     train_ds = to_ds(train_rows)
@@ -133,7 +141,8 @@ def main() -> int:
 
     onnx_dir = OUT_DIR / "onnx"
     ort_model = ORTModelForSequenceClassification.from_pretrained(
-        str(pytorch_out), export=True,
+        str(pytorch_out),
+        export=True,
     )
     ort_model.save_pretrained(str(onnx_dir))
     print(f"onnx model saved to {onnx_dir}")
@@ -141,8 +150,12 @@ def main() -> int:
     quantizer = ORTQuantizer.from_pretrained(str(onnx_dir))
     variants = {
         "model_quint8_avx2.onnx": AutoQuantizationConfig.avx2(is_static=False, per_channel=False),
-        "model_qint8_avx512.onnx": AutoQuantizationConfig.avx512(is_static=False, per_channel=False),
-        "model_qint8_avx512_vnni.onnx": AutoQuantizationConfig.avx512_vnni(is_static=False, per_channel=False),
+        "model_qint8_avx512.onnx": AutoQuantizationConfig.avx512(
+            is_static=False, per_channel=False
+        ),
+        "model_qint8_avx512_vnni.onnx": AutoQuantizationConfig.avx512_vnni(
+            is_static=False, per_channel=False
+        ),
         "model_qint8_arm64.onnx": AutoQuantizationConfig.arm64(is_static=False, per_channel=False),
     }
     for filename, qconfig in variants.items():

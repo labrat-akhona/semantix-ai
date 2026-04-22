@@ -8,6 +8,7 @@ from semantix.judges.popia import POPIAJudge
 
 def _all_presets():
     from semantix.presets import popia as m
+
     return [getattr(m, n) for n in m.__all__]
 
 
@@ -31,11 +32,13 @@ def test_all_presets_have_clause_attribute_matching_judge():
 
 def test_breach_preset_is_negated():
     from semantix.presets.popia import POPIA_BREACH
+
     assert POPIA_BREACH.negate is True
 
 
 def test_non_breach_presets_are_not_negated():
     from semantix.presets import popia as m
+
     for name in m.__all__:
         if name == "POPIA_BREACH":
             continue
@@ -45,6 +48,7 @@ def test_non_breach_presets_are_not_negated():
 
 def test_security_preset_has_stricter_threshold():
     from semantix.presets.popia import POPIA_SECURITY
+
     assert POPIA_SECURITY.threshold is not None
     assert 0.8 < POPIA_SECURITY.threshold <= 0.95
 
@@ -57,10 +61,12 @@ def test_all_thresholds_in_valid_range():
 
 def test_preset_count_matches_clause_count():
     from semantix.presets import popia as m
+
     assert len(m.__all__) == len(POPIAJudge.clauses())
 
 
 def test_preset_clauses_cover_all_judge_clauses():
     from semantix.presets import popia as m
+
     covered = {getattr(m, n).clause for n in m.__all__}
     assert covered == set(POPIAJudge.clauses())

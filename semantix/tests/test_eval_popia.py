@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from semantix.eval.popia import EvalReport, evaluate_popia
+from semantix.eval.popia import evaluate_popia
 from semantix.judges import Judge, Verdict
 
 
@@ -32,13 +32,27 @@ def test_perfect_popia_beats_random_stock(tmp_path):
     rows = [
         {"clause": "POPIA consent", "premise": "p1", "hypothesis": "h1", "label": "entailment"},
         {"clause": "POPIA consent", "premise": "p2", "hypothesis": "h2", "label": "contradiction"},
-        {"clause": "POPIA security safeguards", "premise": "p3", "hypothesis": "h3", "label": "entailment"},
-        {"clause": "POPIA security safeguards", "premise": "p4", "hypothesis": "h4", "label": "neutral"},
+        {
+            "clause": "POPIA security safeguards",
+            "premise": "p3",
+            "hypothesis": "h3",
+            "label": "entailment",
+        },
+        {
+            "clause": "POPIA security safeguards",
+            "premise": "p4",
+            "hypothesis": "h4",
+            "label": "neutral",
+        },
     ]
     eval_path = _write_eval(tmp_path, rows)
 
-    popia = ScriptedJudge({("p1", "h1"): True, ("p2", "h2"): False, ("p3", "h3"): True, ("p4", "h4"): False})
-    stock = ScriptedJudge({("p1", "h1"): False, ("p2", "h2"): True, ("p3", "h3"): False, ("p4", "h4"): True})
+    popia = ScriptedJudge(
+        {("p1", "h1"): True, ("p2", "h2"): False, ("p3", "h3"): True, ("p4", "h4"): False}
+    )
+    stock = ScriptedJudge(
+        {("p1", "h1"): False, ("p2", "h2"): True, ("p3", "h3"): False, ("p4", "h4"): True}
+    )
 
     report = evaluate_popia(eval_path, popia, stock)
     assert report.n_pairs == 4
@@ -51,32 +65,63 @@ def test_release_gate_requires_both_delta_and_no_per_clause_regression(tmp_path)
     rows = [
         {"clause": "POPIA consent", "premise": "p1", "hypothesis": "h1", "label": "entailment"},
         {"clause": "POPIA consent", "premise": "p2", "hypothesis": "h2", "label": "entailment"},
-        {"clause": "POPIA security safeguards", "premise": "p3", "hypothesis": "h3", "label": "entailment"},
-        {"clause": "POPIA security safeguards", "premise": "p4", "hypothesis": "h4", "label": "entailment"},
+        {
+            "clause": "POPIA security safeguards",
+            "premise": "p3",
+            "hypothesis": "h3",
+            "label": "entailment",
+        },
+        {
+            "clause": "POPIA security safeguards",
+            "premise": "p4",
+            "hypothesis": "h4",
+            "label": "entailment",
+        },
     ]
     eval_path = _write_eval(tmp_path, rows)
 
-    popia = ScriptedJudge({("p1", "h1"): True, ("p2", "h2"): True, ("p3", "h3"): False, ("p4", "h4"): False})
-    stock = ScriptedJudge({("p1", "h1"): False, ("p2", "h2"): False, ("p3", "h3"): True, ("p4", "h4"): True})
+    popia = ScriptedJudge(
+        {("p1", "h1"): True, ("p2", "h2"): True, ("p3", "h3"): False, ("p4", "h4"): False}
+    )
+    stock = ScriptedJudge(
+        {("p1", "h1"): False, ("p2", "h2"): False, ("p3", "h3"): True, ("p4", "h4"): True}
+    )
 
     report = evaluate_popia(eval_path, popia, stock)
     assert report.per_clause["POPIA consent"][1] > report.per_clause["POPIA consent"][0]
-    assert report.per_clause["POPIA security safeguards"][1] < report.per_clause["POPIA security safeguards"][0]
+    assert (
+        report.per_clause["POPIA security safeguards"][1]
+        < report.per_clause["POPIA security safeguards"][0]
+    )
     assert report.release_gate_passed is False
 
 
 def test_gate_passes_when_delta_ge_10pp_and_no_regression(tmp_path):
     rows = [
-        {"clause": "POPIA consent", "premise": f"p{i}", "hypothesis": f"h{i}", "label": "entailment"}
+        {
+            "clause": "POPIA consent",
+            "premise": f"p{i}",
+            "hypothesis": f"h{i}",
+            "label": "entailment",
+        }
         for i in range(4)
     ] + [
-        {"clause": "POPIA security safeguards", "premise": f"s{i}", "hypothesis": f"sh{i}", "label": "entailment"}
+        {
+            "clause": "POPIA security safeguards",
+            "premise": f"s{i}",
+            "hypothesis": f"sh{i}",
+            "label": "entailment",
+        }
         for i in range(4)
     ]
     eval_path = _write_eval(tmp_path, rows)
 
-    popia_script = {(f"p{i}", f"h{i}"): True for i in range(4)} | {(f"s{i}", f"sh{i}"): True for i in range(4)}
-    stock_script = {(f"p{i}", f"h{i}"): i < 3 for i in range(4)} | {(f"s{i}", f"sh{i}"): i < 2 for i in range(4)}
+    popia_script = {(f"p{i}", f"h{i}"): True for i in range(4)} | {
+        (f"s{i}", f"sh{i}"): True for i in range(4)
+    }
+    stock_script = {(f"p{i}", f"h{i}"): i < 3 for i in range(4)} | {
+        (f"s{i}", f"sh{i}"): i < 2 for i in range(4)
+    }
     popia = ScriptedJudge(popia_script)
     stock = ScriptedJudge(stock_script)
 

@@ -130,7 +130,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Intent to validate against (default: a built-in customer-service intent)",
     )
     prove.add_argument(
-        "--n", type=int, default=100, help="Number of repetitions (default: 100)",
+        "--n",
+        type=int,
+        default=100,
+        help="Number of repetitions (default: 100)",
     )
     prove.add_argument(
         "--judge",
@@ -145,7 +148,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Threshold for pass/fail (default: judge-recommended or 0.8)",
     )
     prove.add_argument(
-        "--no-color", action="store_true", help="Disable ANSI colour output",
+        "--no-color",
+        action="store_true",
+        help="Disable ANSI colour output",
     )
 
     demo = sub.add_parser(
@@ -159,7 +164,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Judge backend (default: quantized with nli fallback)",
     )
     demo.add_argument(
-        "--no-color", action="store_true", help="Disable ANSI colour output",
+        "--no-color",
+        action="store_true",
+        help="Disable ANSI colour output",
     )
 
     verify = sub.add_parser(
@@ -167,13 +174,19 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Verify a semantix audit trail (JSONL file) — check hash chain and summarise",
     )
     verify.add_argument(
-        "path", help="Path to a JSONL audit trail (written by AuditEngine.flush)",
+        "path",
+        help="Path to a JSONL audit trail (written by AuditEngine.flush)",
     )
     verify.add_argument(
-        "--top", type=int, default=5, help="Number of top intents to display (default: 5)",
+        "--top",
+        type=int,
+        default=5,
+        help="Number of top intents to display (default: 5)",
     )
     verify.add_argument(
-        "--no-color", action="store_true", help="Disable ANSI colour output",
+        "--no-color",
+        action="store_true",
+        help="Disable ANSI colour output",
     )
 
     eval_parser = sub.add_parser("eval", help="Run release-gate evaluations.")
@@ -187,6 +200,7 @@ def _build_parser() -> argparse.ArgumentParser:
 def _download_popia_eval():
     """Download eval.jsonl from HF and return the local cached path."""
     from huggingface_hub import hf_hub_download
+
     return hf_hub_download(
         repo_id="labrat-aiko/nli-popia-v1",
         filename="eval.jsonl",
@@ -197,12 +211,14 @@ def _load_popia_judges():
     """Instantiate POPIAJudge and stock QuantizedNLIJudge."""
     from semantix.judges.popia import POPIAJudge
     from semantix.judges.quantized_nli import QuantizedNLIJudge
+
     return POPIAJudge(), QuantizedNLIJudge()
 
 
 def evaluate_popia(*args, **kwargs):
     """Indirection so tests can monkeypatch semantix.cli.evaluate_popia."""
     from semantix.eval.popia import evaluate_popia as _impl
+
     return _impl(*args, **kwargs)
 
 
@@ -223,7 +239,7 @@ def _run_eval_popia(args) -> int:
         out["per_clause"] = {k: list(v) for k, v in out["per_clause"].items()}
         print(json.dumps(out, indent=2))
     else:
-        print(f"\n                    stock    POPIA    Delta")
+        print("\n                    stock    POPIA    Delta")
         print(
             f"Accuracy           {report.stock_accuracy:.2f}     "
             f"{report.popia_accuracy:.2f}     "
@@ -322,10 +338,7 @@ def _run_prove(args) -> int:
 
     print()
     print(f"{_DIM}Wall-clock: {wall_ms:.0f} ms total -- {wall_ms / n:.2f} ms/call{_RESET}")
-    print(
-        f"{_DIM}Latency p50/p95/p99: "
-        f"{p50:.1f} / {p95:.1f} / {p99:.1f} ms{_RESET}"
-    )
+    print(f"{_DIM}Latency p50/p95/p99: {p50:.1f} / {p95:.1f} / {p99:.1f} ms{_RESET}")
     print()
     print(
         f"{_DIM}Determinism matters for CI reward loops, compliance audits, and{_RESET}\n"
@@ -340,7 +353,10 @@ _DEMO_SCENARIOS = [
     {
         "label": "polite response",
         "intent": "polite and professional customer service",
-        "text": "Thank you for reaching out. I've reviewed your complaint and I'm issuing a full refund today.",
+        "text": (
+            "Thank you for reaching out. I've reviewed your complaint and "
+            "I'm issuing a full refund today."
+        ),
         "negate": False,
         "expect": "PASS",
     },
@@ -406,10 +422,12 @@ def _run_demo(args) -> int:
         print()
 
     print(f"{_DIM}Total inference: {total_ms:.1f} ms across {len(_DEMO_SCENARIOS)} checks.{_RESET}")
-    print(f"{_DIM}0 API calls. 0 tokens burned. Scores are deterministic (`semantix prove`).{_RESET}")
+    print(
+        f"{_DIM}0 API calls. 0 tokens burned. Scores are deterministic (`semantix prove`).{_RESET}"
+    )
     print()
     print("Try your own:")
-    print(f"  {_BOLD}semantix check{_RESET} \"your output\" --intent \"what you want\"")
+    print(f'  {_BOLD}semantix check{_RESET} "your output" --intent "what you want"')
     print(f"  {_BOLD}semantix prove{_RESET}    # verify determinism across 100 runs")
     print(f"  {_BOLD}semantix verify{_RESET} audit.jsonl    # check a tamper-evident audit trail")
 
@@ -547,9 +565,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "demo":
         return _run_demo(args)
 
-    if args.command == "eval":
-        if args.eval_target == "popia":
-            return _run_eval_popia(args)
+    if args.command == "eval" and args.eval_target == "popia":
+        return _run_eval_popia(args)
 
     return 0
 

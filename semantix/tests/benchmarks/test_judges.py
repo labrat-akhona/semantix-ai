@@ -1,4 +1,18 @@
-from benchmarks.common.judges import SemantixJudge, JudgeResult
+import json
+from pathlib import Path
+
+import respx
+from httpx import Response
+
+from benchmarks.common.judges import (
+    GeminiFlashJudge,
+    GeminiProJudge,
+    GroqJudge,
+    JudgeResult,
+    SemantixJudge,
+)
+
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
 def test_semantix_judge_returns_score_for_polite_text():
@@ -28,18 +42,6 @@ def test_semantix_judge_scores_rude_text_lower():
         intent="The text must be polite and professional.",
     )
     assert rude.score < polite.score
-
-
-import json
-from pathlib import Path
-
-import pytest
-import respx
-from httpx import Response
-
-from benchmarks.common.judges import GroqJudge
-
-FIXTURES = Path(__file__).parent / "fixtures"
 
 
 @respx.mock
@@ -84,9 +86,6 @@ def test_groq_judge_records_error_on_non_numeric_response(monkeypatch):
     result = judge.evaluate("test", "test")
     assert result.score != result.score  # NaN
     assert result.error is not None
-
-
-from benchmarks.common.judges import GeminiFlashJudge, GeminiProJudge
 
 
 @respx.mock

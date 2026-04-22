@@ -9,9 +9,9 @@ import sys
 import time
 from pathlib import Path
 
-import dspy
 from dotenv import load_dotenv
 
+import dspy
 from benchmarks.common.cache import JudgeCache
 from benchmarks.common.io import write_csv, write_summary_md
 from benchmarks.common.judges import GeminiFlashJudge, GeminiProJudge, GroqJudge, SemantixJudge
@@ -28,7 +28,9 @@ N_PRO_SLICE = int(os.environ.get("N_PRO_SLICE", "25"))
 def _dspy_lm_from_env() -> dspy.LM:
     api_key = os.environ["GROQ_API_KEY"]
     return dspy.LM(
-        model="groq/llama-3.3-70b-versatile", api_key=api_key, temperature=0,
+        model="groq/llama-3.3-70b-versatile",
+        api_key=api_key,
+        temperature=0,
     )
 
 
@@ -78,17 +80,23 @@ def main() -> None:
     def program_fn(input_dict, reward_fn):
         def adapted(_kwargs, pred):
             return reward_fn(pred.answer)
+
         best = dspy.BestOfN(module=program, N=5, reward_fn=adapted, threshold=1.0)
         pred = best(**input_dict)
         return pred.answer
 
     opt_rows: list = []
+
     def _on_example_done(ex_rows):
         opt_rows.extend(ex_rows)
         write_csv(agreement_rows + opt_rows, RESULTS / "raw.csv")
+
     try:
         run_optimization(
-            generated, program_fn=program_fn, reward_judges=[semantix, groq], final_judge=flash,
+            generated,
+            program_fn=program_fn,
+            reward_judges=[semantix, groq],
+            final_judge=flash,
             on_example_done=_on_example_done,
         )
         print(f"[4/4] optimization: {len(opt_rows)} rows", flush=True)
@@ -100,14 +108,22 @@ def main() -> None:
     write_summary_md(rows, RESULTS / "summary.md", task_name="hotpotqa_groundedness")
 
     git_sha = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True,
+        ["git", "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True,
     ).stdout.strip()
-    (RESULTS / "run_metadata.json").write_text(json.dumps({
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "git_sha": git_sha,
-        "examples": len(examples),
-        "judges": [semantix.name, groq.name, flash.name, pro.name],
-    }, indent=2))
+    (RESULTS / "run_metadata.json").write_text(
+        json.dumps(
+            {
+                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "git_sha": git_sha,
+                "examples": len(examples),
+                "judges": [semantix.name, groq.name, flash.name, pro.name],
+            },
+            indent=2,
+        )
+    )
 
     cache.close()
     print(f"done -> {RESULTS}/")

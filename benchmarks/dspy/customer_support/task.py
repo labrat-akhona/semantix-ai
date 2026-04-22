@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 
 import dspy
-
 from benchmarks.common.runner import Example
 
 DATASET = Path(__file__).parent / "dataset.json"
@@ -45,7 +44,5 @@ def generate_all(examples: list[Example], program: dspy.Module) -> list[Example]
             text = pred.response
         except Exception as exc:  # noqa: BLE001
             text = f"__GENERATION_ERROR__:{type(exc).__name__}:{exc}"
-        out.append(
-            Example(example_id=ex.example_id, text=text, intent=ex.intent, input=ex.input)
-        )
+        out.append(Example(example_id=ex.example_id, text=text, intent=ex.intent, input=ex.input))
     return out

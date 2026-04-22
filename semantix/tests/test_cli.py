@@ -23,6 +23,7 @@ from semantix.cli import (
 # _resolve_threshold
 # ---------------------------------------------------------------------------
 
+
 class TestResolveThreshold:
     def test_explicit_wins(self):
         judge = MagicMock(recommended_threshold=0.6)
@@ -41,6 +42,7 @@ class TestResolveThreshold:
 # Parser
 # ---------------------------------------------------------------------------
 
+
 class TestParser:
     def test_check_basic(self):
         parser = _build_parser()
@@ -54,13 +56,19 @@ class TestParser:
 
     def test_check_all_flags(self):
         parser = _build_parser()
-        args = parser.parse_args([
-            "check", "hello",
-            "--intent", "polite",
-            "--threshold", "0.85",
-            "--judge", "nli",
-            "--negate",
-        ])
+        args = parser.parse_args(
+            [
+                "check",
+                "hello",
+                "--intent",
+                "polite",
+                "--threshold",
+                "0.85",
+                "--judge",
+                "nli",
+                "--negate",
+            ]
+        )
         assert args.threshold == 0.85
         assert args.judge == "nli"
         assert args.negate is True
@@ -69,6 +77,7 @@ class TestParser:
 # ---------------------------------------------------------------------------
 # _run_check
 # ---------------------------------------------------------------------------
+
 
 class TestRunCheck:
     def _make_args(self, **overrides):
@@ -167,6 +176,7 @@ class TestRunCheck:
 # main()
 # ---------------------------------------------------------------------------
 
+
 class TestMain:
     def test_no_command_prints_help(self, capsys):
         code = main([])
@@ -182,6 +192,7 @@ class TestMain:
 # ---------------------------------------------------------------------------
 # _resolve_judge
 # ---------------------------------------------------------------------------
+
 
 class TestPercentile:
     def test_empty_returns_zero(self):
@@ -272,10 +283,22 @@ class TestRunProve:
 
     def test_parser_prove_custom(self):
         parser = _build_parser()
-        args = parser.parse_args([
-            "prove", "--text", "x", "--intent", "y", "--n", "5",
-            "--judge", "nli", "--threshold", "0.5", "--no-color",
-        ])
+        args = parser.parse_args(
+            [
+                "prove",
+                "--text",
+                "x",
+                "--intent",
+                "y",
+                "--n",
+                "5",
+                "--judge",
+                "nli",
+                "--threshold",
+                "0.5",
+                "--no-color",
+            ]
+        )
         assert args.text == "x"
         assert args.intent == "y"
         assert args.n == 5
@@ -502,9 +525,7 @@ class TestRunDemo:
         judge = MagicMock()
         judge.recommended_threshold = 0.3
         # Force all scenarios to PASS regardless of expected verdict.
-        judge.evaluate.side_effect = [
-            Verdict(passed=True, score=0.9)
-        ] * (1 + len(_DEMO_SCENARIOS))
+        judge.evaluate.side_effect = [Verdict(passed=True, score=0.9)] * (1 + len(_DEMO_SCENARIOS))
         mock_resolve.return_value = judge
 
         code = _run_demo(self._make_args())

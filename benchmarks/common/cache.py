@@ -38,8 +38,11 @@ class JudgeCache:
             return None
         score, latency_ms, cost_usd, paid, raw = row
         return JudgeResult(
-            score=score, latency_ms=latency_ms, cost_usd=cost_usd,
-            paid_equivalent_usd=paid, raw=raw,
+            score=score,
+            latency_ms=latency_ms,
+            cost_usd=cost_usd,
+            paid_equivalent_usd=paid,
+            raw=raw,
         )
 
     def put(self, judge: str, text: str, intent: str, result: JudgeResult) -> None:

@@ -16,7 +16,7 @@ Hi @isaacbmiller — circling back on #9583. You closed it with:
 
 > "For our providers with integrations, we try to keep it specific to people who have built, measured, and tested specific DSPy features. Are there any DSPy specific features in Semantix?"
 
-Fair. I went and built them. This PR is the resubmission, with the measured + tested part done.
+Fair. I went and built them. This PR is the resubmission, with the measured + tested part done on a small but honest slice.
 
 ## What's DSPy-specific in semantix-ai
 
@@ -25,7 +25,7 @@ Two primitives in `semantix.integrations.dspy`, both compatible with your public
 - **`semantic_reward(intent)`** → `reward_fn(args, pred) -> float`, drop-in for `dspy.BestOfN` and `dspy.Refine`.
 - **`semantic_metric(intent)`** → `metric(example, pred) -> float`, drop-in for `dspy.Evaluate` and `dspy.MIPROv2`.
 
-Both are powered by a local quantized NLI model (~25 MB ONNX). No API call, no key, deterministic, ~15 ms per evaluation on CPU.
+Both are powered by a local quantized NLI cross-encoder (~79 MB INT8 ONNX per CPU variant, auto-selected). No API call, no key, deterministic, ~70 ms per evaluation on CPU.
 
 ```python
 import dspy
@@ -39,36 +39,46 @@ qa = dspy.ChainOfThought("context, question -> answer")
 best = dspy.BestOfN(module=qa, N=5, reward_fn=semantic_reward(Grounded))
 ```
 
-## Measured
+## Measured — customer_support_qa agreement vs Groq Llama 3.3 70B
 
-Reproducible benchmark in the [semantix-ai repo](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks). Two tasks, four judges, two experiments per task.
+Reproducible benchmark in [semantix-ai/benchmarks](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks). 50 paired examples, customer-support polite-response classification, scored by both **semantix (local NLI)** and **Groq Llama 3.3 70B** (free tier).
 
-### Task A — customer_support_qa
+| Metric | Value |
+|---|---|
+| Pearson r (continuous scores) | **0.596** |
+| Cohen's kappa @ 0.5 | 0.487 (moderate agreement) |
+| Cohen's kappa @ 0.3 | 0.633 (substantial agreement) |
+| Binary agreement @ 0.5 | 76% (38/50) |
+| Binary agreement @ 0.3 | 84% (42/50) |
 
-<!-- PASTE headline table from benchmarks/dspy/customer_support/results/summary.md -->
+At threshold 0.3–0.4, semantix reaches substantial agreement with Groq Llama 3.3 70B on this task.
 
-### Task B — hotpotqa_groundedness (HotpotQA distractor validation subset)
+| Latency | semantix | groq-llama-3.3-70b |
+|---|---|---|
+| Mean | 70 ms | 799 ms |
+| p50 | 64 ms | 777 ms |
+| p95 | 121 ms | 992 ms |
+| Paid cost / 1k calls | $0.0000 | $0.1312 |
 
-<!-- PASTE headline table from benchmarks/dspy/hotpotqa_groundedness/results/summary.md -->
+**~11× lower latency and ~$131/day saved at 1M calls vs Groq's paid tier**, with no cross-border data transfer.
 
-### Agreement with proxy-ground-truth (Gemini 2.5 Flash)
+### Honest scope
 
-<!-- PASTE Pearson r row from notebooks -->
+I originally scoped this to four judges × two tasks (customer-support QA + HotpotQA) and an optimization experiment. What actually shipped:
 
-### Flash ↔ Pro verification slice
+- ✅ customer-support QA, semantix vs Groq: 50/50 clean pairs (above)
+- ⚠️ gemini-2.5-flash: 15/50 dropped to free-tier RPD cap (20 req/day/model)
+- ⚠️ gemini-2.5-pro: 25/25 hit the same cap before I could finish the slice
+- ⚠️ HotpotQA task and optimization experiment deferred — Gemini free-tier
+  quota wasn't enough to score a matched set, and I'd rather ship one honest
+  paired comparison than a multi-task table with more holes than data
 
-<!-- PASTE Flash↔Pro Pearson r from 25-example slice -->
+The raw CSVs are committed with error columns intact if anyone wants to audit
+what didn't run.
 
-### Optimization-impact (`dspy.BestOfN(N=5)`, paired)
+## Headline
 
-<!-- PASTE semantix vs Groq win/loss/tie counts -->
-
-<!-- HEADLINE: written only after inspecting actual results. Candidate framings, to be kept or dropped based on the data:
- - "semantix-ai matches Groq on X, trails on Y, at Z× lower latency"
- - "semantix-ai wins on latency, trails on reward-agreement — suitable for iteration loops, not final scoring"
- - "Parity on [task], regression on [other task]"
-Refuse to write a headline that the measured numbers don't support. -->
-
+**semantix-ai reaches 0.596 Pearson / substantial Cohen's kappa agreement with Groq Llama 3.3 70B on polite-response classification, at ~11× lower latency and zero API cost.** Suitable for use as a `reward_fn` or `metric` inside `BestOfN` / `Refine` / `Evaluate` / `MIPROv2` when the per-call latency of an LLM-as-judge would dominate the optimization loop.
 
 ## Full writeup
 
@@ -76,18 +86,21 @@ Dev.to article: <!-- PASTE LINK ONCE PUBLISHED -->
 
 ## This PR
 
-One-row addition to the providers/integrations table, linking to the DSPy integration docs page that hosts working code and the benchmark tables above.
+One-row addition to the providers/integrations table, linking to the DSPy integration docs page that hosts working code and the benchmark above.
 
 Precedent: this mirrors the OpenLIT integration row (#1849) — docs entry + dedicated hosted integration page on the project's own docs site.
 
 ## Reproducibility
 
-- Pinned datasets (synthetic + HotpotQA indices) committed
-- Raw CSVs, `summary.md`, `run_metadata.json` per task
-- Notebooks render on GitHub
+- Pinned dataset (50 customer-support examples, seeded)
+- Raw CSV + `summary.md` with Pearson r / kappa / per-threshold agreement
+- Judge implementations and adapter committed (`benchmarks/common/judges.py`)
 - All runs used **free-tier APIs only** (Groq + Google AI Studio Gemini)
 - Seeded (`dspy.settings.rng = 42`, dataset seed 42)
+- semantix scores regenerated against v0.2.0 (label-index bug fix shipped
+  2026-04-21); both the pre-fix and post-fix score sets are diffable from
+  git history.
 
 ## AI disclosure (per CONTRIBUTING.md)
 
-Portions of this PR (benchmark harness scaffolding, docs polish, commit messages) were drafted with Claude 4.X under my supervision. All claims were verified against actual benchmark outputs before submission. The `semantix_reward` / `semantic_metric` implementations predate Claude assistance.
+Portions of this PR (benchmark harness scaffolding, docs polish, commit messages) were drafted with Claude 4.X under my supervision. All claims were verified against actual benchmark outputs before submission. The `semantic_reward` / `semantic_metric` implementations predate Claude assistance.

@@ -28,6 +28,15 @@
 - **`[popia]` and `[train]` extras** in `pyproject.toml` — Install the POPIA
   runtime with `pip install 'semantix-ai[popia]'` or training deps with
   `[train]`.
+- **New CLI subcommands** (accumulated since v0.1.12):
+  - `semantix prove` — re-runs the same validation N times and proves the
+    judge is deterministic (bit-identical scores).
+  - `semantix demo` — runs three canned scenarios (pass / fail / negated)
+    in under a second; useful as a 60-second smoke demo.
+  - `semantix verify <audit.jsonl>` — checks the hash chain on a tamper-
+    evident audit trail file and prints a summary.
+  - `semantix eval popia` — runs the POPIA release gate against the
+    HF-bundled eval set and emits JSON when passed `--json`.
 
 ### Fixed
 - **QuantizedNLIJudge label-order bug** — Since v0.1.5 the judge was reading

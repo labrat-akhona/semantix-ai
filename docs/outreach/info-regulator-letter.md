@@ -4,12 +4,13 @@
 >
 > **Not asking for:** endorsement, certification, or any claim that the model is "POPIA-compliant" — those are determinations only the Regulator can make.
 >
-> **Recipients (verify before sending):**
-> - Information Officer, Information Regulator South Africa: [inforeg@justice.gov.za](mailto:inforeg@justice.gov.za)
-> - Complaints / general queries: [complaints.IR@justice.gov.za](mailto:complaints.IR@justice.gov.za)
-> - Copy: [enquiries@justice.gov.za](mailto:enquiries@justice.gov.za)
+> **Recipients — last verified 2026-04-22:**
+> - **To:** [enquiries@inforegulator.org.za](mailto:enquiries@inforegulator.org.za)
+> - **Cc:** [POPIAComplaints@inforegulator.org.za](mailto:POPIAComplaints@inforegulator.org.za)
 >
-> **Before sending:** verify all three email addresses at <https://inforegulator.org.za/> — they move from time to time. If the Regulator publishes a new address after 2026-04, use that.
+> **Historical note:** the Regulator previously used `@justice.gov.za` addresses (`inforeg@`, `complaints.IR@`, `enquiries@`). As of the 2026-04-22 send, all three were dead — the Regulator has migrated fully to the `@inforegulator.org.za` domain. The send log at `docs/outreach/regulator-send-log.jsonl` records the migration.
+>
+> **Before any future send:** still verify at <https://inforegulator.org.za/> — addresses can move again.
 
 ---
 

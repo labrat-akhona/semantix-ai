@@ -9,6 +9,7 @@
   <a href="https://github.com/labrat-akhona/semantix-ai/blob/master/LICENSE"><img src="https://img.shields.io/github/license/labrat-akhona/semantix-ai" alt="License"></a>
   <a href="https://pypi.org/project/semantix-ai/"><img src="https://img.shields.io/pypi/dm/semantix-ai?color=green" alt="Downloads"></a>
   <a href="https://labrat-akhona.github.io/semantix-ai/"><img src="https://img.shields.io/badge/docs-mkdocs-blue" alt="Docs"></a>
+  <a href="https://glama.ai/mcp/servers/labrat-akhona/semantix-ai"><img src="https://glama.ai/mcp/servers/labrat-akhona/semantix-ai/badges/score.svg" alt="semantix-ai MCP server"></a>
 </p>
 
 ---

@@ -11,6 +11,7 @@ from benchmarks.common.judges import (
     JudgeResult,
     SemantixJudge,
 )
+from semantix.judges.nli import NLIJudge
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -23,7 +24,7 @@ def test_semantix_judge_returns_score_for_polite_text():
     )
     assert isinstance(result, JudgeResult)
     assert 0.0 <= result.score <= 1.0
-    assert result.score > 0.5  # Should clearly pass
+    assert result.score > NLIJudge.recommended_threshold  # passes at the judge's default operating point
     assert result.latency_ms > 0
     assert result.cost_usd == 0.0
     assert result.paid_equivalent_usd == 0.0

@@ -1,0 +1,17 @@
+[
+  {
+    "user": "What POPIA rule is implicated by this scenario? Sign-up for our homework helper happens on the child's own phone with no parent in the loop \u2014 the learner picks an avatar, types in their email, and immediately starts uploading practice scores.",
+    "gold": "This scenario implicates POPIA \u00a734 and POPIA \u00a735 \u2014 the children's information provisions.",
+    "pred": "This scenario implicates POPIA \u00a734 and POPIA \u00a735 \u2014 the children's information provisions."
+  },
+  {
+    "user": "Which POPIA sections govern data subject rights?",
+    "gold": "The data subject rights concern is anchored in POPIA \u00a75, \u00a723, \u00a724, \u00a725.",
+    "pred": "The data subject rights concern is anchored in POPIA \u00a75 and POPIA \u00a723."
+  },
+  {
+    "user": "What POPIA rule is implicated by this scenario? NUMSA's member-services team uses the union's own membership records to administer benefits and process pension contributions on behalf of its members, under \u00a733's trade-union exception.",
+    "gold": "This scenario implicates POPIA \u00a726 and POPIA \u00a727 \u2014 the special personal information provisions.",
+    "pred": "This scenario implicates POPIA \u00a710 and POPIA \u00a713 \u2014 the special personal information provisions."
+  }
+]

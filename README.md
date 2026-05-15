@@ -23,6 +23,7 @@
 | **`semantix-ai`** | Decorator + library that wraps a judge around every LLM call, with hash-chained audit certificates | [PyPI](https://pypi.org/project/semantix-ai/) |
 | **`nli-popia-v2`** | 10-clause POPIA-grounded NLI judge (consent, minimality, security, breach, cross-border, data-subject-rights, children, special PI, automated decision-making, general processing) | [HuggingFace](https://huggingface.co/labrat-aiko/nli-popia-v2) |
 | **`sa-compliance-embeddings-v1`** | 384-dim embeddings fine-tuned on POPIA Act text + grounded scenarios — POPIA-section retrieval (recall@1 0.211 → 0.477 over `bge-small-en-v1.5`) | [HuggingFace](https://huggingface.co/labrat-aiko/sa-compliance-embeddings-v1) |
+| **`popia-instruct-v0`** | QLoRA adapter on Phi-3-mini for grounded POPIA Q&A. v0 — narrow but real: clause routing + section text recitation, not free-form legal reasoning | [HuggingFace](https://huggingface.co/labrat-aiko/popia-instruct-v0) |
 | **`POPIA-Bench v1`** | 197-pair public benchmark for clause-level POPIA NLI, with pinned eval hashes and a community leaderboard | [`bench/popia-v1/`](bench/popia-v1/) |
 | **`POPIAJudge` preprint** | arXiv cs.CL paper documenting the recipe, results, and limitations | [`papers/popiajudge-arxiv/`](papers/popiajudge-arxiv/) |
 

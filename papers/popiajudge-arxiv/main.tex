@@ -128,8 +128,12 @@ Every original v1 clause continues to beat stock. The smallest gain is on minima
 \subsection{sa-compliance-embeddings-v1}
 \texttt{labrat-aiko/sa-compliance-embeddings-v1} is a 33M-parameter retrieval model fine-tuned from \texttt{bge-small-en-v1.5} on 308 training pairs derived from POPIA Act section text and the labelled scenarios. On a 128-query held-out retrieval task (scenario $\rightarrow$ POPIA section), recall@1 rises from 0.211 to 0.477 over the base model. To our knowledge this is the first publicly distributed embedding model fine-tuned on POPIA-grounded data.
 
-\subsection{popia-instruct-v0 [if shipped before camera-ready]}
-\textit{[Pending --- QLoRA fine-tune of Phi-3-mini-4k-instruct on a grounded instruction dataset derived from POPIA Act sections + the labelled scenarios. Results section to follow.]}
+\subsection{popia-instruct-v0}
+\texttt{labrat-aiko/popia-instruct-v0} is a QLoRA adapter on \texttt{microsoft/Phi-3-mini-4k-instruct} (3.8B params, 4-bit NF4, LoRA r=16) fine-tuned on 805 instruction examples derived deterministically from the POPIA Act sections, the labelled scenarios, and the clause-to-section mapping. The training set contains no LLM-generated text; every assistant response traces to extracted Act content or a hand-authored scenario label.
+
+The adapter is 25.2M trainable parameters (0.65\% of base) and trains in $\sim$85 minutes on the same GTX 1650 used elsewhere in this work. Train loss descends from 1.57 to 0.26; eval loss from 0.38 to 0.33 between epochs, with no overfitting signal.
+
+Qualitatively, the v0 adapter learns the output template and clause-name routing reliably, while section-number recall is partial: it exact-matches gold on clearly-trained clauses (e.g.\ children's information $\rightarrow$ POPIA \S 34--35), partially matches on others (e.g.\ data subject rights $\rightarrow$ \S 5, \S 23 instead of the full \S 5, \S 23, \S 24, \S 25 list), and occasionally cites wrong sections while preserving the correct clause label. We position this honestly as an MVP: clause routing and template fidelity are real; deeper section recall requires v1 work with $10\times$ more training data, a 7B-class base, and case-law and Information Regulator decision data added to the corpus.
 
 \subsection{semantix-ai}
 \texttt{semantix-ai} \cite{semantix-ai} is the Python library that wraps POPIAJudge for production use. It exposes a \texttt{@validate\_intent} decorator that verifies LLM function outputs against declared intents, handles per-leaf decomposition of composite intents, and emits a hash-chained audit certificate per call.

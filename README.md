@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">semantix-ai</h1>
-  <p align="center"><strong>Provable semantic validation for LLM outputs. Local. Deterministic. Auditable.</strong></p>
+  <p align="center"><strong>Regulator-clause-trained NLI judges, datasets, and audit trails — for compliance work in jurisdictions large vendors skip.</strong></p>
 </p>
 
 <p align="center">
@@ -13,6 +13,26 @@
 </p>
 
 ---
+
+## The SA AI Compliance Stack
+
+`semantix-ai` is the Python entry point to a coherent, Apache-licensed compliance stack built around South Africa's Protection of Personal Information Act (POPIA), the first publicly-distributed regulator-clause-fine-tuned NLI judge for any jurisdiction.
+
+| Artifact | What it is | Where |
+|---|---|---|
+| **`semantix-ai`** | Decorator + library that wraps a judge around every LLM call, with hash-chained audit certificates | [PyPI](https://pypi.org/project/semantix-ai/) |
+| **`nli-popia-v2`** | 10-clause POPIA-grounded NLI judge (consent, minimality, security, breach, cross-border, data-subject-rights, children, special PI, automated decision-making, general processing) | [HuggingFace](https://huggingface.co/labrat-aiko/nli-popia-v2) |
+| **`sa-compliance-embeddings-v1`** | 384-dim embeddings fine-tuned on POPIA Act text + grounded scenarios — POPIA-section retrieval (recall@1 0.211 → 0.477 over `bge-small-en-v1.5`) | [HuggingFace](https://huggingface.co/labrat-aiko/sa-compliance-embeddings-v1) |
+| **`POPIA-Bench v1`** | 197-pair public benchmark for clause-level POPIA NLI, with pinned eval hashes and a community leaderboard | [`bench/popia-v1/`](bench/popia-v1/) |
+| **`POPIAJudge` preprint** | arXiv cs.CL paper documenting the recipe, results, and limitations | [`papers/popiajudge-arxiv/`](papers/popiajudge-arxiv/) |
+
+> No competitor publicly distributes a regulator-clause-fine-tuned NLI judge. Llama Guard is trained on hazard taxonomies, Patronus Lynx on RAG faithfulness, Guardrails Hub on PII patterns + classifiers. The clause-pinned compliance niche is empty.
+
+The library below makes the judge usable in a Python program. The stack above makes it *defensible* in a regulatory review.
+
+---
+
+## Quick start
 
 Validate every LLM output against an explicit intent. Get back a score, a verdict, and a tamper-evident receipt. Locally. In ~15-50 milliseconds. Without an API key.
 
@@ -266,7 +286,7 @@ See [Where semantix fits](https://labrat-akhona.github.io/semantix-ai/competitiv
 - **Fast** — ~15-50 ms per check with the quantized judge.
 - **Zero API cost** — no tokens burned for validation.
 - **Auditable** — hash-chained JSON-LD certificates per check.
-- **Well-tested** — 249 tests, MIT licensed.
+- **Well-tested** — 274 tests, MIT licensed (model weights and datasets ship under Apache-2.0 / CC-BY-4.0).
 
 ---
 

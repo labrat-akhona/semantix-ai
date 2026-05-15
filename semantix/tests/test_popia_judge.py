@@ -95,3 +95,49 @@ def test_download_failure_raises_runtime_error_no_silent_fallback(monkeypatch):
 
     with pytest.raises(RuntimeError, match="HF unreachable"):
         POPIAJudge()
+
+
+def test_v2_loads_v2_repo(mocked_onnx, monkeypatch):
+    """version='v2' must load labrat-aiko/nli-popia-v2, not v1."""
+    captured: dict = {}
+
+    def capture_load(variant, repo_id=None):
+        captured["session_repo"] = repo_id
+        from unittest.mock import MagicMock
+        s = MagicMock()
+        s.get_inputs.return_value = []
+        return s
+
+    def capture_tok(repo_id=None):
+        captured["tokenizer_repo"] = repo_id
+        from unittest.mock import MagicMock
+        return MagicMock()
+
+    monkeypatch.setattr("semantix.judges.quantized_nli._load_session", capture_load)
+    monkeypatch.setattr("semantix.judges.quantized_nli._load_tokenizer", capture_tok)
+
+    from semantix.judges.popia import POPIAJudge
+
+    judge = POPIAJudge(version="v2")
+    assert judge.version == "v2"
+    assert captured["session_repo"] == "labrat-aiko/nli-popia-v2"
+    assert captured["tokenizer_repo"] == "labrat-aiko/nli-popia-v2"
+
+
+def test_v2_clauses_includes_ai_critical_set(mocked_onnx):
+    from semantix.judges.popia import POPIAJudge
+
+    v2_clauses = POPIAJudge.clauses(version="v2")
+    assert len(v2_clauses) == 10
+    assert "POPIA children's information" in v2_clauses
+    assert "POPIA special personal information" in v2_clauses
+    assert "POPIA automated decision-making" in v2_clauses
+    # v1 clauses still present
+    assert "POPIA consent" in v2_clauses
+
+
+def test_unknown_version_raises(mocked_onnx):
+    from semantix.judges.popia import POPIAJudge
+
+    with pytest.raises(ValueError, match="unknown POPIAJudge version"):
+        POPIAJudge(version="v3")

@@ -1,5 +1,35 @@
 # Changelog
 
+## v0.2.1 — Dogfooding fixes (2026-05-15)
+
+Two correctness bugs surfaced while integrating semantix-ai into a sibling
+project ([TrustMesh](https://github.com/labrat-akhona)) during its Phase 2.5
+integration. Triage notes for the full feedback set live at
+`docs/backlog/2026-05-15-trustmesh-feedback.md`.
+
+### Fixed
+- **`@validate_intent` silently no-opped on unresolvable annotations.** If a
+  decorated function's signature contained a forward reference or a
+  `TYPE_CHECKING`-only import, `get_type_hints()` would raise; the decorator
+  swallowed the exception and turned itself into a pass-through with no
+  warning. `_resolve_intent_class` now logs a `WARNING` naming the function,
+  the exception class, and the message before returning `None`. Silent
+  no-op is the worst failure mode for a guardrail.
+- **Composite intents scored near zero against NLI judges.** `@validate_intent(A & ~B & ~C)`
+  fed the concatenated multi-clause description to the judge as a single
+  premise/hypothesis pair, which cross-encoder NLI models can't entail —
+  empirically ~0.02 on ideal output. The decorator now decomposes
+  composites into leaves and calls the judge once per leaf, combining
+  verdicts as `AllOf=all(passed)+min(scores)`, `AnyOf=any(passed)+max(scores)`,
+  `Not=not(passed)+1-score`. Each leaf description is a single short
+  sentence the model can directly entail or rule out.
+
+### Notes
+- Both bugs were found by dogfooding, not external adoption — semantix-ai
+  has no confirmed external production users yet. The integration-driven
+  bug-finding is the visible benefit of running one's own library against
+  a sibling project rather than only against unit tests.
+
 ## v0.2.0 — The POPIA Release (2026-04-21)
 
 ### Added

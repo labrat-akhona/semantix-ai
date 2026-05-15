@@ -1056,3 +1056,91 @@ Thank you for reaching out to us about returning your item. We apologize, but ou
 Could you please provide us with more details about the reason for the return and why it was not possible to initiate the return process within the 30-day window? This information will help us better understand your situation and see if there are any alternative solutions we can offer. 
 
 We appreciate your patience and cooperation, and we look forward to finding a resolution that meets your needs.",nan,0.0,0.0,0.0,,429
+declines_without_being_rude-026,optimization,final_judge::gemini-2.5-flash__reward::semantix,The response must decline the request without being rude or dismissive.,"Dear valued customer,
+
+We apologize for the trouble you've experienced and appreciate you bringing this to our attention. We're committed to making things right. Regarding your request, we can offer a full refund for your purchase. As for the coupon, we'd like to provide you with a 10% discount on your next purchase as a gesture of goodwill for the inconvenience you've faced. Please allow us 3-5 business days to process your refund. You will receive an email confirmation once the refund is initiated. If you have any further questions or concerns, please don't hesitate to reach out to us. Your satisfaction is our top priority.",nan,0.0,0.0,0.0,,429
+declines_without_being_rude-026,optimization,final_judge::gemini-2.5-flash__reward::groq-llama-3.3-70b,The response must decline the request without being rude or dismissive.,"Dear valued customer, 
+
+We apologize for the trouble you've experienced and appreciate you bringing this to our attention. We're committed to making things right. Regarding your request for a full refund plus a coupon, we'd like to discuss this further to ensure we're providing the best possible solution. Our standard refund policy allows for a full refund under certain conditions, and we also offer coupons or discounts as a gesture of goodwill in situations like yours. 
+
+Could you please provide more details about the issue you've encountered, including any order numbers or previous communication with our team? This will help us to expedite your request and offer a satisfactory resolution. We're looking forward to resolving this matter promptly and to your satisfaction.
+
+Thank you for your patience and understanding.
+
+Best regards,
+[Customer Service]",nan,0.0,0.0,0.0,,429
+polite-052,optimization,final_judge::gemini-2.5-flash__reward::semantix,The response must be polite and professional.,"Dear valued customer, I apologize sincerely for the third instance of our service failing to meet your expectations. I understand how frustrating this must be for you, and I want to assure you that we take these issues seriously. I would like to investigate this matter further and provide a suitable solution to prevent such failures in the future. Could you please provide more details about the issue you're experiencing, including any error messages you've encountered? Your patience and cooperation are greatly appreciated, and I'll do my best to resolve this issue promptly.",nan,0.0,0.0,0.0,,429
+polite-052,optimization,final_judge::gemini-2.5-flash__reward::groq-llama-3.3-70b,The response must be polite and professional.,"Dear valued customer, 
+
+I am deeply sorry to hear that our service has failed for the third time. I understand how frustrating this must be for you, and I want to assure you that we take situations like this very seriously. I would like to investigate this matter further to identify the root cause of the issue and work on a solution to prevent it from happening again in the future.
+
+Could you please provide more details about the service failure, such as the date and time it occurred, and any error messages you may have received? This information will help me assist you more efficiently. Additionally, I'd like to offer you a suitable alternative or compensation for the inconvenience you've experienced.
+
+Please know that we appreciate your patience and cooperation. Your satisfaction is our top priority, and I am committed to making things right. If you have any further questions or concerns, please do not hesitate to reach out to me directly.
+
+Thank you for your feedback, and I look forward to resolving this issue for you.
+
+Best regards,
+[Your Customer Service Representative]",nan,0.0,0.0,0.0,,429
+on_topic-058,optimization,final_judge::gemini-2.5-flash__reward::semantix,The response must directly address the customer's specific question.,"Dear valued customer,
+
+We apologize for the inconvenience you have experienced with the charger not matching your device. We understand how frustrating this can be and want to make it right. Could you please provide us with more details about your device, such as the model number, and the charger you received? This information will help us to identify the correct charger for your device and expedite a replacement. If you would prefer, you can also return the incorrect charger for a full refund. Please let us know which option you prefer, and we will be happy to assist you further.
+
+Thank you for your patience and cooperation.
+
+Best regards,
+Customer Service Team",nan,0.0,0.0,0.0,,429
+on_topic-058,optimization,final_judge::gemini-2.5-flash__reward::groq-llama-3.3-70b,The response must directly address the customer's specific question.,"Dear valued customer,
+
+Thank you for reaching out to us about the issue with your charger. We apologize for the inconvenience caused by receiving a charger that does not match your device. We understand the importance of receiving the correct accessories for your device, and we are here to help.
+
+Could you please provide us with your order number and the model of your device so we can look into this further? We will be happy to send a replacement charger that is compatible with your device. If you have already tried to use the incorrect charger, please do not use it further to avoid any potential damage to your device.
+
+We appreciate your patience and cooperation in this matter and are committed to making things right. If you have any questions or concerns, please do not hesitate to contact us.
+
+Thank you for choosing our company, and we look forward to resolving this issue for you.
+
+Best regards,
+[Your Company Name]",nan,0.0,0.0,0.0,,429
+on_topic-039,optimization,final_judge::gemini-2.5-flash__reward::semantix,The response must directly address the customer's specific question.,"Dear valued customer, thank you for reaching out to us about the duplicate charge on your card. We apologize for the inconvenience this has caused and are here to assist you in resolving the issue. To process your refund, could you please provide us with your order number and the date of the transaction? We will investigate this matter promptly and ensure that the duplicate charge is refunded to your card as soon as possible. If you have any further questions or concerns, please do not hesitate to contact us.",0.2,2730.025900003966,0.0,2.97e-05,0.2,
+on_topic-039,optimization,final_judge::gemini-2.5-flash__reward::groq-llama-3.3-70b,The response must directly address the customer's specific question.,"Dear valued customer, thank you for bringing this matter to our attention. We apologize for the inconvenience caused by the duplicate charge on your card. We understand the frustration this can cause and are here to assist you in resolving this issue as quickly as possible. To process your refund, could you please provide us with your order number and the date of the transaction? This information will help us to locate the duplicate charge and initiate the refund process. We appreciate your patience and cooperation and will keep you updated on the status of your refund.",0.0,1364.5650999969803,0.0,3.0225e-05,0.0,
+on_topic-006,optimization,final_judge::gemini-2.5-flash__reward::semantix,The response must directly address the customer's specific question.,"Dear valued customer,
+
+Thank you for reaching out to us about changing the delivery address for order #12345. We understand the importance of ensuring your order reaches the correct location. To assist you with this request, could you please provide us with the new delivery address you would like to use? Additionally, we will need to check on the current status of your order. If the order has not yet shipped, we may be able to accommodate your request. However, if the order has already been processed for shipping, address changes might not be possible. We will review your order and get back to you as soon as possible with further instructions.
+
+Please allow us 24-48 hours to process your request. If you have any additional questions or concerns, do not hesitate to contact us. Your satisfaction is our top priority, and we appreciate your patience and understanding in this matter.
+
+Thank you for choosing our service, and we look forward to resolving this for you promptly.
+
+Best regards,
+[Customer Service Team]",nan,0.0,0.0,0.0,,429
+on_topic-006,optimization,final_judge::gemini-2.5-flash__reward::groq-llama-3.3-70b,The response must directly address the customer's specific question.,"Dear valued customer,
+
+Thank you for reaching out to us about changing the delivery address for order #12345. We understand the importance of ensuring your order reaches the correct location. To assist you with this request, could you please provide us with the new delivery address you would like to use? Additionally, we will need to check on the current status of your order. If the order has not yet shipped, we may be able to accommodate your request. However, if the order has already been processed for shipping, address changes might not be possible. We will review your order and get back to you as soon as possible with further instructions.
+
+Please allow us 24-48 hours to process your request. If you have any additional questions or concerns, do not hesitate to contact us. Your satisfaction is our top priority, and we appreciate your patience and understanding in this matter.
+
+Thank you for choosing our service, and we look forward to resolving this for you promptly.
+
+Best regards,
+[Customer Service Team]",nan,0.0,0.0,0.0,,429
+on_topic-046,optimization,final_judge::gemini-2.5-flash__reward::semantix,The response must directly address the customer's specific question.,"Dear valued customer,
+
+Thank you for reaching out to us about changing the delivery address for order #12345. We understand the importance of ensuring your order reaches the correct location. To assist you with this request, could you please provide us with the new delivery address you would like to use? Additionally, we will need to check on the current status of your order. If the order has not yet shipped, we may be able to accommodate your request. However, if the order has already been processed for shipping, address changes might not be possible. We will review your order and get back to you as soon as possible with further instructions.
+
+Please allow us 24-48 hours to process your request. If you have any additional questions or concerns, do not hesitate to contact us. Your satisfaction is our top priority, and we appreciate your patience and understanding in this matter.
+
+Thank you for choosing our service, and we look forward to resolving this for you promptly.
+
+Best regards,
+[Customer Service Team]",0.0,2062.915599963162,0.0,3.8100000000000005e-05,0.,
+on_topic-046,optimization,final_judge::gemini-2.5-flash__reward::groq-llama-3.3-70b,The response must directly address the customer's specific question.,"Dear valued customer,
+
+Thank you for reaching out to us about changing the delivery address for order #12345. We understand the importance of ensuring your order reaches the correct location. To assist you with this request, could you please provide us with the new delivery address you would like to use? Additionally, we will need to check on the current status of your order. If the order has not yet shipped, we may be able to accommodate your request. However, if the order has already been processed for shipping, address changes might not be possible. We will review your order and get back to you as soon as possible with further instructions.
+
+Please allow us 24-48 hours to process your request. If you have any additional questions or concerns, do not hesitate to contact us. Your satisfaction is our top priority, and we appreciate your patience and understanding in this matter.
+
+Thank you for choosing our service, and we look forward to resolving this for you promptly.
+
+Best regards,
+[Customer Service Team]",0.0,2062.915599963162,0.0,3.8100000000000005e-05,0.,

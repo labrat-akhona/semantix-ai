@@ -73,7 +73,10 @@ all = [
     "instructor>=1.0",
     "pydantic-ai>=0.1",
     "langchain-core>=0.3",
-    "guardrails-ai>=0.5.0",
+    # guardrails-ai intentionally omitted — see [guardrails] extra.
+    # The package is currently quarantined on PyPI; users who want the
+    # integration can install it explicitly via `pip install semantix-ai[guardrails]`
+    # once upstream lifts the quarantine.
     "dspy>=2.6",
 ]
 dev = [
@@ -90,7 +93,8 @@ dev = [
     "instructor>=1.0",
     "pydantic-ai>=0.1",
     "langchain-core>=0.3",
-    "guardrails-ai>=0.5.0",
+    # guardrails-ai is quarantined on PyPI; tests for the integration use
+    # pytest.importorskip and skip cleanly when the package is unavailable.
     "dspy>=2.6",
 ]
 docs = [

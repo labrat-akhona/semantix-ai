@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from semantix.tests.conftest import MockJudge
+import pytest
+
+# guardrails-ai is an optional integration dep; when it isn't installed
+# (e.g. the package is currently quarantined on PyPI) skip the whole module.
+pytest.importorskip("guardrails")
+
+from semantix.tests.conftest import MockJudge  # noqa: E402
 
 
 def test_passing_validation_returns_pass_result():

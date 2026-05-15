@@ -1,0 +1,35 @@
+{
+  "stock_v1_f1": 0.4960194375516956,
+  "stock_v1_per_clause": {
+    "POPIA consent": 0.573268921095008,
+    "POPIA minimality / purpose limitation": 0.5286195286195287,
+    "POPIA security safeguards": 0.2371794871794872,
+    "POPIA breach notification": 0.3353174603174603,
+    "POPIA cross-border transfers": 0.6137022397891964,
+    "POPIA general processing": 0.43686868686868685,
+    "POPIA data subject rights": 0.4761904761904761
+  },
+  "v2_model_v1_f1": 0.7465253851392465,
+  "v2_model_v1_per_clause": {
+    "POPIA consent": 0.8214285714285715,
+    "POPIA minimality / purpose limitation": 0.628968253968254,
+    "POPIA security safeguards": 0.5702075702075702,
+    "POPIA breach notification": 0.6842592592592592,
+    "POPIA cross-border transfers": 0.8591880341880342,
+    "POPIA general processing": 0.8087912087912087,
+    "POPIA data subject rights": 0.8086978381096027
+  },
+  "stock_v2_f1": 0.3284950343773873,
+  "stock_v2_per_clause": {
+    "POPIA children's information": 0.3386243386243386,
+    "POPIA special personal information": 0.36481481481481487,
+    "POPIA automated decision-making": 0.25925925925925924
+  },
+  "v2_model_v2_f1": 0.8620911551946034,
+  "v2_model_v2_per_clause": {
+    "POPIA children's information": 0.9267399267399267,
+    "POPIA special personal information": 0.797979797979798,
+    "POPIA automated decision-making": 0.85
+  },
+  "gate_pass": true
+}

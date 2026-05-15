@@ -80,11 +80,16 @@ def test_not_composable_with_allof():
 
 
 def test_not_usable_with_validate_intent():
-    """Not intent works end-to-end with a mock judge."""
+    """Not intent works end-to-end with a mock judge.
+
+    The mock reports that the output does NOT match MedicalAdvice
+    (passed=False against the *positive* clause), so ~MedicalAdvice must
+    PASS — its negated verdict is True.
+    """
     from semantix.decorator import validate_intent
 
     Safe = ~MedicalAdvice
-    judge = MockJudge(passed=True, score=0.95)
+    judge = MockJudge(passed=False, score=0.05)
 
     @validate_intent(judge=judge)
     def chatbot(msg: str) -> Safe:

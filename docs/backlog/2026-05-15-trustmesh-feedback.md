@@ -65,9 +65,20 @@ case has no signal at all.
 
 ---
 
-## 2. Critical — composite Intent descriptions don't entail well in NLI judges
+## 2. Critical — composite Intent descriptions don't entail well in NLI judges — **FIXED 2026-05-15**
 
 **Where:** Composite intents built with `&` / `|` / `~`.
+
+**Fix:** The decorator now decomposes composites into leaves and calls the
+judge once per leaf, combining verdicts as AllOf=min(scores)+all(passed),
+AnyOf=max(scores)+any(passed), Not=1-score+not(passed). NLI judges entail
+each single-clause leaf description directly. `AllOf` / `AnyOf` carry an
+explicit `_compose_kind` marker to disambiguate them. Three regression
+tests in `semantix/tests/test_composite.py` cover the per-leaf calls, the
+fail-when-any-negated-leaf-matches case, and AnyOf passing on a single
+leaf. One pre-existing test in `test_not_intent.py` had a semantically
+wrong expectation that was masked by the bug; it was corrected (mock now
+reports the truthful "output does not match the positive clause").
 
 **Symptom:** `@validate_intent(A & ~B & ~C)` rejects even ideal output.
 

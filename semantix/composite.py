@@ -28,6 +28,7 @@ def AllOf(*intent_classes: type[Intent]) -> type[Intent]:
     ns: dict[str, object] = {
         "__doc__": combined_doc,
         "_component_intents": intent_classes,
+        "_compose_kind": "all",
     }
     if explicit:
         ns["threshold"] = min(cls.threshold for cls in explicit)
@@ -58,6 +59,7 @@ def AnyOf(*intent_classes: type[Intent]) -> type[Intent]:
     ns: dict[str, object] = {
         "__doc__": combined_doc,
         "_component_intents": intent_classes,
+        "_compose_kind": "any",
     }
     if explicit:
         ns["threshold"] = max(cls.threshold for cls in explicit)

@@ -116,6 +116,66 @@ def _build_feedback(err: SemanticIntentError, attempt: int) -> str:
     )
 
 
+def _threshold_for(judge: Judge, intent_cls: type[Intent]) -> float:
+    """Pick the threshold for *intent_cls*: the class's own if it sets one,
+    else the judge's recommended_threshold, else the class default."""
+    if "threshold" not in intent_cls.__dict__ and judge.recommended_threshold is not None:
+        return judge.recommended_threshold
+    return intent_cls.threshold
+
+
+def _evaluate_intent(
+    judge: Judge,
+    raw_output: str,
+    intent_cls: type[Intent],
+) -> Verdict:
+    """Recursively evaluate *intent_cls* against *raw_output*.
+
+    Composite intents (AllOf / AnyOf / Not) are decomposed into their leaves
+    and the judge is called once per leaf — NLI cross-encoders can't entail
+    a multi-clause concatenated description, so feeding the composite's full
+    docstring scores near zero even on ideal output. See TrustMesh feedback
+    #2 in docs/backlog/2026-05-15-trustmesh-feedback.md.
+    """
+    kind = intent_cls.__dict__.get("_compose_kind")
+    if kind == "all":
+        verdicts = [
+            _evaluate_intent(judge, raw_output, leaf)
+            for leaf in intent_cls._component_intents  # type: ignore[attr-defined]
+        ]
+        scores = [v.score for v in verdicts if v.score is not None]
+        return Verdict(
+            passed=all(v.passed for v in verdicts),
+            score=min(scores) if scores else None,
+            reason=next((v.reason for v in verdicts if not v.passed and v.reason), None),
+        )
+    if kind == "any":
+        verdicts = [
+            _evaluate_intent(judge, raw_output, leaf)
+            for leaf in intent_cls._component_intents  # type: ignore[attr-defined]
+        ]
+        scores = [v.score for v in verdicts if v.score is not None]
+        return Verdict(
+            passed=any(v.passed for v in verdicts),
+            score=max(scores) if scores else None,
+            reason=None,
+        )
+    negated = intent_cls.__dict__.get("_negated_intent")
+    if negated is not None:
+        inner = _evaluate_intent(judge, raw_output, negated)
+        return Verdict(
+            passed=not inner.passed,
+            score=(1.0 - inner.score) if inner.score is not None else None,
+            reason=(f"matched {negated.__name__}" if inner.passed else None),
+        )
+    # Leaf intent: hand the single-clause description to the judge.
+    return judge.evaluate(
+        raw_output,
+        intent_cls.description(),
+        _threshold_for(judge, intent_cls),
+    )
+
+
 def _run_judge(
     judge: Judge,
     raw_output: str,
@@ -126,20 +186,12 @@ def _run_judge(
 
     Returns a ``(Intent, Verdict)`` tuple on success; raises ``SemanticIntentError`` on failure.
     """
-    description = intent_cls.description()
-    # Use the judge's recommended threshold when the Intent doesn't
-    # explicitly override the default.
-    if "threshold" not in intent_cls.__dict__ and judge.recommended_threshold is not None:
-        threshold = judge.recommended_threshold
-    else:
-        threshold = intent_cls.threshold
-
     with log_validation(
         intent_cls.__name__,
         attempt=attempt,
         output_preview=raw_output,
     ) as ctx:
-        verdict: Verdict = judge.evaluate(raw_output, description, threshold)
+        verdict = _evaluate_intent(judge, raw_output, intent_cls)
         ctx["passed"] = verdict.passed
         ctx["score"] = verdict.score
         ctx["reason"] = verdict.reason
@@ -148,7 +200,7 @@ def _run_judge(
         raise SemanticIntentError(
             output=raw_output,
             intent_name=intent_cls.__name__,
-            intent_description=description,
+            intent_description=intent_cls.description(),
             score=verdict.score,
             reason=verdict.reason,
         )

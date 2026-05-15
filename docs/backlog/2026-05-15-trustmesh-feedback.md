@@ -7,9 +7,14 @@ as we get to each one.*
 
 ---
 
-## 1. Critical — `validate_intent` silently no-ops on unresolvable annotations
+## 1. Critical — `validate_intent` silently no-ops on unresolvable annotations — **FIXED 2026-05-15**
 
 **Where:** `semantix/decorator.py::_resolve_intent_class`
+
+**Fix:** `_resolve_intent_class` now emits a `logger.warning` naming the
+function, the exception class, and the message before returning None.
+Regression test: `test_unresolvable_annotations_warn_and_noop` in
+`semantix/tests/test_decorator.py`. Slated for the v0.2.1 release.
 
 **Symptom:** A decorated function passes through every output unchecked, with no
 warning, no log line, no exception. Took ~30 minutes to diagnose.

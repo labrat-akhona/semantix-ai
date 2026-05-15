@@ -55,6 +55,39 @@ def test_no_intent_return_type_is_noop():
     assert judge.call_count == 0  # never invoked
 
 
+def test_unresolvable_annotations_warn_and_noop(caplog):
+    """If get_type_hints() raises (forward ref, TYPE_CHECKING-only import),
+    the decorator must warn instead of silently no-opping. See TrustMesh
+    feedback #1 (docs/backlog/2026-05-15-trustmesh-feedback.md).
+    """
+    judge = MockJudge(passed=True)
+
+    # Build a function whose annotation references a symbol that doesn't
+    # exist at runtime — get_type_hints() will raise NameError.
+    def make_fn():
+        ns: dict = {}
+        exec(
+            "def fn(x: 'NonExistentType') -> 'AlsoMissing':\n    return 'hi'\n",
+            ns,
+        )
+        return ns["fn"]
+
+    fn = make_fn()
+
+    with caplog.at_level("WARNING", logger="semantix"):
+        wrapped = validate_intent(judge=judge)(fn)
+
+    # Function still callable as a no-op (validation can't run).
+    assert wrapped("anything") == "hi"
+    assert judge.call_count == 0
+
+    # The user must see a warning explaining why validation was skipped.
+    assert any(
+        "validate_intent" in rec.message and "no-op" in rec.message
+        for rec in caplog.records
+    ), f"expected no-op warning, got: {[r.message for r in caplog.records]}"
+
+
 # ── retries ─────────────────────────────────────────────────────────────
 
 

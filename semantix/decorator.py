@@ -55,7 +55,18 @@ def _resolve_intent_class(func: Callable[..., Any]) -> type[Intent] | None:
     """Return the Intent subclass from *func*'s return annotation, or None."""
     try:
         hints = get_type_hints(func)
-    except Exception:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
+        # Forward references or TYPE_CHECKING-only imports in the signature
+        # make get_type_hints() raise. Warn so callers don't get a silent
+        # no-op decorator — that's the worst failure mode for a guardrail.
+        logger.warning(
+            "validate_intent: cannot resolve annotations for %s (%s: %s) — "
+            "decorator will no-op. Check for forward references or "
+            "TYPE_CHECKING-only imports in the function signature.",
+            getattr(func, "__qualname__", getattr(func, "__name__", repr(func))),
+            type(exc).__name__,
+            exc,
+        )
         return None
     ret = hints.get("return")
     if ret is None:

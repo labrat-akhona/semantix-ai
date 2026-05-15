@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{cite}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black,
+}
+
+\title{POPIAJudge: A Compliance-Pinned NLI Judge for South African Data Protection}
+\author{Akhona Eland \\ \texttt{akhona@automationarchitects.ai}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We introduce \textbf{POPIAJudge}, a small cross-encoder NLI model fine-tuned to verify whether real-world processing scenarios comply with named clauses of South Africa's Protection of Personal Information Act (POPIA). On a held-out 150-pair holdout covering seven core POPIA clauses, the v1 model raises macro F1 from 0.517 (stock cross-encoder) to 0.813 ($+29.6$pp). The v2 model extends coverage to ten clauses --- adding children's information ($\S34$--$35$), special personal information ($\S26$--$33$), and automated decision-making ($\S71$) --- and achieves $+25.05$pp over stock on the original holdout while gaining $+53.36$pp on the new clauses. We release model weights, training data, eval sets with pinned cryptographic hashes, and a reproducible training recipe under Apache-2.0. To our knowledge, this is the first publicly distributed regulator-clause-fine-tuned NLI judge for any jurisdiction; published reference models target hazard taxonomies (Llama Guard), RAG faithfulness (Patronus Lynx), or PII pattern rules (Guardrails Hub), not statutory clauses. The artifact is positioned not as an LLM-safety competitor but as the missing primitive for clause-level compliance reasoning --- a primitive that becomes load-bearing as the EU AI Act Article 50 binds (2 August 2026) and as South African financial-sector regulators (FSCA, Prudential Authority) explicitly demand POPIA-coordinated AI governance.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+The 2025--2026 wave of regulatory action --- the EU AI Act \cite{eu-ai-act}, the US OMB M-26-04 procurement memorandum \cite{omb-m-26-04}, the South African Financial Sector Conduct Authority and Prudential Authority's joint AI report \cite{fsca-pa-2025}, and ongoing Information Regulator enforcement under POPIA \cite{popia} --- creates a concrete operational need that the existing AI-safety toolchain does not directly address: \emph{verifying that the output of an LLM-driven system complies with a named statutory clause}.
+
+Current public artifacts are aimed elsewhere. Llama Guard \cite{llama-guard} classifies inputs and outputs against a hazard taxonomy. Patronus Lynx \cite{patronus-lynx} is a hallucination detector for RAG. Guardrails Hub \cite{guardrails-ai} ships pattern-based validators (PII, profanity, JSON shape) and pluggable classifiers. None of these ship weights trained against the literal clause structure of a specific statute. Academic prior art --- LegiLM \cite{legilm} for GDPR Q\&A and EXCLAIM \cite{exclaim} for multi-hop reasoning over GDPR assurance cases --- provides papers but not deployable models with persistent identifiers.
+
+This paper introduces POPIAJudge, fills that gap for South Africa's POPIA, and documents the recipe so that comparable judges can be built for GDPR, HIPAA, EU AI Act Annex III high-risk categories, and other clause-structured regulations. Our contributions:
+
+\begin{itemize}
+\item A reproducible recipe for fine-tuning a cross-encoder NLI judge against the operative provisions of a national data-protection statute, using $<$300 hand-authored training rows per release.
+\item Two trained models (\texttt{nli-popia-v1}, 7-clause, macro F1 0.813; \texttt{nli-popia-v2}, 10-clause including the three highest-leverage clauses for AI workloads) and an embedding model (\texttt{sa-compliance-embeddings-v1}) for compliance retrieval, all Apache-2.0.
+\item An eval methodology with cryptographically-pinned holdouts that supports honest release-gate semantics without requiring a frozen leaderboard infrastructure.
+\item An honest cost-and-tradeoff section: extending clause coverage on the same 22M-param base trades $\sim$7pp of in-domain macro F1 for $+53$pp on the new clauses, suggesting larger bases are a productive next investment.
+\end{itemize}
+
+We argue the artifact's significance is positional rather than methodological. The technique --- contrastive fine-tuning of a small NLI cross-encoder on hand-authored clause-grounded triples --- is straightforward and replicable. The contribution is the demonstration that this works well enough to ship and to anchor real-world compliance review, that it can be done on commodity hardware (a single GTX 1650), and that it fills an empirically empty niche in the public artifact landscape.
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{LLM safety / guardrail libraries.} A 2024--2026 consolidation reduced the independent OSS safety layer to a handful of survivors: Patronus AI \cite{patronus-lynx}, Guardrails AI \cite{guardrails-ai}, NeMo Guardrails \cite{nemo-guardrails}, DeepEval, and PromptFoo (acquired by OpenAI, March 2026 \cite{promptfoo-acquisition}). Robust Intelligence joined Cisco AI Defense; Protect AI joined Palo Alto Prisma AIRS; Lakera was acquired by Check Point; CalypsoAI became F5 AI Guardrails. None of these ship weights trained against named statutory clauses --- they ship classifiers over hazard taxonomies, RAG faithfulness, or pattern rules.
+
+\paragraph{Hazard-taxonomy classifiers.} Meta's Llama Guard family \cite{llama-guard} trains a generative classifier against the MLCommons hazard taxonomy. The taxonomy is jurisdiction-agnostic; the model does not encode statutory text. The Patronus Lynx model \cite{patronus-lynx} focuses on RAG hallucination detection. These models complement, but do not substitute for, clause-level entailment.
+
+\paragraph{Legal-domain language models.} LegiLM \cite{legilm} is a GDPR-focused LM fine-tuned for question answering. EXCLAIM \cite{exclaim} demonstrates multi-hop entailment over GDPR assurance cases. ContractNLI \cite{contract-nli} provides a contract-entailment benchmark. None release a clause-pinned NLI judge with deployment-grade weights for a national statute --- the niche this work fills.
+
+\paragraph{Context engineering and output-side verification.} The 2025--2026 framing of LLM application engineering as \emph{context engineering} \cite{karpathy-context, anthropic-context, mei-survey} highlights an emerging stack: retrieval, compaction, persistent memory, and tool-integrated reasoning. Compliance verification has natural insertion points at (a) the pre-call context-quality gate, (b) the compaction-time clause-risk filter, and (c) the post-generation check. We adopt the third pattern as the simplest to deploy, while noting that the second is an unclaimed slot in the current taxonomy.
+
+\paragraph{Compliance-aware retrieval.} General embedding models such as \texttt{intfloat/e5-small-v2} \cite{e5} and \texttt{BAAI/bge-small-en-v1.5} \cite{bge} are not specifically trained on national-statute text. We release \texttt{sa-compliance-embeddings-v1} as a companion model that raises POPIA-section recall@1 from 0.211 to 0.477 over the same base.
+
+\section{The POPIA Compliance NLI Task}
+\label{sec:task}
+
+POPIA \cite{popia} sets out eight Conditions for Lawful Processing in Chapter 3 ($\S\S 9$--$25$) plus additional regimes for special personal information ($\S\S 26$--$33$), children ($\S\S 34$--$35$), cross-border transfers ($\S 72$), direct marketing ($\S 69$), and automated decision-making ($\S 71$). The Act is structured around named conditions and clauses, each with operative criteria.
+
+We frame compliance verification as a clause-conditioned NLI task. Given a \emph{premise} (a description of a real-world processing scenario, e.g., "Our app collects under-13 learner data without parental consent") and a \emph{hypothesis} (a clause-grounded claim, e.g., "The responsible party has obtained consent from a competent person before processing the child's personal information"), the judge predicts \texttt{contradiction}, \texttt{entailment}, or \texttt{neutral}.
+
+This framing has two properties that matter for downstream deployment. First, the judge does not need to know what the operator's intent was --- it only needs to assess the scenario against a clause-grounded claim. Second, composite intents (consent AND minimality AND not-marketing) decompose to per-clause judgments and can be combined post-hoc, which we exploit in our companion \texttt{semantix-ai} library.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Base model}
+Both versions use \texttt{cross-encoder/nli-MiniLM2-L6-H768} \cite{minilm-cross-encoder}, a 22M-parameter MiniLM-based cross-encoder pretrained on a mixture of NLI datasets. We retain the label order $\{0: \mathrm{contradiction}, 1: \mathrm{entailment}, 2: \mathrm{neutral}\}$ to reuse the inherited classifier head.
+
+\subsection{Data construction}
+v1 uses 60 \emph{seeds} and 120 \emph{paraphrases} covering seven POPIA clauses (consent, minimality, security safeguards, general processing, breach notification, cross-border transfers, data subject rights). v2 extends this with 27 new seeds and 54 new paraphrases covering three additional clauses (children's information, special personal information, automated decision-making). All examples are hand-authored, anchored in plausible South African business scenarios (Capitec, Pick n Pay, Discovery, TymeBank, SASSA, Department of Basic Education, and similar). Eval sets are entirely separate from training: 150 pairs for v1 ($\S$\ref{sec:eval}), 48 pairs for v2's new clauses.
+
+\subsection{Training}
+3 epochs (v1) / 6 epochs (v2), AdamW with learning rate $2 \times 10^{-5}$, batch size 16, warmup ratio 0.1, weight decay 0.01. Best model selected by lowest dev-loss. The full training run completes in $\sim$50s for v1 and $\sim$2 min for v2 on a single NVIDIA GTX 1650 (4 GB VRAM, Turing, CUDA 12.1). The training script is released at \url{https://github.com/labrat-akhona/semantix-ai/blob/master/scripts/train_popia_v2.py}.
+
+\subsection{ONNX export and quantization}
+We export to ONNX and produce four CPU-targeted quantized variants (AVX2, AVX512, AVX512-VNNI, ARM64) via \texttt{optimum.onnxruntime}. The final \texttt{model\_qint8\_avx512.onnx} is approximately 25 MB, supporting offline-capable deployment.
+
+\subsection{Release gate}
+For v1: macro F1 delta versus stock cross-encoder on the v1 holdout must satisfy $\Delta \mathrm{F1} \geq 0.10$ AND no per-clause regression. For v2: the same gate against stock on \emph{both} the v1 holdout and the v2 holdout. Cryptographic SHA-256 hashes of both holdout files are pinned in \texttt{scripts/\_popia\_eval\_hash.txt} and \texttt{scripts/\_popia\_eval\_v2\_hash.txt}; training scripts abort if either file has been modified.
+
+\section{Experiments}
+\label{sec:eval}
+
+\subsection{v1 holdout (7 clauses, 150 pairs)}
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+& Stock & \texttt{nli-popia-v1} & \texttt{nli-popia-v2} \\
+\midrule
+Macro F1 & 0.517 & \textbf{0.813} & 0.747 \\
+\bottomrule
+\end{tabular}
+\caption{Macro F1 on the v1 holdout. v1 leads on its narrow scope; v2 trades $\sim$7pp for broader clause coverage.}
+\end{table}
+
+\subsection{v2 holdout (3 new clauses, 48 pairs)}
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+& Stock & \texttt{nli-popia-v2} \\
+\midrule
+Macro F1 (overall) & 0.329 & \textbf{0.862} \\
+\addlinespace
+Children's information ($\S34$--$35$) & 0.339 & 0.874 \\
+Special personal information ($\S26$--$33$) & 0.365 & 0.717 \\
+Automated decision-making ($\S71$) & 0.259 & 0.850 \\
+\bottomrule
+\end{tabular}
+\caption{v2's new clauses. Special personal information is hardest --- it folds together race, religion, health, biometric, sex life, criminal behavior, and trade-union membership, which is the broadest semantic surface in the v2 set.}
+\end{table}
+
+\subsection{Per-clause analysis (v2 model on v1 holdout)}
+Every original v1 clause continues to beat stock. The smallest gain is on minimality / purpose limitation ($+8.3$pp), where the boundary between "adequate, relevant" and "excessive" is the most semantically subtle and the stock NLI model has the most prior knowledge to draw on.
+
+\section{Companion artifacts}
+\label{sec:companion}
+
+\subsection{sa-compliance-embeddings-v1}
+\texttt{labrat-aiko/sa-compliance-embeddings-v1} is a 33M-parameter retrieval model fine-tuned from \texttt{bge-small-en-v1.5} on 308 training pairs derived from POPIA Act section text and the labelled scenarios. On a 128-query held-out retrieval task (scenario $\rightarrow$ POPIA section), recall@1 rises from 0.211 to 0.477 over the base model. To our knowledge this is the first publicly distributed embedding model fine-tuned on POPIA-grounded data.
+
+\subsection{popia-instruct-v0 [if shipped before camera-ready]}
+\textit{[Pending --- QLoRA fine-tune of Phi-3-mini-4k-instruct on a grounded instruction dataset derived from POPIA Act sections + the labelled scenarios. Results section to follow.]}
+
+\subsection{semantix-ai}
+\texttt{semantix-ai} \cite{semantix-ai} is the Python library that wraps POPIAJudge for production use. It exposes a \texttt{@validate\_intent} decorator that verifies LLM function outputs against declared intents, handles per-leaf decomposition of composite intents, and emits a hash-chained audit certificate per call.
+
+\section{Limitations}
+\label{sec:limitations}
+
+\paragraph{English only.} South Africa has 11 official languages; training scenarios are in English only. Multilingual coverage is future work, especially for downstream applications in education, healthcare, and public services.
+
+\paragraph{Small base.} 22M parameters is small for a downstream NLI task; the $\sim$7pp drop on v1 holdout when extending to 10 clauses suggests capacity is a constraint. We expect a larger base (e.g.\ \texttt{nli-deberta-v3-base}, $\sim$184M) to close the gap, at the cost of slower inference and a $\sim$200 MB ONNX artifact.
+
+\paragraph{Not legal advice.} Verdicts are statistical entailment estimates, not legal determinations. The model is positioned as one input to a compliance review, not as a substitute for it. Bias note: POPIA itself prohibits discriminatory processing of special personal information ($\S 26$). The model may therefore flag systems that process race, religion, or biometric data without lawful basis --- this is intended.
+
+\paragraph{Single-jurisdiction.} POPIA is unique to South Africa. The recipe is designed to be reusable for GDPR, HIPAA, and EU AI Act Annex III categories, but transferring training scenarios to a different jurisdiction requires re-authoring the seed set against the target statute. We are pursuing a GDPR sibling release before EU AI Act Article 50 binds (2 August 2026).
+
+\section{Conclusion}
+We have released the first publicly distributed regulator-clause-fine-tuned NLI judge for a national data-protection statute, alongside a POPIA-grounded embedding model and the \texttt{semantix-ai} library that operationalizes them. We argue the artifact's value is positional, not methodological: the technique is straightforward, but the demonstrated combination of (a) a national statute, (b) shipped weights, (c) Apache-2.0 licensing, (d) a documented eval methodology, and (e) commodity-hardware reproducibility is novel. We invite replication and extension to other clause-structured statutes.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

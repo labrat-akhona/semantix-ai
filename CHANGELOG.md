@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.2.2 — Calibration (2026-05-18)
 
 ### Added
 - **Opt-in probability calibration for `QuantizedNLIJudge` / `POPIAJudge`.**
@@ -13,8 +13,18 @@
   `T=1.0`. Default remains `calibrated=False` for backwards compatibility;
   flipping the default is slated for v0.3.0 alongside a re-tuned
   `recommended_threshold`. Distinct from the existing *threshold*
-  calibration in `semantix.training.calibrate` — see the new
-  `\subsection{Calibration}` in the POPIAJudge preprint for methodology.
+  calibration in `semantix.training.calibrate` — see the calibration
+  subsection of the POPIAJudge preprint (papers/popiajudge-arxiv/) for
+  methodology and reliability diagrams.
+
+### Fixed
+- **Train-script reproducibility for `nli-popia-v2`.** Pin all RNGs
+  (Python, NumPy, PyTorch, HF `set_seed`) via a new `--seed` flag, and
+  build the dev split via per-(clause, label) stratification rather than
+  tail-slicing the concatenated rows. The previous tail slice put the
+  entire dev set in `v2_paraphrases`, so `load_best_model_at_end` had
+  zero signal on v1 clauses and per-clause F1 could fluctuate ~20pp
+  between runs. No effect on already-shipped `nli-popia-v2` weights.
 
 ## v0.2.1 — Dogfooding fixes (2026-05-15)
 

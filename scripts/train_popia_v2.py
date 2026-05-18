@@ -16,6 +16,16 @@ Release gate (both must pass):
 Usage:
     python scripts/train_popia_v2.py           # GPU if available, else CPU
     python scripts/train_popia_v2.py --epochs 5
+
+Generalised since v0.2.2: --base-model and --out-dir override the v2
+defaults so this same recipe can train v3 (deberta-v3-base, ~184M) or
+other clause-NLI variants without forking the script. The v2 defaults
+keep the original release-gate semantics for reproducibility.
+
+    # v3 on a bigger base (recipe used by scripts/modal_train_v3.py)
+    python scripts/train_popia_v2.py \\
+        --base-model cross-encoder/nli-deberta-v3-base \\
+        --out-dir out/nli-popia-v3 --epochs 6 --skip-quantize
 """
 
 from __future__ import annotations
@@ -31,7 +41,8 @@ from pathlib import Path
 
 SEED = 42
 
-BASE_MODEL = "cross-encoder/nli-MiniLM2-L6-H768"
+DEFAULT_BASE = "cross-encoder/nli-MiniLM2-L6-H768"
+DEFAULT_OUT = Path("out/nli-popia-v2")
 V1_SEEDS = Path("data/popia_seeds.jsonl")
 V1_PARAPHRASES = Path("data/popia_paraphrases.jsonl")
 V1_EVAL = Path("data/popia_eval.jsonl")
@@ -40,7 +51,6 @@ V2_SEEDS = Path("data/popia_seeds_v2.jsonl")
 V2_PARAPHRASES = Path("data/popia_paraphrases_v2.jsonl")
 V2_EVAL = Path("data/popia_eval_v2.jsonl")
 V2_EVAL_HASH = Path("scripts/_popia_eval_v2_hash.txt")
-OUT_DIR = Path("out/nli-popia-v2")
 
 
 def verify_eval_integrity(eval_path: Path, pinned_hash_path: Path) -> None:
@@ -116,8 +126,22 @@ def main() -> int:
         help="Skip ONNX export + quantization (faster for iteration)",
     )
     ap.add_argument("--seed", type=int, default=SEED)
+    ap.add_argument(
+        "--base-model",
+        type=str,
+        default=DEFAULT_BASE,
+        help="HF repo id of the base NLI cross-encoder (default: cross-encoder/nli-MiniLM2-L6-H768)",
+    )
+    ap.add_argument(
+        "--out-dir",
+        type=Path,
+        default=DEFAULT_OUT,
+        help="Output directory for pytorch + onnx + release_gate.json (default: out/nli-popia-v2)",
+    )
     args = ap.parse_args()
     seed = args.seed
+    base_model = args.base_model
+    out_dir = args.out_dir
 
     verify_eval_integrity(V1_EVAL, V1_EVAL_HASH)
     verify_eval_integrity(V2_EVAL, V2_EVAL_HASH)
@@ -164,8 +188,8 @@ def main() -> int:
     rng.shuffle(dev_split)
     print(f"stratified split: train={len(train_split)}, dev={len(dev_split)}")
 
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
-    model = AutoModelForSequenceClassification.from_pretrained(BASE_MODEL, num_labels=3)
+    tokenizer = AutoTokenizer.from_pretrained(base_model)
+    model = AutoModelForSequenceClassification.from_pretrained(base_model, num_labels=3)
 
     def tokenize(batch):
         return tokenizer(
@@ -189,8 +213,8 @@ def main() -> int:
         )
         return ds.map(tokenize, batched=True, remove_columns=["premise", "hypothesis"])
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    pytorch_out = OUT_DIR / "pytorch"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    pytorch_out = out_dir / "pytorch"
 
     targs = TrainingArguments(
         output_dir=str(pytorch_out),
@@ -227,8 +251,8 @@ def main() -> int:
     print("\n=== Release gate eval ===")
 
     # Baseline: stock model on each holdout (for gating new-capability check).
-    stock_tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
-    stock_model = AutoModelForSequenceClassification.from_pretrained(BASE_MODEL).to(model.device)
+    stock_tokenizer = AutoTokenizer.from_pretrained(base_model)
+    stock_model = AutoModelForSequenceClassification.from_pretrained(base_model).to(model.device)
 
     v1_rows = load_rows(V1_EVAL)
     v2_rows = load_rows(V2_EVAL)
@@ -251,6 +275,9 @@ def main() -> int:
     print(f"\nrelease gate: {'PASS' if gate_pass else 'FAIL'}")
 
     report = {
+        "base_model": base_model,
+        "seed": seed,
+        "epochs": args.epochs,
         "stock_v1_f1": stock_v1_f1,
         "stock_v1_per_clause": stock_v1_per,
         "v2_model_v1_f1": trained_v1_f1,
@@ -261,8 +288,8 @@ def main() -> int:
         "v2_model_v2_per_clause": trained_v2_per,
         "gate_pass": gate_pass,
     }
-    (OUT_DIR / "release_gate.json").write_text(json.dumps(report, indent=2))
-    print(f"report written to {OUT_DIR / 'release_gate.json'}")
+    (out_dir / "release_gate.json").write_text(json.dumps(report, indent=2))
+    print(f"report written to {out_dir / 'release_gate.json'}")
 
     if not gate_pass:
         sys.exit("release gate failed -- not exporting ONNX")
@@ -275,7 +302,7 @@ def main() -> int:
     from optimum.onnxruntime import ORTModelForSequenceClassification, ORTQuantizer
     from optimum.onnxruntime.configuration import AutoQuantizationConfig
 
-    onnx_dir = OUT_DIR / "onnx"
+    onnx_dir = out_dir / "onnx"
     ort_model = ORTModelForSequenceClassification.from_pretrained(str(pytorch_out), export=True)
     ort_model.save_pretrained(str(onnx_dir))
     print(f"onnx model saved to {onnx_dir}")
@@ -296,11 +323,11 @@ def main() -> int:
         shutil.rmtree(tmp_dir)
         print(f"quantized -> {target}")
 
-    shutil.copy(str(V1_EVAL), str(OUT_DIR / "eval.jsonl"))
-    shutil.copy(str(V2_EVAL), str(OUT_DIR / "eval_v2.jsonl"))
-    print(f"bundled eval sets -> {OUT_DIR}")
+    shutil.copy(str(V1_EVAL), str(out_dir / "eval.jsonl"))
+    shutil.copy(str(V2_EVAL), str(out_dir / "eval_v2.jsonl"))
+    print(f"bundled eval sets -> {out_dir}")
 
-    print(f"\nDONE. Upload {OUT_DIR} to HuggingFace as labrat-aiko/nli-popia-v2")
+    print(f"\nDONE. Upload {out_dir} to HuggingFace as labrat-aiko/{out_dir.name}")
     return 0
 
 

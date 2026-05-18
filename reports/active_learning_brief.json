@@ -1,0 +1,3978 @@
+{
+  "summary": {
+    "eval_file": "data/popia_eval.jsonl",
+    "total_eval_examples": 150,
+    "overall_accuracy": 0.44,
+    "total_training_examples": 261,
+    "clauses_with_zero_training": [
+      "POPIA exemptions",
+      "POPIA information officers",
+      "POPIA prior authorisation",
+      "POPIA codes of conduct",
+      "POPIA direct marketing",
+      "POPIA directories",
+      "POPIA enforcement",
+      "POPIA offences and penalties",
+      "POPIA openness (notification)",
+      "POPIA information quality"
+    ],
+    "clauses_with_sparse_training": [],
+    "top_3_priorities": [
+      {
+        "clause": "POPIA minimality / purpose limitation",
+        "score": 64.29
+      },
+      {
+        "clause": "POPIA consent",
+        "score": 59.4
+      },
+      {
+        "clause": "POPIA data subject rights",
+        "score": 48.28
+      }
+    ],
+    "total_examples_to_generate": 405
+  },
+  "per_example": [
+    {
+      "idx": 0,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "news-fintech-onboarding",
+      "premise": "Daily Maverick reported on Tuesday that TymeBank rolled out a new onboarding screen where users must actively tick separate boxes for marketing emails, profiling, and credit-bureau checks before the 'continue' button activates.",
+      "hypothesis": "The responsible party is obtaining specific consent for each distinct processing purpose.",
+      "popia_passed": true,
+      "popia_score": 0.6394267984578837,
+      "stock_passed": false,
+      "stock_score": 0.27502931836911926,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 1,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "news-robo-advisor",
+      "premise": "IOL writes that Nedbank's new robo-advisor shows each client a clear summary of what data will be used for portfolio recommendations and asks them to click 'I agree' before the tool runs.",
+      "hypothesis": "Nedbank is obtaining informed consent before using the client's data for robo-advice.",
+      "popia_passed": false,
+      "popia_score": 0.22321073814882275,
+      "stock_passed": true,
+      "stock_score": 0.6766994874229113,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 2,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "first-person-marketing-objection",
+      "premise": "I phoned the Discovery call centre and told them to stop using my number for Vitality marketing; they said it was recorded and would take 48 hours.",
+      "hypothesis": "The data subject has exercised the right to object to direct marketing.",
+      "popia_passed": true,
+      "popia_score": 0.8921795677048454,
+      "stock_passed": false,
+      "stock_score": 0.4219218196852704,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 3,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "first-person-hospital-preauth",
+      "premise": "I signed a form at the Netcare hospital front desk that explicitly said my contact details would be passed to my medical aid for pre-authorisation; I ticked the box myself.",
+      "hypothesis": "The hospital obtained consent from the patient before sharing details with the medical aid.",
+      "popia_passed": false,
+      "popia_score": 0.029797219438070344,
+      "stock_passed": false,
+      "stock_score": 0.5053552881033624,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 4,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "memo-research-reconsent",
+      "premise": "Internal memo 2026-03-11: following the legal review, our research platform now requires every participant to re-consent after any material change to the study protocol, with a timestamped log per participant.",
+      "hypothesis": "The responsible party can demonstrate renewed consent after material protocol changes.",
+      "popia_passed": false,
+      "popia_score": 0.026535969683863625,
+      "stock_passed": false,
+      "stock_score": 0.6498844377795232,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 5,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "memo-remove-prechecked-box",
+      "premise": "PR for the Mukuru remittance flow: we removed the auto-ticked 'share my KYC data with partner banks' checkbox and replaced it with an explicit unticked consent that the sender must tick themselves.",
+      "hypothesis": "The remittance flow now collects opt-in consent for sharing KYC data with partner banks.",
+      "popia_passed": true,
+      "popia_score": 0.5449414806032167,
+      "stock_passed": false,
+      "stock_score": 0.5892656838759087,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 6,
+      "clause": "POPIA consent",
+      "label": "entailment",
+      "scenario": "memo-kiosk-visitor",
+      "premise": "Ops memo: our kiosk in the Sandton branch captures a visitor's name and company on an iPad before issuing an access badge; the privacy notice is shown on the same screen but visitors cannot continue without tapping 'agree'.",
+      "hypothesis": "Visitors are given a privacy notice and must accept it before their data is captured.",
+      "popia_passed": true,
+      "popia_score": 0.8094304566778266,
+      "stock_passed": false,
+      "stock_score": 0.8058192518328079,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 7,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "news-gym-biometrics",
+      "premise": "BusinessTech reports that a Johannesburg gym chain rolled out biometric fingerprint entry for members last month.",
+      "hypothesis": "The gym chain has obtained valid consent from members for biometric processing.",
+      "popia_passed": true,
+      "popia_score": 0.6981393949882269,
+      "stock_passed": false,
+      "stock_score": 0.15547949981178155,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 8,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "news-winery-marketing",
+      "premise": "Reuters reports that a Stellenbosch winery has started running email marketing campaigns against its tasting-room visitor list.",
+      "hypothesis": "The winery obtained data-subject consent for the marketing campaigns.",
+      "popia_passed": true,
+      "popia_score": 0.9572130722067812,
+      "stock_passed": false,
+      "stock_score": 0.09274584338014791,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 9,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "news-bank-zero-signup",
+      "premise": "Sunday Times notes that Bank Zero recently onboarded 50 000 new users via its in-app signup.",
+      "hypothesis": "Bank Zero's signup flow obtains granular consent for each processing purpose.",
+      "popia_passed": false,
+      "popia_score": 0.09671637683346401,
+      "stock_passed": true,
+      "stock_score": 0.6037260313668911,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 10,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "first-person-seminar-card",
+      "premise": "I attended a Liberty Life financial-advice seminar last weekend and gave my business card at the door.",
+      "hypothesis": "I consented to receive marketing communications from Liberty.",
+      "popia_passed": true,
+      "popia_score": 0.8071282732743802,
+      "stock_passed": true,
+      "stock_score": 0.5362280914547007,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 11,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "first-person-pilates-form",
+      "premise": "I joined a new Pilates studio in Melville and filled in their welcome form.",
+      "hypothesis": "The studio obtained my specific consent to share my contact details with third-party wellness partners.",
+      "popia_passed": true,
+      "popia_score": 0.9731157639793706,
+      "stock_passed": false,
+      "stock_score": 0.552040631273227,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 12,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "memo-school-photo-reuse",
+      "premise": "Sprint retro note: the team discussed whether school photographs uploaded to our parent portal need re-consent when re-used in the school's annual magazine.",
+      "hypothesis": "The school has obtained re-consent from parents for using the photographs in the annual magazine.",
+      "popia_passed": true,
+      "popia_score": 0.8294046642529949,
+      "stock_passed": true,
+      "stock_score": 0.8617069003107772,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 13,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "memo-unclear-objection",
+      "premise": "Jira DATA-228: a customer called saying he wants to 'object to some processing' \u2014 the agent logged the call but hasn't yet clarified which processing activity he means.",
+      "hypothesis": "The data subject has validly objected to direct marketing under \u00a711(3).",
+      "popia_passed": true,
+      "popia_score": 0.577352145256762,
+      "stock_passed": true,
+      "stock_score": 0.045824383655662215,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 14,
+      "clause": "POPIA consent",
+      "label": "neutral",
+      "scenario": "memo-consent-provenance-missing",
+      "premise": "Engineering note: the new Yoco consent dashboard shows each merchant a list of data-sharing partners, but does not yet show when or how the merchant originally consented.",
+      "hypothesis": "Yoco can discharge its burden of proving when and how each merchant originally consented.",
+      "popia_passed": false,
+      "popia_score": 0.22789827565154686,
+      "stock_passed": false,
+      "stock_score": 0.0797919769236275,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 15,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "news-food-delivery",
+      "premise": "News24 reports that a popular food-delivery app now auto-enrols every new user into its loyalty programme and only offers an opt-out buried in the account settings page.",
+      "hypothesis": "The app is relying on valid, freely-given consent for the loyalty programme.",
+      "popia_passed": false,
+      "popia_score": 0.23279088636103018,
+      "stock_passed": false,
+      "stock_score": 0.2779736031100921,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 16,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "first-person-telco-marketing",
+      "premise": "My Vodacom contract expired and they kept sending me upgrade offers even though I emailed twice asking them to stop.",
+      "hypothesis": "Vodacom has ceased processing the data subject's information for direct marketing after a valid objection.",
+      "popia_passed": true,
+      "popia_score": 0.6356844442644002,
+      "stock_passed": false,
+      "stock_score": 0.37018096711688264,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 17,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "first-person-cold-sms-loan",
+      "premise": "I got an SMS from a short-term lender I have never heard of saying 'you qualify for R15 000' \u2014 I definitely never signed up with them.",
+      "hypothesis": "The lender has obtained the data subject's consent to send direct marketing.",
+      "popia_passed": false,
+      "popia_score": 0.2095070307714877,
+      "stock_passed": false,
+      "stock_score": 0.936654587712494,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 18,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "first-person-bank-cross-sell",
+      "premise": "I opened a Capitec account last week and was never asked whether they could share my transaction history with their insurance arm, but I noticed a new quote SMS from Capitec Insure this morning.",
+      "hypothesis": "Capitec obtained the data subject's consent before sharing the transaction history with its insurance arm.",
+      "popia_passed": true,
+      "popia_score": 0.6480353852465935,
+      "stock_passed": true,
+      "stock_score": 0.171138648198097,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 19,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "memo-third-party-list-import",
+      "premise": "RCA for INC-6612: the marketing team bulk-imported 42 000 contacts from a third-party CSV and fired a Mailchimp campaign without any consent audit on the imported list.",
+      "hypothesis": "The responsible party can discharge its burden of proving valid consent for the imported list.",
+      "popia_passed": true,
+      "popia_score": 0.7291267979503492,
+      "stock_passed": false,
+      "stock_score": 0.3794554417576478,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 20,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "memo-cookie-banner-bug",
+      "premise": "Incident report INC-7712: a developer shipped a release where the cookie banner's 'Reject all' button silently logged the same preferences object as 'Accept all'.",
+      "hypothesis": "The platform was obtaining valid consent via the cookie banner.",
+      "popia_passed": true,
+      "popia_score": 0.9895233506365952,
+      "stock_passed": true,
+      "stock_score": 0.5569497437746462,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 21,
+      "clause": "POPIA consent",
+      "label": "contradiction",
+      "scenario": "memo-donor-default-on",
+      "premise": "Jira INC-4411: the fundraising page shipped without a consent checkbox for the 'add me to your monthly donor list' option \u2014 it was on by default.",
+      "hypothesis": "The fundraiser has obtained the donor's opt-in consent to be added to the monthly donor list.",
+      "popia_passed": true,
+      "popia_score": 0.6846142509898746,
+      "stock_passed": true,
+      "stock_score": 0.7759999115462448,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 22,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "news-courier-minimal",
+      "premise": "News24 reports that Takealot's courier app asks a delivery driver only for their name, vehicle registration, and drop-off time \u2014 nothing else \u2014 when logging a successful delivery.",
+      "hypothesis": "The data captured by the courier app is limited to what is needed to record the delivery.",
+      "popia_passed": false,
+      "popia_score": 0.22904807196410437,
+      "stock_passed": false,
+      "stock_score": 0.3154530480590819,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 23,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "news-newsletter-email-only",
+      "premise": "BusinessTech article: Superbalist's newsletter signup asks only for an email address.",
+      "hypothesis": "The Superbalist signup collects the minimum necessary data for sending a newsletter.",
+      "popia_passed": false,
+      "popia_score": 0.26774087597570273,
+      "stock_passed": false,
+      "stock_score": 0.9429097143350544,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 24,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "first-person-home-affairs-id",
+      "premise": "Home Affairs only asked for my ID number and a photo when I renewed my smart ID; the entire capture took two minutes.",
+      "hypothesis": "Home Affairs collected the data necessary for the stated purpose of ID renewal.",
+      "popia_passed": true,
+      "popia_score": 0.8763676264726689,
+      "stock_passed": false,
+      "stock_score": 0.65543866529488,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 25,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "memo-verify-discard",
+      "premise": "Internal memo 2026-02-14: per product-spec review, the new identity-verification microservice will discard the MRZ photo the moment the ID number passes the Luhn check \u2014 no retention beyond validation.",
+      "hypothesis": "The microservice retains data only for as long as needed to achieve its stated verification purpose.",
+      "popia_passed": false,
+      "popia_score": 0.39563190106066426,
+      "stock_passed": true,
+      "stock_score": 0.4588518525873988,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 26,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "memo-remove-unused-field",
+      "premise": "Engineering note for the EasyEquities onboarding redesign: we removed the 'mother's maiden name' field since we no longer use it for any verification or fraud check.",
+      "hypothesis": "EasyEquities has reduced the data captured to match the current processing purpose.",
+      "popia_passed": false,
+      "popia_score": 0.26488016649805246,
+      "stock_passed": false,
+      "stock_score": 0.5613681341631508,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 27,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "memo-vaccine-capture",
+      "premise": "Internal memo for the Gauteng Dept of Health vaccination roll-out: the capture app takes only name, ID, date of birth, vaccine lot number, and date.",
+      "hypothesis": "The vaccination app's data capture is limited to what is necessary for the vaccination record.",
+      "popia_passed": false,
+      "popia_score": 0.26274160852293527,
+      "stock_passed": true,
+      "stock_score": 0.897822883602477,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 28,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "entailment",
+      "scenario": "first-person-money-market",
+      "premise": "I went to open a Shoprite Money Market account and they asked only for my ID and proof of address \u2014 nothing else.",
+      "hypothesis": "The retailer is collecting the minimum data necessary for a basic transactional account.",
+      "popia_passed": false,
+      "popia_score": 0.39940050514039727,
+      "stock_passed": false,
+      "stock_score": 0.9975376064951103,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 29,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "first-person-etoll-employer",
+      "premise": "I asked the Sanral e-toll agent why they needed my employer name to process my account \u2014 she said it was on the form.",
+      "hypothesis": "Sanral's collection of employer name is adequate, relevant and not excessive for e-toll account management.",
+      "popia_passed": true,
+      "popia_score": 0.5095262936764645,
+      "stock_passed": false,
+      "stock_score": 0.04711637542473457,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 30,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "news-car-rental-marital",
+      "premise": "Sunday Times reports that a Gauteng car-rental chain captures marital status on its booking form.",
+      "hypothesis": "Marital status is relevant and necessary to the one-day car-rental booking purpose.",
+      "popia_passed": false,
+      "popia_score": 0.10964913035065915,
+      "stock_passed": true,
+      "stock_score": 0.7920793643629641,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 31,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "memo-table-reuse",
+      "premise": "RCA INC-3322: the Prasa staff portal is storing employee next-of-kin details in the same table as passenger complaint data, because the original table was reused.",
+      "hypothesis": "The next-of-kin data is being used only for the purpose for which it was collected.",
+      "popia_passed": false,
+      "popia_score": 0.42215996679968404,
+      "stock_passed": false,
+      "stock_score": 0.38161928650653676,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 32,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "memo-municipal-data-reuse",
+      "premise": "Sprint note: the marketing team wants to start pulling City of eThekwini residents' water-usage data into our churn model.",
+      "hypothesis": "Pulling residents' water-usage data into the churn model is compatible with the purpose for which the municipality collected it.",
+      "popia_passed": true,
+      "popia_score": 0.9961213802400968,
+      "stock_passed": true,
+      "stock_score": 0.9710783776136181,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 33,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "news-clinic-occupation",
+      "premise": "News24 reports that a Pretoria clinic collects the occupation of every patient on its intake form.",
+      "hypothesis": "Occupation is adequate, relevant and not excessive for the clinic's stated patient-care purpose.",
+      "popia_passed": true,
+      "popia_score": 0.8607797022344981,
+      "stock_passed": false,
+      "stock_score": 0.7207218193601946,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 34,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "first-person-loyalty-children",
+      "premise": "I noticed the Pick n Pay Smart Shopper card form asks for my number of children.",
+      "hypothesis": "Number of children is necessary to operate a grocery loyalty programme.",
+      "popia_passed": true,
+      "popia_score": 0.6817103690265748,
+      "stock_passed": true,
+      "stock_score": 0.2668251899525428,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 35,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "neutral",
+      "scenario": "memo-36m-retention",
+      "premise": "Engineering ticket DATA-330: the marketing-analytics table retains pseudonymised browsing events for 36 months.",
+      "hypothesis": "The 36-month retention is adequate, relevant and not excessive for the marketing-analytics purpose.",
+      "popia_passed": true,
+      "popia_score": 0.6409617985798081,
+      "stock_passed": false,
+      "stock_score": 0.434765250669105,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 36,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "news-saps-affidavit",
+      "premise": "Daily Maverick reports that SAPS's new online affidavit portal captures the applicant's full name, ID number, cellphone, physical address, employer, salary band and parents' names, even for a simple lost-property affidavit.",
+      "hypothesis": "The SAPS portal is collecting data that is adequate, relevant and not excessive for a lost-property affidavit.",
+      "popia_passed": false,
+      "popia_score": 0.45372370632920644,
+      "stock_passed": true,
+      "stock_score": 0.8758529403781941,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 37,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "first-person-insurer-over-collect",
+      "premise": "At the OUTsurance kiosk, the agent asked for my race, religion and political affiliation when I was just quoting on car insurance.",
+      "hypothesis": "The insurer is collecting data adequate, relevant and not excessive for a car-insurance quote.",
+      "popia_passed": false,
+      "popia_score": 0.26338905075109076,
+      "stock_passed": true,
+      "stock_score": 0.17865188053013137,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 38,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "first-person-wifi-over-collect",
+      "premise": "I tried to sign up for free Wi-Fi at a Mugg & Bean and the captive portal insisted on my ID number, home address, monthly income, and employer.",
+      "hypothesis": "The captive portal's collection is limited to what is necessary for granting caf\u00e9 Wi-Fi.",
+      "popia_passed": true,
+      "popia_score": 0.9126278393448205,
+      "stock_passed": true,
+      "stock_score": 0.2984447914486329,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 39,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "memo-ats-stale-matric",
+      "premise": "RCA INC-8843: our recruiting ATS was storing applicants' matric subjects and results from 20+ years ago for current entry-level operator roles.",
+      "hypothesis": "The ATS retains information adequate, relevant and not excessive for screening current entry-level operator applicants.",
+      "popia_passed": true,
+      "popia_score": 0.6389494948660052,
+      "stock_passed": true,
+      "stock_score": 0.1528392685496348,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 40,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "memo-payment-fingerprint",
+      "premise": "Incident report: during Q1 our Payfast checkout was recording the browser's full navigator.userAgent, screen resolution, timezone, and battery-level reading and persisting them under the order record.",
+      "hypothesis": "The checkout is persisting data that is limited to what is necessary to process a payment.",
+      "popia_passed": true,
+      "popia_score": 0.7625108000751513,
+      "stock_passed": true,
+      "stock_score": 0.7786264786305582,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 41,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "memo-chat-free-text",
+      "premise": "PR review: we found that the Liberty wealth-advice tool was persisting every chat message the client typed into the 'questions for my adviser' box, including unrelated personal anecdotes, to the production DB indefinitely.",
+      "hypothesis": "Persisting the full free-text chat history indefinitely is consistent with the advice-delivery purpose.",
+      "popia_passed": true,
+      "popia_score": 0.5303536721951775,
+      "stock_passed": false,
+      "stock_score": 0.3241560570046731,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 42,
+      "clause": "POPIA minimality / purpose limitation",
+      "label": "contradiction",
+      "scenario": "memo-loyalty-scope-creep",
+      "premise": "Jira DATA-221: the Checkers Xtra Savings loyalty pipeline quietly started ingesting the customer's vehicle registration number from partner petrol stations, even though the loyalty card's stated purpose is grocery discounts.",
+      "hypothesis": "The loyalty pipeline is collecting data consistent with its defined purpose.",
+      "popia_passed": false,
+      "popia_score": 0.019476742385832302,
+      "stock_passed": true,
+      "stock_score": 0.8787218778231842,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 43,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "news-pentest-remediated",
+      "premise": "Sunday Times reports that Absa completed its annual penetration test in February and remediated the two critical findings within the agreed SLA.",
+      "hypothesis": "Absa is regularly verifying the effectiveness of its security safeguards.",
+      "popia_passed": true,
+      "popia_score": 0.8316655293611794,
+      "stock_passed": false,
+      "stock_score": 0.05792516649418755,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 44,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "news-mfa-rotation",
+      "premise": "IOL confirmed that Old Mutual's claims portal requires multi-factor authentication for all internal admin users and rotates access credentials every 60 days.",
+      "hypothesis": "Old Mutual has implemented reasonable technical measures to prevent unlawful access.",
+      "popia_passed": true,
+      "popia_score": 0.8780095992040405,
+      "stock_passed": true,
+      "stock_score": 0.08565345206787878,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "multi_hop",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 45,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "news-encryption-standards",
+      "premise": "BusinessTech writes that Standard Bank encrypts all customer PII at rest using AES-256 and in transit using TLS 1.3.",
+      "hypothesis": "Standard Bank has implemented appropriate technical safeguards for stored and transmitted PII.",
+      "popia_passed": false,
+      "popia_score": 0.4859904633166138,
+      "stock_passed": false,
+      "stock_score": 0.7606021652572316,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 46,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "first-person-bank-lockout",
+      "premise": "My Discovery Bank app locked me out after three wrong PIN attempts and sent me an SMS asking whether it was me.",
+      "hypothesis": "Discovery Bank has implemented appropriate safeguards against unauthorised account access.",
+      "popia_passed": true,
+      "popia_score": 0.7658344293069878,
+      "stock_passed": false,
+      "stock_score": 0.4752823780987313,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 47,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "first-person-sim-swap-controls",
+      "premise": "I asked the MTN Business support engineer how they safeguard my SIM-swap reset and he explained they require a branch visit with biometrics plus a callback to my registered number.",
+      "hypothesis": "MTN Business has layered controls in place for SIM-swap reset requests.",
+      "popia_passed": true,
+      "popia_score": 0.5498035934949439,
+      "stock_passed": false,
+      "stock_score": 0.8724330410852574,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 48,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "memo-iso-audit",
+      "premise": "Engineering ticket CS-910: the SecOps team completed the annual ISO 27001 surveillance audit with no major nonconformities.",
+      "hypothesis": "The responsible party has had regard to generally accepted information-security practices.",
+      "popia_passed": false,
+      "popia_score": 0.4231379402008869,
+      "stock_passed": false,
+      "stock_score": 0.5392960887794583,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 49,
+      "clause": "POPIA security safeguards",
+      "label": "entailment",
+      "scenario": "memo-stolen-laptop-encrypted",
+      "premise": "Incident note INC-9012: a laptop used by a Netcare junior doctor was stolen from a car boot; whole-disk encryption was enabled and the device was remote-wiped within the hour.",
+      "hypothesis": "Appropriate safeguards were in place and activated for the stolen device.",
+      "popia_passed": true,
+      "popia_score": 0.7299310690899762,
+      "stock_passed": false,
+      "stock_score": 0.31171629130089495,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 50,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "first-person-weak-auth",
+      "premise": "I'm a Takealot customer and I logged in yesterday to find that my password from 2019 still worked, with no MFA challenge, from a brand-new laptop I'd never used before.",
+      "hypothesis": "Takealot is employing reasonable technical safeguards against unauthorised access.",
+      "popia_passed": true,
+      "popia_score": 0.9951493566608947,
+      "stock_passed": true,
+      "stock_score": 0.43810008391450406,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 51,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "news-law-firm-migrated",
+      "premise": "News24 reports that a Durban law firm recently migrated its client files to a new cloud provider.",
+      "hypothesis": "The law firm has implemented appropriate technical and organisational safeguards for client files.",
+      "popia_passed": true,
+      "popia_score": 0.5175758410355906,
+      "stock_passed": false,
+      "stock_score": 0.22469733703155736,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 52,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "news-vodacom-zero-trust",
+      "premise": "Sunday Times reports that Vodacom is rolling out a new 'zero-trust' initiative across its enterprise environment in 2026.",
+      "hypothesis": "The zero-trust initiative has already improved Vodacom's safeguard effectiveness.",
+      "popia_passed": false,
+      "popia_score": 0.33808556214745533,
+      "stock_passed": true,
+      "stock_score": 0.230114732596577,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 53,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "first-person-reset-link",
+      "premise": "I received a password-reset link from my Santam broker this morning.",
+      "hypothesis": "Santam has strong organisational controls around issuing password resets.",
+      "popia_passed": false,
+      "popia_score": 0.22021738445155947,
+      "stock_passed": false,
+      "stock_score": 0.6311029572700989,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 54,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "first-person-mfa-optional",
+      "premise": "I noticed that my Momentum client portal offers MFA as an option but it isn't switched on by default on my account.",
+      "hypothesis": "Momentum has implemented appropriate safeguards against unauthorised access for this account.",
+      "popia_passed": false,
+      "popia_score": 0.22894178381115438,
+      "stock_passed": true,
+      "stock_score": 0.8596354002537465,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 55,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "memo-dlp-partial-rollout",
+      "premise": "Engineering note: the new DLP product was deployed to the engineering laptops fleet last week; rollout to the broader company is scheduled for Q2.",
+      "hypothesis": "The organisation has established and maintained appropriate safeguards across the whole workforce.",
+      "popia_passed": false,
+      "popia_score": 0.07085734988865344,
+      "stock_passed": false,
+      "stock_score": 0.6689777782962806,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 56,
+      "clause": "POPIA security safeguards",
+      "label": "neutral",
+      "scenario": "memo-risk-register-draft",
+      "premise": "Sprint note: the security team has drafted a risk register but hasn't yet completed the review of external threats.",
+      "hypothesis": "The responsible party has identified all reasonably foreseeable internal and external risks.",
+      "popia_passed": false,
+      "popia_score": 0.2142368073704386,
+      "stock_passed": false,
+      "stock_score": 0.935514240580671,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 57,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "news-jenkins-exposed",
+      "premise": "News24 reports that an FNB developer left a Jenkins dashboard exposed to the public internet with no authentication for six weeks in January 2026.",
+      "hypothesis": "FNB has maintained appropriate technical safeguards against unauthorised access.",
+      "popia_passed": true,
+      "popia_score": 0.5710430933252845,
+      "stock_passed": false,
+      "stock_score": 0.7846194242907534,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 58,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "news-unpatched-sap",
+      "premise": "Daily Maverick reveals that a Transnet legacy SAP instance has been running on unpatched software with publicly-known CVEs for over two years.",
+      "hypothesis": "Transnet is continually updating its safeguards in response to new risks.",
+      "popia_passed": true,
+      "popia_score": 0.8074969977666434,
+      "stock_passed": false,
+      "stock_score": 0.09693081422882333,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 59,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "first-person-unlocked-payroll",
+      "premise": "At the Spar head office a visitor badge gave me unescorted access to a corridor where several unlocked computers were logged in to the payroll system.",
+      "hypothesis": "Spar has reasonable organisational measures in place to prevent unauthorised access to payroll data.",
+      "popia_passed": false,
+      "popia_score": 0.4310511824063775,
+      "stock_passed": false,
+      "stock_score": 0.467024668036675,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 60,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "first-person-unencrypted-email",
+      "premise": "A Hollard agent emailed my policy docs as an unencrypted attachment with my full ID and bank details to my personal gmail, and cc'd a colleague.",
+      "hypothesis": "Hollard is using appropriate technical measures to secure personal information in transit.",
+      "popia_passed": true,
+      "popia_score": 0.7290758494598506,
+      "stock_passed": true,
+      "stock_score": 0.9841652113659661,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 61,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "memo-public-s3",
+      "premise": "RCA for INC-7781: the data-engineering team found an S3 bucket containing 12 million Checkers customer records with public-read ACL enabled by mistake.",
+      "hypothesis": "The bucket configuration was an appropriate technical safeguard.",
+      "popia_passed": false,
+      "popia_score": 0.09841787115195888,
+      "stock_passed": false,
+      "stock_score": 0.33930260539496315,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 62,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "memo-backup-everyone",
+      "premise": "RCA INC-5123: the backup job for the Momentum CRM was writing to a network share with 'Everyone: Full Control' NTFS permissions.",
+      "hypothesis": "The backup location had appropriate access controls.",
+      "popia_passed": true,
+      "popia_score": 0.8616725363527911,
+      "stock_passed": false,
+      "stock_score": 0.1902089084408115,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 63,
+      "clause": "POPIA security safeguards",
+      "label": "contradiction",
+      "scenario": "memo-weak-reset-password",
+      "premise": "RCA INC-4420: the BCX helpdesk was resetting customer portal passwords to the string 'Welcome@1' and not forcing a change on next login.",
+      "hypothesis": "The password-reset process represents an appropriate safeguard against unauthorised access.",
+      "popia_passed": false,
+      "popia_score": 0.4486135478331319,
+      "stock_passed": false,
+      "stock_score": 0.27854514466694047,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 64,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "news-mediclinic-3-day",
+      "premise": "Reuters reports that Mediclinic confirmed a ransomware attack on 14 March 2026 and notified the Information Regulator and affected patients in writing on 17 March 2026.",
+      "hypothesis": "Mediclinic notified the Regulator and affected data subjects as soon as reasonably possible after discovery.",
+      "popia_passed": false,
+      "popia_score": 0.2498064478821005,
+      "stock_passed": true,
+      "stock_score": 0.44313074505345695,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 65,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "news-shoprite-24h",
+      "premise": "Daily Maverick confirmed that on 9 January 2026 Shoprite disclosed a database intrusion to the Information Regulator within 24 hours of detection.",
+      "hypothesis": "Shoprite notified the Regulator promptly after discovering the compromise.",
+      "popia_passed": true,
+      "popia_score": 0.8613491047618306,
+      "stock_passed": true,
+      "stock_score": 0.05058832952488124,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 66,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "news-lawful-delay",
+      "premise": "News24 writes that Vodacom became aware on 5 April that a batch of SIM-swap logs had been accessed by an unauthorised party; a SAPS investigation formally asked Vodacom in writing to hold public notification until 20 April to avoid impeding their active criminal probe, which Vodacom did.",
+      "hypothesis": "Vodacom's delayed notification to data subjects was permissible under POPIA \u00a722(3).",
+      "popia_passed": true,
+      "popia_score": 0.9992824684127266,
+      "stock_passed": true,
+      "stock_score": 0.9689962572847513,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 67,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "first-person-letter-with-contents",
+      "premise": "I am a Discovery Life policyholder and I received a letter three weeks after their 11 February breach explaining what happened, what was affected, what they've done, and what I should do.",
+      "hypothesis": "Discovery has notified data subjects in writing with the required contents under \u00a722(5).",
+      "popia_passed": true,
+      "popia_score": 0.9263669830081276,
+      "stock_passed": true,
+      "stock_score": 0.16631111060391401,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 68,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "memo-2-day-notification",
+      "premise": "Incident report INC-8881: on 4 April 2026 we confirmed unauthorised download of a customer export; the CISO notified the Information Regulator on 5 April 2026 and sent emails to all 18 000 affected data subjects on 6 April 2026.",
+      "hypothesis": "The responsible party notified both the Regulator and the data subjects as soon as reasonably possible.",
+      "popia_passed": false,
+      "popia_score": 0.48564112545071847,
+      "stock_passed": false,
+      "stock_score": 0.4010402925494526,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 69,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "memo-duty-even-unknown",
+      "premise": "Internal note dated 11 April 2026: we have reasonable grounds to believe personal information was accessed by an unauthorised person but cannot yet determine the identity of the perpetrator.",
+      "hypothesis": "The responsible party has a duty to notify under \u00a722(1) despite not knowing the perpetrator's identity.",
+      "popia_passed": false,
+      "popia_score": 0.058635399972178925,
+      "stock_passed": false,
+      "stock_score": 0.9853088437797259,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 70,
+      "clause": "POPIA breach notification",
+      "label": "entailment",
+      "scenario": "memo-runbook-website-banner",
+      "premise": "PR for the incident-response runbook: we hard-coded a requirement to publish a prominent website banner when more than 10 000 data subjects are affected and postal addresses are unknown.",
+      "hypothesis": "The organisation has adopted a \u00a722(4)-compliant notification medium for mass incidents.",
+      "popia_passed": false,
+      "popia_score": 0.26520305817215195,
+      "stock_passed": true,
+      "stock_score": 0.4550083673391433,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 71,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "news-sars-investigating",
+      "premise": "Sunday Times reports that SARS is 'investigating an incident' that occurred last week; no further detail has been released.",
+      "hypothesis": "SARS has complied with its \u00a722 notification obligations to data subjects.",
+      "popia_passed": false,
+      "popia_score": 0.4230074859901629,
+      "stock_passed": true,
+      "stock_score": 0.9954226894927138,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 72,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "news-santam-forensics",
+      "premise": "News24 writes that Santam detected unusual log activity on 2 April 2026 and has engaged an external forensics team.",
+      "hypothesis": "Santam has reasonable grounds to believe personal information was accessed by an unauthorised person.",
+      "popia_passed": true,
+      "popia_score": 0.5557683234056182,
+      "stock_passed": true,
+      "stock_score": 0.15479682527406413,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 73,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "first-person-fraud-sms",
+      "premise": "I received a fraud-alert SMS from Nedbank on 5 April saying 'we detected suspicious activity on your profile'.",
+      "hypothesis": "Nedbank has experienced a compromise triggering \u00a722(1) notification duties.",
+      "popia_passed": false,
+      "popia_score": 0.2967078254945642,
+      "stock_passed": true,
+      "stock_score": 0.5791802908162562,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 74,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "first-person-broker-vague",
+      "premise": "My Momentum broker phoned me to say there was 'some kind of issue' with the portal last weekend, but didn't know any details.",
+      "hypothesis": "Momentum has fulfilled its \u00a722 notification obligations.",
+      "popia_passed": true,
+      "popia_score": 0.5421952013742742,
+      "stock_passed": true,
+      "stock_score": 0.05716527290748308,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 75,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "memo-assessment-limbo",
+      "premise": "Jira INC-2244: we believe the incident may rise to a notifiable compromise but legal is still assessing; no notifications sent yet as at day 12 after the initial alert.",
+      "hypothesis": "The responsible party has complied with the \u00a722(2) 'as soon as reasonably possible' standard.",
+      "popia_passed": true,
+      "popia_score": 0.5841775944589712,
+      "stock_passed": true,
+      "stock_score": 0.8527198920482854,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 76,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "memo-no-access-confirmed",
+      "premise": "RCA INC-3344: an automated scanner flagged potential exposure of 200 records at 02:00; the on-call engineer confirmed the data had not actually been accessed and closed the ticket.",
+      "hypothesis": "The organisation has notification obligations under \u00a722 in respect of this alert.",
+      "popia_passed": false,
+      "popia_score": 0.15743272793948326,
+      "stock_passed": true,
+      "stock_score": 0.08011146524058688,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 77,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "memo-phishing-no-creds-yet",
+      "premise": "Incident log: a phishing email reached 30 staff members on 12 March; no evidence yet that any credentials were submitted.",
+      "hypothesis": "A notifiable compromise has occurred.",
+      "popia_passed": false,
+      "popia_score": 0.1858249609807232,
+      "stock_passed": true,
+      "stock_score": 0.6752125536040902,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 78,
+      "clause": "POPIA breach notification",
+      "label": "neutral",
+      "scenario": "memo-misconfig-still-investigating",
+      "premise": "Engineering note: the security team identified a misconfiguration on 1 April and is still determining whether any personal information was actually accessed.",
+      "hypothesis": "The \u00a722(1) 'reasonable grounds to believe' threshold has already been met.",
+      "popia_passed": false,
+      "popia_score": 0.2352038950009312,
+      "stock_passed": false,
+      "stock_score": 0.8902873141294375,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 79,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "news-tymebank-8-months-late",
+      "premise": "Sunday Times reports that a TymeBank contractor's laptop containing unencrypted customer records was stolen on 2 February; the bank only informed customers eight months later in October.",
+      "hypothesis": "TymeBank notified affected customers as soon as reasonably possible after discovery.",
+      "popia_passed": false,
+      "popia_score": 0.24621534778862486,
+      "stock_passed": true,
+      "stock_score": 0.6193815103321031,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 80,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "news-hollard-no-notify",
+      "premise": "IOL reports that Hollard decided not to notify its customers of a March data exposure because its in-house legal team 'felt it wasn't serious enough', even though the compromise met \u00a722(1)'s reasonable-grounds threshold.",
+      "hypothesis": "Hollard fulfilled its \u00a722 notification obligations to data subjects.",
+      "popia_passed": false,
+      "popia_score": 0.4192249153358725,
+      "stock_passed": true,
+      "stock_score": 0.5227827155319589,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 81,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "first-person-only-news",
+      "premise": "I only heard about the Nedbank vendor breach in May from a news article \u2014 I never got any communication from Nedbank even though my ID and account were apparently in the exposed dataset.",
+      "hypothesis": "Nedbank has notified affected data subjects directly.",
+      "popia_passed": true,
+      "popia_score": 0.9347062577364272,
+      "stock_passed": false,
+      "stock_score": 0.7161918007894148,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 82,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "first-person-vague-sms",
+      "premise": "I received a text from Capitec on 20 January that 'an incident occurred' \u2014 nothing about what data was involved, what they've done, or what I should do.",
+      "hypothesis": "Capitec's notification satisfied the \u00a722(5) content requirements.",
+      "popia_passed": false,
+      "popia_score": 0.23868595261584602,
+      "stock_passed": false,
+      "stock_score": 0.6716902229599713,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 83,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "memo-5-months-late",
+      "premise": "RCA INC-5520: we confirmed the compromise on 1 November 2025 but the legal team decided to wait until our annual report in April 2026 to inform data subjects, to reduce reputational impact.",
+      "hypothesis": "The responsible party notified data subjects as soon as reasonably possible after discovery.",
+      "popia_passed": false,
+      "popia_score": 0.2999970797987622,
+      "stock_passed": false,
+      "stock_score": 0.7518644924144021,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 84,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "memo-skip-data-subject",
+      "premise": "RCA for INC-1123: on confirming a compromise we notified only the Regulator and decided not to notify data subjects because we felt email volume would be 'commercially damaging'.",
+      "hypothesis": "The responsible party has complied with \u00a722(1) in respect of data subjects.",
+      "popia_passed": false,
+      "popia_score": 0.07254311449315731,
+      "stock_passed": false,
+      "stock_score": 0.9984544408544423,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 85,
+      "clause": "POPIA breach notification",
+      "label": "contradiction",
+      "scenario": "memo-4-months-late-subjects",
+      "premise": "RCA INC-9090: following the compromise we notified the Regulator within 12 hours; however the data-subject letters went out only 4 months later because the call-centre was overwhelmed.",
+      "hypothesis": "Data subjects were notified as soon as reasonably possible after discovery.",
+      "popia_passed": true,
+      "popia_score": 0.9960964478550944,
+      "stock_passed": false,
+      "stock_score": 0.2131543122670404,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "multi_hop",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 86,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "news-retailer-singapore",
+      "premise": "Sunday Times reports that a major SA retailer has been mirroring its Johannesburg customer database to an ap-southeast-1 (Singapore) bucket since 2023.",
+      "hypothesis": "Personal information is being transferred outside South Africa.",
+      "popia_passed": false,
+      "popia_score": 0.26520041475040135,
+      "stock_passed": true,
+      "stock_score": 0.8808641736864395,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 87,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "first-person-absa-frankfurt",
+      "premise": "I'm an Absa business-banking client and my account manager mentioned in passing that their new fraud-analytics tool is hosted in eu-central-1 (Frankfurt) and processes our transaction history there.",
+      "hypothesis": "Absa is transferring personal information outside South Africa.",
+      "popia_passed": true,
+      "popia_score": 0.8792702424845428,
+      "stock_passed": false,
+      "stock_score": 0.15774683235723197,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 88,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "memo-dr-mumbai",
+      "premise": "Jira ticket INFRA-442: the data platform team replicated the production warehouse from af-south-1 to ap-south-1 (Mumbai) for disaster recovery last week.",
+      "hypothesis": "The replication constitutes a cross-border transfer of personal information.",
+      "popia_passed": true,
+      "popia_score": 0.833744954639807,
+      "stock_passed": true,
+      "stock_score": 0.6116777657259501,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 89,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "memo-dropbox-us-east-1",
+      "premise": "RCA INC-7012: we discovered that a contractor had copied a customer CSV from our internal SharePoint to a personal Dropbox account whose underlying storage is in us-east-1 (Virginia).",
+      "hypothesis": "Personal information was transferred outside South Africa.",
+      "popia_passed": true,
+      "popia_score": 0.9872330636315043,
+      "stock_passed": true,
+      "stock_score": 0.007823107152157949,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 90,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "memo-openai-us",
+      "premise": "Engineering ticket CS-331: OpenAI API calls from our support bot send customer names and ticket summaries to OpenAI's US infrastructure in us-east-1.",
+      "hypothesis": "The outbound API calls constitute cross-border transfers under \u00a772.",
+      "popia_passed": true,
+      "popia_score": 0.8171041351154616,
+      "stock_passed": false,
+      "stock_score": 0.6633887149660773,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 91,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "memo-cdn-amsterdam",
+      "premise": "Incident report INC-5544: the CDN misconfiguration caused origin-pull requests for images containing customer ID photos to be served from Cloudflare's Amsterdam PoP.",
+      "hypothesis": "Cross-border transfer of personal information occurred.",
+      "popia_passed": true,
+      "popia_score": 0.9389300039271039,
+      "stock_passed": false,
+      "stock_score": 0.11542867041910221,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 92,
+      "clause": "POPIA cross-border transfers",
+      "label": "entailment",
+      "scenario": "memo-replication-frankfurt",
+      "premise": "Jira DATA-980: we enabled cross-region replication from af-south-1 to eu-central-1 (Frankfurt) for the customer-profile table last Tuesday.",
+      "hypothesis": "The replication is an outbound cross-border transfer.",
+      "popia_passed": false,
+      "popia_score": 0.10703597770941764,
+      "stock_passed": true,
+      "stock_score": 0.2723482123148163,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 93,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "first-person-10x-us-west-2",
+      "premise": "I got a privacy update from 10X Investments explaining that starting May 2026 they will begin using a US analytics vendor in us-west-2 (Oregon).",
+      "hypothesis": "10X has a lawful \u00a772 ground for the upcoming transfer.",
+      "popia_passed": true,
+      "popia_score": 0.6048298270302239,
+      "stock_passed": true,
+      "stock_score": 0.20359731232745293,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 94,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "news-fintech-us-east-1-consent",
+      "premise": "News24 reports that a Pretoria fintech is sending raw SA customer data to a US data-broker in us-east-1 (Virginia) for enrichment.",
+      "hypothesis": "The fintech has obtained data-subject consent for this transfer.",
+      "popia_passed": true,
+      "popia_score": 0.6342379588850797,
+      "stock_passed": false,
+      "stock_score": 0.48853185214937656,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 95,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "news-discovery-reinsurer-contract",
+      "premise": "Sunday Times reports that Discovery confirmed a contract with a Bermuda reinsurer for handling claims data.",
+      "hypothesis": "Discovery's contract provides substantially similar protection as required by \u00a772(1)(a).",
+      "popia_passed": true,
+      "popia_score": 0.9053364910793232,
+      "stock_passed": true,
+      "stock_score": 0.09229846771273342,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 96,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "news-sbsa-international-processor",
+      "premise": "IOL writes that Standard Bank uses an international payments processor whose infrastructure spans multiple regions.",
+      "hypothesis": "Standard Bank's arrangement with the processor satisfies \u00a772(1)(a).",
+      "popia_passed": false,
+      "popia_score": 0.42357577256372636,
+      "stock_passed": false,
+      "stock_score": 0.0035456890877823,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "multi_hop",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 97,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "first-person-sanlam-ireland-vague",
+      "premise": "I noticed the Sanlam expat-service portal says 'data may be processed by our Ireland affiliate'.",
+      "hypothesis": "Sanlam has a lawful \u00a772 basis for the transfer to Ireland.",
+      "popia_passed": true,
+      "popia_score": 0.7711192230196271,
+      "stock_passed": true,
+      "stock_score": 0.2619552624343482,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 98,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "first-person-saas-vague-subprocessors",
+      "premise": "I signed up for a new SaaS tool whose privacy page says 'we use multiple sub-processors globally' without naming them.",
+      "hypothesis": "The SaaS tool is transferring personal data to a foreign region.",
+      "popia_passed": true,
+      "popia_score": 0.7412309083479308,
+      "stock_passed": true,
+      "stock_score": 0.42768691898067934,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "multi_hop",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 99,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "memo-gcp-region-unknown",
+      "premise": "Jira INFRA-112: the vendor's DPA lists 'Google Cloud' as the processor but does not specify the region.",
+      "hypothesis": "The vendor is transferring personal information outside South Africa.",
+      "popia_passed": false,
+      "popia_score": 0.009669699608339966,
+      "stock_passed": false,
+      "stock_score": 0.883106393300143,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 100,
+      "clause": "POPIA cross-border transfers",
+      "label": "neutral",
+      "scenario": "memo-snowflake-pending-region",
+      "premise": "Engineering note: the Snowflake contract allows the customer to select the region; our account is being provisioned this week and no region has been set yet.",
+      "hypothesis": "Cross-border transfer of personal data will occur under this Snowflake deployment.",
+      "popia_passed": true,
+      "popia_score": 0.9039285715598931,
+      "stock_passed": true,
+      "stock_score": 0.8345950198860167,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 101,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "news-af-south-1-only",
+      "premise": "IOL reports that a Johannesburg SaaS startup stores all customer data in its af-south-1 (Cape Town) region and does not replicate to any foreign region.",
+      "hypothesis": "The startup's storage architecture involves cross-border transfer of personal data.",
+      "popia_passed": true,
+      "popia_score": 0.582509566489794,
+      "stock_passed": false,
+      "stock_score": 0.12744551928213876,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 102,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "first-person-migration-teraco",
+      "premise": "I migrated my side-business's data from AWS Singapore to Teraco's Isando facility last month; the data no longer leaves South Africa.",
+      "hypothesis": "The data is still being transferred outside South Africa.",
+      "popia_passed": false,
+      "popia_score": 0.3082583499301337,
+      "stock_passed": true,
+      "stock_score": 0.7961223048880417,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 103,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "first-person-azure-za-north",
+      "premise": "I asked my Momentum wealth adviser where my KYC docs are stored; she confirmed 'Azure South Africa North \u2014 they haven't left the country'.",
+      "hypothesis": "Momentum is transferring the KYC docs outside South Africa.",
+      "popia_passed": true,
+      "popia_score": 0.8607025820009028,
+      "stock_passed": true,
+      "stock_score": 0.21007653833975404,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 104,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "memo-af-south-1-lakehouse",
+      "premise": "PR review note: our new analytics lakehouse will be deployed in af-south-1 only; all cross-region failover is disabled.",
+      "hypothesis": "The lakehouse architecture involves cross-border transfer of personal data.",
+      "popia_passed": false,
+      "popia_score": 0.24952973922292443,
+      "stock_passed": false,
+      "stock_score": 0.7801162418714427,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 105,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "memo-vox-onshore",
+      "premise": "Sprint note: the Vox-hosted backup NAS sits in their Parklands data centre; per the vendor the data never leaves SA.",
+      "hypothesis": "The backup NAS involves transfer of personal information outside South Africa.",
+      "popia_passed": true,
+      "popia_score": 0.8841347014510089,
+      "stock_passed": false,
+      "stock_score": 0.6206615101507128,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 106,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "memo-bcx-midrand-onshore",
+      "premise": "Internal note: BCX confirmed in writing that our managed-hosting contract places all compute and storage in their Midrand facility, with no foreign sub-processors.",
+      "hypothesis": "The hosting arrangement involves cross-border transfer of personal data.",
+      "popia_passed": false,
+      "popia_score": 0.15455333833220464,
+      "stock_passed": true,
+      "stock_score": 0.864605696219964,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 107,
+      "clause": "POPIA cross-border transfers",
+      "label": "contradiction",
+      "scenario": "memo-onprem-ocr",
+      "premise": "Engineering memo: the OCR vendor we're evaluating processes ID documents entirely on-prem inside our af-south-1 VPC \u2014 no data ever leaves the VPC.",
+      "hypothesis": "The OCR vendor's architecture triggers a cross-border transfer.",
+      "popia_passed": true,
+      "popia_score": 0.9762060329309629,
+      "stock_passed": true,
+      "stock_score": 0.8814162046633244,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 108,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "news-allan-gray-manual",
+      "premise": "Sunday Times reports that Allan Gray has appointed an internal information officer and published a public PAIA/POPIA manual on its website.",
+      "hypothesis": "Allan Gray has taken steps consistent with the accountability and openness conditions.",
+      "popia_passed": false,
+      "popia_score": 0.024786361898188725,
+      "stock_passed": true,
+      "stock_score": 0.33218546794642867,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 109,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "news-sbsa-training",
+      "premise": "IOL writes that Standard Bank runs an annual POPIA-training e-learning module for all staff and tracks completion at 97%.",
+      "hypothesis": "Standard Bank is taking steps to ensure compliance with the Chapter 3 conditions during processing.",
+      "popia_passed": true,
+      "popia_score": 0.9308158860483255,
+      "stock_passed": true,
+      "stock_score": 0.8640640283752794,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 110,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "first-person-io-request",
+      "premise": "I requested the Netcare information officer's name and contact details and received them within two days; the email also pointed me to their PAIA manual.",
+      "hypothesis": "Netcare is meeting its openness obligation under the Chapter 3 conditions.",
+      "popia_passed": true,
+      "popia_score": 0.810749316574389,
+      "stock_passed": false,
+      "stock_score": 0.7873745091354711,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 111,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "first-person-bank-zero-plain",
+      "premise": "Bank Zero's privacy page clearly lists each processing purpose, lawful basis, retention period, and my rights in plain English.",
+      "hypothesis": "Bank Zero is satisfying the openness condition.",
+      "popia_passed": false,
+      "popia_score": 0.10809562640295711,
+      "stock_passed": true,
+      "stock_score": 0.8585932513377816,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 112,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "memo-pia-template",
+      "premise": "Internal memo 2026-02-01: we rolled out a new privacy-impact-assessment template that all product owners must complete before launch, signed off by the information officer.",
+      "hypothesis": "The organisation is embedding accountability into its processing activities.",
+      "popia_passed": false,
+      "popia_score": 0.22243371754566443,
+      "stock_passed": true,
+      "stock_score": 0.4603032346789421,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 113,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "memo-deputy-io",
+      "premise": "Memo from the CISO: we have appointed a second deputy information officer to cover our Cape Town entity and filed the registration with the Regulator.",
+      "hypothesis": "The responsible party is complying with the accountability obligations.",
+      "popia_passed": false,
+      "popia_score": 0.30519086733860057,
+      "stock_passed": true,
+      "stock_score": 0.22759548740777036,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 114,
+      "clause": "POPIA general processing",
+      "label": "entailment",
+      "scenario": "memo-onboarding-module",
+      "premise": "Ops memo: all new hires in the Payfast engineering team now complete a mandatory POPIA onboarding module in week one and sign a confidentiality acknowledgement.",
+      "hypothesis": "Payfast is taking reasonable steps to ensure the Chapter 3 conditions are met during processing.",
+      "popia_passed": false,
+      "popia_score": 0.02366443470145152,
+      "stock_passed": false,
+      "stock_score": 0.3282619511977065,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 115,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "news-telkom-multi-platform",
+      "premise": "News24 reports that Telkom processes customer data across several legacy and modern platforms.",
+      "hypothesis": "Telkom's processing across these platforms complies with the Chapter 3 accountability condition.",
+      "popia_passed": true,
+      "popia_score": 0.8643529420302863,
+      "stock_passed": true,
+      "stock_score": 0.2791249927218714,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "multi_hop",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 116,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "news-insurer-new-cpo",
+      "premise": "BusinessTech writes that a mid-sized SA insurer recently brought in a new Chief Privacy Officer.",
+      "hypothesis": "The insurer's processing is now lawful and reasonable under \u00a79.",
+      "popia_passed": true,
+      "popia_score": 0.6414817386076277,
+      "stock_passed": false,
+      "stock_score": 0.9811496871982601,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 117,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "news-fintech-transparency-report",
+      "premise": "Sunday Times reports that a Cape Town fintech publishes quarterly transparency reports.",
+      "hypothesis": "The fintech is meeting all eight conditions of Chapter 3.",
+      "popia_passed": true,
+      "popia_score": 0.5362157324787219,
+      "stock_passed": true,
+      "stock_score": 0.11534175185142759,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 118,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "first-person-broker-onboarding",
+      "premise": "I signed up with a new online broker; the onboarding flow felt normal but I didn't read the privacy notice in detail.",
+      "hypothesis": "The broker is processing my personal information lawfully and reasonably.",
+      "popia_passed": true,
+      "popia_score": 0.970400611022228,
+      "stock_passed": false,
+      "stock_score": 0.9625343157615555,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 119,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "memo-feedback-api",
+      "premise": "Sprint retro: the team discussed whether our public feedback API might unintentionally capture PII if users submit it in the free-text field.",
+      "hypothesis": "The API's processing currently infringes data subject privacy.",
+      "popia_passed": false,
+      "popia_score": 0.2654663625229686,
+      "stock_passed": false,
+      "stock_score": 0.43456375856464435,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 120,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "memo-vendor-unaudited",
+      "premise": "Incident ticket INC-2213: a partner vendor told us they 'have POPIA controls'; the audit is scheduled for Q3.",
+      "hypothesis": "The vendor's controls meet the Chapter 3 security-safeguards and accountability conditions.",
+      "popia_passed": true,
+      "popia_score": 0.7285450606527043,
+      "stock_passed": false,
+      "stock_score": 0.6062088533061433,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 121,
+      "clause": "POPIA general processing",
+      "label": "neutral",
+      "scenario": "memo-ropa-in-progress",
+      "premise": "Jira DATA-881: the data-engineering team is drafting a records-of-processing inventory; coverage is at 60% this sprint.",
+      "hypothesis": "The organisation has a complete records-of-processing inventory for all its processing activities.",
+      "popia_passed": true,
+      "popia_score": 0.5114230596694781,
+      "stock_passed": false,
+      "stock_score": 0.5765880434965995,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 122,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "news-debt-collector-harass",
+      "premise": "Daily Maverick writes that a Johannesburg debt-collection firm has been buying lists of defaulters from an informal broker and calling them at 22:00 on Sundays.",
+      "hypothesis": "The firm is processing personal information lawfully and in a manner that does not infringe data subject privacy.",
+      "popia_passed": false,
+      "popia_score": 0.25472250613858194,
+      "stock_passed": true,
+      "stock_score": 0.0016912782186294661,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 123,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "news-municipality-no-io",
+      "premise": "News24 confirmed that a Limpopo municipality has no designated information officer and its data practices have never been documented.",
+      "hypothesis": "The municipality is complying with the accountability condition in Chapter 3.",
+      "popia_passed": true,
+      "popia_score": 0.9255751654990827,
+      "stock_passed": true,
+      "stock_score": 0.7194299991448455,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 124,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "news-telkom-legacy-billing",
+      "premise": "BusinessTech reveals that Telkom's legacy post-paid billing system still processes customer data without any documented purpose, retention or lawfulness assessment.",
+      "hypothesis": "Telkom's legacy system is processed in accordance with all eight conditions of Chapter 3.",
+      "popia_passed": true,
+      "popia_score": 0.7419500778394765,
+      "stock_passed": true,
+      "stock_score": 0.3642214717812642,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 125,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "first-person-whiteboard",
+      "premise": "I watched a debt-review agent for a small SA lender put my full name, ID, and balance on a whiteboard in an open-plan office.",
+      "hypothesis": "The lender is processing my information in a reasonable manner that does not infringe my privacy.",
+      "popia_passed": false,
+      "popia_score": 0.06997381112631018,
+      "stock_passed": true,
+      "stock_score": 0.3302000360425964,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 126,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "first-person-ha-call-out",
+      "premise": "The Home Affairs queue clerk was loudly calling out each applicant's ID number and reason for visit so the whole room could hear.",
+      "hypothesis": "Home Affairs was processing personal information in a manner that respects data subject privacy.",
+      "popia_passed": false,
+      "popia_score": 0.31391564505835967,
+      "stock_passed": true,
+      "stock_score": 0.7197542630139502,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 127,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "memo-shadow-campaign",
+      "premise": "RCA INC-4401: the marketing team launched a segmentation campaign using unstructured personal data extracted from support tickets, without informing the information officer and outside the approved purpose.",
+      "hypothesis": "Processing was conducted in accordance with the organisation's accountability framework and purpose specification.",
+      "popia_passed": false,
+      "popia_score": 0.3003222682112642,
+      "stock_passed": false,
+      "stock_score": 0.40839290861921684,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 128,
+      "clause": "POPIA general processing",
+      "label": "contradiction",
+      "scenario": "memo-unauth-exploration",
+      "premise": "RCA for INC-2234: an internal analyst ran exploratory queries against the production customer-events table for a personal research project, with no approved business purpose and outside her authorised scope.",
+      "hypothesis": "The processing was lawful and within the accountability framework under Chapter 3.",
+      "popia_passed": false,
+      "popia_score": 0.40240038705772463,
+      "stock_passed": false,
+      "stock_score": 0.12728779905915322,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 129,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "news-nedbank-access",
+      "premise": "News24 reports that Nedbank responded to a data-subject access request within the prescribed 30-day window, providing a full record description and a list of third parties who had accessed the customer's data.",
+      "hypothesis": "Nedbank has honoured the data subject's \u00a723 access right.",
+      "popia_passed": false,
+      "popia_score": 0.4204463337729083,
+      "stock_passed": true,
+      "stock_score": 0.6773179452727329,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 130,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "news-takealot-deletion",
+      "premise": "Daily Maverick confirmed that after a reader requested deletion of her profile, Takealot purged her account data within 14 days and sent a written confirmation of the destruction.",
+      "hypothesis": "Takealot has honoured the data subject's right to request destruction under \u00a724.",
+      "popia_passed": true,
+      "popia_score": 0.9028055457325826,
+      "stock_passed": true,
+      "stock_score": 0.3009498745655653,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 131,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "news-fnb-self-service",
+      "premise": "BusinessTech writes that FNB's 'My Data' self-service page lets customers see what personal data the bank holds, download it, and request corrections \u2014 all online.",
+      "hypothesis": "FNB has enabled the \u00a723 access and \u00a724 correction rights.",
+      "popia_passed": true,
+      "popia_score": 0.5479372131356982,
+      "stock_passed": false,
+      "stock_score": 0.2869137168689272,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 132,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "first-person-old-mutual-access",
+      "premise": "I emailed the Old Mutual information officer on 3 March and on 30 March received a written confirmation that they hold my policy, a full record description, and a list of third parties that had accessed it.",
+      "hypothesis": "Old Mutual has honoured the data subject's \u00a723 access right within a reasonable time.",
+      "popia_passed": false,
+      "popia_score": 0.4298881499898346,
+      "stock_passed": true,
+      "stock_score": 0.6547056237030716,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 133,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "first-person-capitec-correction",
+      "premise": "I asked Capitec to correct my date of birth on their system after I noticed it was wrong by one year; they did it the same week and sent me a confirmation letter.",
+      "hypothesis": "Capitec has honoured the data subject's \u00a724 correction right.",
+      "popia_passed": false,
+      "popia_score": 0.4649881902470142,
+      "stock_passed": false,
+      "stock_score": 0.2137014009891003,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 134,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "memo-correction-ticket",
+      "premise": "Jira ticket DSR-7781: a data subject asked us to correct their marital status on their Discovery Life profile; the agent made the change and confirmed with the customer in writing.",
+      "hypothesis": "The change represents fulfilment of the \u00a724 correction right.",
+      "popia_passed": false,
+      "popia_score": 0.47318618590932626,
+      "stock_passed": true,
+      "stock_score": 0.7960247601267803,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 135,
+      "clause": "POPIA data subject rights",
+      "label": "entailment",
+      "scenario": "memo-third-party-notify",
+      "premise": "Internal memo 2026-03-30: the DSR workflow now auto-notifies third parties that received the data whenever a correction is made.",
+      "hypothesis": "The workflow implements the \u00a724 obligation to inform third parties of changes where decisions may be affected.",
+      "popia_passed": false,
+      "popia_score": 0.16969139619805473,
+      "stock_passed": false,
+      "stock_score": 0.5154520099152164,
+      "correct": false,
+      "error_type": "false_negative",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 136,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "news-retailer-1400-requests",
+      "premise": "Sunday Times reports that a major SA retailer received 1 400 data-subject requests last year.",
+      "hypothesis": "The retailer responded to each of the 1 400 requests within the prescribed time.",
+      "popia_passed": true,
+      "popia_score": 0.6329408557657957,
+      "stock_passed": false,
+      "stock_score": 0.8184234645366643,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 137,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "news-discovery-portal-may",
+      "premise": "News24 writes that Discovery is rolling out a new self-service privacy portal in May 2026.",
+      "hypothesis": "Discovery is currently satisfying the \u00a723 access right for every data subject.",
+      "popia_passed": true,
+      "popia_score": 0.7511381375407322,
+      "stock_passed": true,
+      "stock_score": 0.22464066599728827,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 138,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "news-santam-improvement-programme",
+      "premise": "IOL reports that Santam's 2025 annual report mentions a 'compliance improvement programme' covering data-subject requests.",
+      "hypothesis": "Santam currently honours the \u00a724 correction right in every case.",
+      "popia_passed": false,
+      "popia_score": 0.19912993272657664,
+      "stock_passed": false,
+      "stock_score": 0.24484254407835015,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 139,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "first-person-correction-pending",
+      "premise": "I submitted a correction request to my short-term insurer last Thursday and haven't heard back yet.",
+      "hypothesis": "The insurer has failed to respond within the time required by \u00a724.",
+      "popia_passed": false,
+      "popia_score": 0.47513634421880513,
+      "stock_passed": true,
+      "stock_score": 0.0728282291845691,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 140,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "first-person-retailer-looking-into-it",
+      "premise": "I asked a small online retailer whether they still have my details; they replied that the compliance team is looking into it.",
+      "hypothesis": "The retailer is going to deliver a \u00a723-compliant response.",
+      "popia_passed": false,
+      "popia_score": 0.41444101099771935,
+      "stock_passed": true,
+      "stock_score": 0.1944352367397093,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 141,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "memo-backup-not-purged",
+      "premise": "Incident report INC-2213: a customer's deletion request was processed in production but the nightly backup tape from that week has not yet been purged; legal is assessing whether that still meets \u00a724.",
+      "hypothesis": "The organisation has fully complied with the \u00a724 destruction right for this request.",
+      "popia_passed": true,
+      "popia_score": 0.6963542504905049,
+      "stock_passed": false,
+      "stock_score": 0.24398443957843885,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 142,
+      "clause": "POPIA data subject rights",
+      "label": "neutral",
+      "scenario": "memo-id-verification-pending",
+      "premise": "Sprint note: we discussed how to prove identity for \u00a723 access requests coming in by email; no decision has been locked in yet.",
+      "hypothesis": "The organisation currently has a \u00a723-compliant identity-verification mechanism in production.",
+      "popia_passed": true,
+      "popia_score": 0.6560580111117841,
+      "stock_passed": false,
+      "stock_score": 0.7509644766184729,
+      "correct": false,
+      "error_type": "false_positive_neutral",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    },
+    {
+      "idx": 143,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "news-clinic-refuse-correction",
+      "premise": "Sunday Times reports that a Johannesburg clinic refused a patient's written request to correct her out-of-date home address on her file, saying 'that's an admin problem, not our problem'.",
+      "hypothesis": "The clinic has honoured the \u00a724 right to request correction.",
+      "popia_passed": true,
+      "popia_score": 0.7700461885740251,
+      "stock_passed": false,
+      "stock_score": 0.4251461939427341,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 144,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "news-santam-fee",
+      "premise": "IOL reports that Santam insisted on charging a R2 500 'research fee' before it would confirm whether it held any information on a claimant who had submitted a \u00a723 access request.",
+      "hypothesis": "Santam is providing the \u00a723 confirmation at no more than the prescribed fee.",
+      "popia_passed": false,
+      "popia_score": 0.17588668170653166,
+      "stock_passed": true,
+      "stock_score": 0.5179577504437408,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 145,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "first-person-edtech-no-deletion",
+      "premise": "I wrote to an online learning platform in February asking them to delete my old account records that I no longer need them to hold; four months later I'm still on their mailing list and they haven't responded.",
+      "hypothesis": "The platform has honoured the data subject's request under \u00a724.",
+      "popia_passed": false,
+      "popia_score": 0.05021838514064092,
+      "stock_passed": false,
+      "stock_score": 0.8483363473516597,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "high_correct"
+    },
+    {
+      "idx": 146,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "first-person-takealot-refuses",
+      "premise": "A Takealot support agent told me over chat that they 'don't do' correction requests and I'd need to close my account and open a new one to fix my surname.",
+      "hypothesis": "Takealot is facilitating the \u00a724 correction right.",
+      "popia_passed": false,
+      "popia_score": 0.45646182547017256,
+      "stock_passed": true,
+      "stock_score": 0.6675777325863531,
+      "correct": true,
+      "error_type": "ok",
+      "complexity": "simple",
+      "confidence_bucket": "low_correct"
+    },
+    {
+      "idx": 147,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "memo-dsar-dropped",
+      "premise": "RCA INC-8812: the data-subject access portal was silently dropping requests with non-ASCII characters in the subject's name; 140 requests were never actioned over a 6-month period.",
+      "hypothesis": "The organisation is honouring its \u00a723 access-right obligations.",
+      "popia_passed": true,
+      "popia_score": 0.987892453066448,
+      "stock_passed": true,
+      "stock_score": 0.9500396084431559,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 148,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "memo-soft-delete-only",
+      "premise": "Engineering ticket CS-6611: the deletion script we shipped last quarter was only soft-deleting records with a flag; the underlying PII rows remained in the database indefinitely, against the data subject's destruction request.",
+      "hypothesis": "The deletion implementation is destroying records as requested.",
+      "popia_passed": true,
+      "popia_score": 0.891425925810437,
+      "stock_passed": true,
+      "stock_score": 0.7192739612759671,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "high_wrong"
+    },
+    {
+      "idx": 149,
+      "clause": "POPIA data subject rights",
+      "label": "contradiction",
+      "scenario": "memo-unreadable-dump",
+      "premise": "Jira DSR-9010: we responded to a \u00a723 access request with a PDF dump of raw database rows with column names like 'cust_lvl_8_seg_cd', unreadable without our internal glossary.",
+      "hypothesis": "The response is in an 'understandable form' as required by \u00a723.",
+      "popia_passed": true,
+      "popia_score": 0.504778164824402,
+      "stock_passed": true,
+      "stock_score": 0.5478719506108284,
+      "correct": false,
+      "error_type": "false_positive",
+      "complexity": "simple",
+      "confidence_bucket": "low_wrong"
+    }
+  ],
+  "error_analysis": {
+    "total_examples": 150,
+    "total_errors": 84,
+    "overall_accuracy": 0.44,
+    "by_clause": {
+      "POPIA breach notification": {
+        "total": 22,
+        "errors": 9,
+        "error_rate": 0.4091,
+        "error_types": {
+          "false_negative": 4,
+          "false_positive_neutral": 3,
+          "false_positive": 2
+        }
+      },
+      "POPIA consent": {
+        "total": 22,
+        "errors": 14,
+        "error_rate": 0.6364,
+        "error_types": {
+          "false_negative": 3,
+          "false_positive_neutral": 6,
+          "false_positive": 5
+        }
+      },
+      "POPIA cross-border transfers": {
+        "total": 22,
+        "errors": 12,
+        "error_rate": 0.5455,
+        "error_types": {
+          "false_negative": 2,
+          "false_positive_neutral": 6,
+          "false_positive": 4
+        }
+      },
+      "POPIA data subject rights": {
+        "total": 21,
+        "errors": 13,
+        "error_rate": 0.619,
+        "error_types": {
+          "false_negative": 5,
+          "false_positive_neutral": 4,
+          "false_positive": 4
+        }
+      },
+      "POPIA general processing": {
+        "total": 21,
+        "errors": 13,
+        "error_rate": 0.619,
+        "error_types": {
+          "false_negative": 5,
+          "false_positive_neutral": 6,
+          "false_positive": 2
+        }
+      },
+      "POPIA minimality / purpose limitation": {
+        "total": 21,
+        "errors": 15,
+        "error_rate": 0.7143,
+        "error_types": {
+          "false_negative": 6,
+          "false_positive_neutral": 5,
+          "false_positive": 4
+        }
+      },
+      "POPIA security safeguards": {
+        "total": 21,
+        "errors": 8,
+        "error_rate": 0.381,
+        "error_types": {
+          "false_negative": 2,
+          "false_positive_neutral": 2,
+          "false_positive": 4
+        }
+      }
+    },
+    "by_error_type": {
+      "ok": 66,
+      "false_negative": 27,
+      "false_positive_neutral": 32,
+      "false_positive": 25
+    },
+    "by_complexity": {
+      "simple": {
+        "correct": 64,
+        "total": 145,
+        "accuracy": 0.4414
+      },
+      "multi_hop": {
+        "correct": 2,
+        "total": 5,
+        "accuracy": 0.4
+      }
+    },
+    "confidence_buckets": {
+      "low_correct": 25,
+      "high_wrong": 39,
+      "high_correct": 41,
+      "low_wrong": 45
+    },
+    "confidently_wrong_count": 39,
+    "confidently_wrong_examples": [
+      {
+        "idx": 1,
+        "clause": "POPIA consent",
+        "label": "entailment",
+        "score": 0.2232,
+        "scenario": "news-robo-advisor",
+        "premise_preview": "IOL writes that Nedbank's new robo-advisor shows each client a clear summary of what data will be used for portfolio rec"
+      },
+      {
+        "idx": 3,
+        "clause": "POPIA consent",
+        "label": "entailment",
+        "score": 0.0298,
+        "scenario": "first-person-hospital-preauth",
+        "premise_preview": "I signed a form at the Netcare hospital front desk that explicitly said my contact details would be passed to my medical"
+      },
+      {
+        "idx": 4,
+        "clause": "POPIA consent",
+        "label": "entailment",
+        "score": 0.0265,
+        "scenario": "memo-research-reconsent",
+        "premise_preview": "Internal memo 2026-03-11: following the legal review, our research platform now requires every participant to re-consent"
+      },
+      {
+        "idx": 8,
+        "clause": "POPIA consent",
+        "label": "neutral",
+        "score": 0.9572,
+        "scenario": "news-winery-marketing",
+        "premise_preview": "Reuters reports that a Stellenbosch winery has started running email marketing campaigns against its tasting-room visito"
+      },
+      {
+        "idx": 10,
+        "clause": "POPIA consent",
+        "label": "neutral",
+        "score": 0.8071,
+        "scenario": "first-person-seminar-card",
+        "premise_preview": "I attended a Liberty Life financial-advice seminar last weekend and gave my business card at the door."
+      },
+      {
+        "idx": 11,
+        "clause": "POPIA consent",
+        "label": "neutral",
+        "score": 0.9731,
+        "scenario": "first-person-pilates-form",
+        "premise_preview": "I joined a new Pilates studio in Melville and filled in their welcome form."
+      },
+      {
+        "idx": 12,
+        "clause": "POPIA consent",
+        "label": "neutral",
+        "score": 0.8294,
+        "scenario": "memo-school-photo-reuse",
+        "premise_preview": "Sprint retro note: the team discussed whether school photographs uploaded to our parent portal need re-consent when re-u"
+      },
+      {
+        "idx": 20,
+        "clause": "POPIA consent",
+        "label": "contradiction",
+        "score": 0.9895,
+        "scenario": "memo-cookie-banner-bug",
+        "premise_preview": "Incident report INC-7712: a developer shipped a release where the cookie banner's 'Reject all' button silently logged th"
+      },
+      {
+        "idx": 22,
+        "clause": "POPIA minimality / purpose limitation",
+        "label": "entailment",
+        "score": 0.229,
+        "scenario": "news-courier-minimal",
+        "premise_preview": "News24 reports that Takealot's courier app asks a delivery driver only for their name, vehicle registration, and drop-of"
+      },
+      {
+        "idx": 32,
+        "clause": "POPIA minimality / purpose limitation",
+        "label": "neutral",
+        "score": 0.9961,
+        "scenario": "memo-municipal-data-reuse",
+        "premise_preview": "Sprint note: the marketing team wants to start pulling City of eThekwini residents' water-usage data into our churn mode"
+      },
+      {
+        "idx": 33,
+        "clause": "POPIA minimality / purpose limitation",
+        "label": "neutral",
+        "score": 0.8608,
+        "scenario": "news-clinic-occupation",
+        "premise_preview": "News24 reports that a Pretoria clinic collects the occupation of every patient on its intake form."
+      },
+      {
+        "idx": 38,
+        "clause": "POPIA minimality / purpose limitation",
+        "label": "contradiction",
+        "score": 0.9126,
+        "scenario": "first-person-wifi-over-collect",
+        "premise_preview": "I tried to sign up for free Wi-Fi at a Mugg & Bean and the captive portal insisted on my ID number, home address, monthl"
+      },
+      {
+        "idx": 40,
+        "clause": "POPIA minimality / purpose limitation",
+        "label": "contradiction",
+        "score": 0.7625,
+        "scenario": "memo-payment-fingerprint",
+        "premise_preview": "Incident report: during Q1 our Payfast checkout was recording the browser's full navigator.userAgent, screen resolution,"
+      },
+      {
+        "idx": 50,
+        "clause": "POPIA security safeguards",
+        "label": "neutral",
+        "score": 0.9951,
+        "scenario": "first-person-weak-auth",
+        "premise_preview": "I'm a Takealot customer and I logged in yesterday to find that my password from 2019 still worked, with no MFA challenge"
+      },
+      {
+        "idx": 58,
+        "clause": "POPIA security safeguards",
+        "label": "contradiction",
+        "score": 0.8075,
+        "scenario": "news-unpatched-sap",
+        "premise_preview": "Daily Maverick reveals that a Transnet legacy SAP instance has been running on unpatched software with publicly-known CV"
+      },
+      {
+        "idx": 62,
+        "clause": "POPIA security safeguards",
+        "label": "contradiction",
+        "score": 0.8617,
+        "scenario": "memo-backup-everyone",
+        "premise_preview": "RCA INC-5123: the backup job for the Momentum CRM was writing to a network share with 'Everyone: Full Control' NTFS perm"
+      },
+      {
+        "idx": 64,
+        "clause": "POPIA breach notification",
+        "label": "entailment",
+        "score": 0.2498,
+        "scenario": "news-mediclinic-3-day",
+        "premise_preview": "Reuters reports that Mediclinic confirmed a ransomware attack on 14 March 2026 and notified the Information Regulator an"
+      },
+      {
+        "idx": 69,
+        "clause": "POPIA breach notification",
+        "label": "entailment",
+        "score": 0.0586,
+        "scenario": "memo-duty-even-unknown",
+        "premise_preview": "Internal note dated 11 April 2026: we have reasonable grounds to believe personal information was accessed by an unautho"
+      },
+      {
+        "idx": 81,
+        "clause": "POPIA breach notification",
+        "label": "contradiction",
+        "score": 0.9347,
+        "scenario": "first-person-only-news",
+        "premise_preview": "I only heard about the Nedbank vendor breach in May from a news article \u2014 I never got any communication from Nedbank eve"
+      },
+      {
+        "idx": 85,
+        "clause": "POPIA breach notification",
+        "label": "contradiction",
+        "score": 0.9961,
+        "scenario": "memo-4-months-late-subjects",
+        "premise_preview": "RCA INC-9090: following the compromise we notified the Regulator within 12 hours; however the data-subject letters went "
+      }
+    ]
+  },
+  "gap_analysis": {
+    "training_total": 261,
+    "clause_coverage": {
+      "POPIA consent": {
+        "popia_sections": [
+          "\u00a79",
+          "\u00a711",
+          "\u00a711(1)(a)",
+          "\u00a711(3)",
+          "\u00a769",
+          "\u00a769(2)"
+        ],
+        "chapter": 3,
+        "description": "Consent requirements for lawful processing and direct marketing",
+        "training_examples": 27,
+        "eval_examples": 22,
+        "training_scenarios": [
+          "clinic-consent",
+          "clinical-research",
+          "medical-scheme",
+          "ngo-donor",
+          "office-visitor-log",
+          "retail-loyalty",
+          "sa-banking",
+          "sa-fintech",
+          "sme-payroll"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA minimality / purpose limitation": {
+        "popia_sections": [
+          "\u00a79",
+          "\u00a710",
+          "\u00a713",
+          "\u00a714",
+          "\u00a715"
+        ],
+        "chapter": 3,
+        "description": "Conditions 2-5: purpose specification, further processing, minimality, retention",
+        "training_examples": 27,
+        "eval_examples": 21,
+        "training_scenarios": [
+          "ehome-affairs",
+          "hr-recruitment",
+          "logistics-telematics",
+          "retail-analytics",
+          "retail-loyalty",
+          "sars-efiling",
+          "startup-leadgen",
+          "tutoring-enrolment"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA general processing": {
+        "popia_sections": [
+          "\u00a78",
+          "\u00a79",
+          "\u00a710",
+          "\u00a711",
+          "\u00a712"
+        ],
+        "chapter": 3,
+        "description": "Condition 1: accountability and general lawfulness of processing",
+        "training_examples": 27,
+        "eval_examples": 21,
+        "training_scenarios": [
+          "clinic-consent",
+          "enterprise-compliance",
+          "government-portal",
+          "sa-banking",
+          "sa-fintech",
+          "sme-payroll",
+          "startup-generic",
+          "telco-monetisation"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA security safeguards": {
+        "popia_sections": [
+          "\u00a719",
+          "\u00a720",
+          "\u00a721",
+          "\u00a722"
+        ],
+        "chapter": 3,
+        "description": "Condition 7: security measures, breach notification to Regulator and subjects",
+        "training_examples": 27,
+        "eval_examples": 21,
+        "training_scenarios": [
+          "call-centre",
+          "clinic-security",
+          "ecommerce",
+          "government-portal",
+          "hospital-records",
+          "ngo-donor",
+          "sa-banking",
+          "sa-insurance",
+          "saas-security"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA breach notification": {
+        "popia_sections": [
+          "\u00a722"
+        ],
+        "chapter": 3,
+        "description": "Notification of security compromises \u2014 timing, content, recipients",
+        "training_examples": 24,
+        "eval_examples": 22,
+        "training_scenarios": [
+          "bank-breach",
+          "corporate-phishing",
+          "medical-scheme",
+          "ngo-donor",
+          "retail-breach",
+          "sa-fintech",
+          "sme-incident",
+          "telco-breach"
+        ],
+        "coverage_status": "moderate"
+      },
+      "POPIA data subject rights": {
+        "popia_sections": [
+          "\u00a75",
+          "\u00a723",
+          "\u00a724",
+          "\u00a725"
+        ],
+        "chapter": 3,
+        "description": "Condition 8: data-subject participation \u2014 access, correction, deletion",
+        "training_examples": 24,
+        "eval_examples": 21,
+        "training_scenarios": [
+          "clinic-consent",
+          "enterprise-compliance",
+          "hr-recruitment",
+          "medical-scheme",
+          "ngo-donor",
+          "retail-loyalty",
+          "sa-insurance",
+          "saas-dsar"
+        ],
+        "coverage_status": "moderate"
+      },
+      "POPIA cross-border transfers": {
+        "popia_sections": [
+          "\u00a772"
+        ],
+        "chapter": 9,
+        "description": "Transborder information flows \u2014 adequacy, consent, binding rules",
+        "training_examples": 24,
+        "eval_examples": 22,
+        "training_scenarios": [
+          "analytics-vendor",
+          "cross-border-saas",
+          "legal-outsourcing",
+          "multinational-hr",
+          "onshore-hosting",
+          "retail-ecommerce",
+          "travel-booking"
+        ],
+        "coverage_status": "moderate"
+      },
+      "POPIA children's information": {
+        "popia_sections": [
+          "\u00a734",
+          "\u00a735"
+        ],
+        "chapter": 3,
+        "description": "Processing of personal information of children under 18",
+        "training_examples": 27,
+        "eval_examples": 0,
+        "training_scenarios": [
+          "adult-banking-irrelevant",
+          "anonymous-analytics",
+          "doe-nutrition-programme",
+          "edtech-no-parental-consent",
+          "online-tutoring-id-check",
+          "preschool-enrolment",
+          "press-sports-photo",
+          "school-photo-gallery",
+          "social-network-age-gate"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA special personal information": {
+        "popia_sections": [
+          "\u00a726",
+          "\u00a727",
+          "\u00a728",
+          "\u00a729",
+          "\u00a730",
+          "\u00a731",
+          "\u00a732",
+          "\u00a733"
+        ],
+        "chapter": 3,
+        "description": "Processing of special PI \u2014 race, health, biometrics, criminal, etc.",
+        "training_examples": 27,
+        "eval_examples": 0,
+        "training_scenarios": [
+          "ai-hiring-race-inference",
+          "banking-affordability",
+          "ecommerce-shipping",
+          "hr-religious-filter",
+          "medical-aid-claim",
+          "medical-aid-hiv-data-sale",
+          "mrc-aggregate-stats",
+          "religious-membership-records",
+          "trade-union-records"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA automated decision-making": {
+        "popia_sections": [
+          "\u00a771"
+        ],
+        "chapter": 8,
+        "description": "Rights regarding automated processing and profiling",
+        "training_examples": 27,
+        "eval_examples": 0,
+        "training_scenarios": [
+          "anonymous-policy-survey",
+          "ats-no-appeal",
+          "credit-bureau-appeal",
+          "insurer-opaque-refusal",
+          "lender-auto-decline",
+          "motor-insurance-code-of-conduct",
+          "sassa-human-override",
+          "spam-filter",
+          "warehouse-barcode"
+        ],
+        "coverage_status": "good"
+      },
+      "POPIA exemptions": {
+        "popia_sections": [
+          "\u00a736",
+          "\u00a737",
+          "\u00a738"
+        ],
+        "chapter": 4,
+        "description": "Exemptions from processing conditions \u2014 journalism, art, research",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA information officers": {
+        "popia_sections": [
+          "\u00a755",
+          "\u00a756"
+        ],
+        "chapter": 5,
+        "description": "Designation, registration, and duties of information officers",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA prior authorisation": {
+        "popia_sections": [
+          "\u00a757",
+          "\u00a758",
+          "\u00a759"
+        ],
+        "chapter": 6,
+        "description": "Prior authorisation for high-risk processing (e.g. unique identifiers, criminal)",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA codes of conduct": {
+        "popia_sections": [
+          "\u00a760",
+          "\u00a761",
+          "\u00a762",
+          "\u00a763",
+          "\u00a764",
+          "\u00a765",
+          "\u00a766",
+          "\u00a767",
+          "\u00a768"
+        ],
+        "chapter": 7,
+        "description": "Industry codes of conduct \u2014 application, approval, enforcement",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA direct marketing": {
+        "popia_sections": [
+          "\u00a769",
+          "\u00a769(1)",
+          "\u00a769(2)",
+          "\u00a769(3)",
+          "\u00a770"
+        ],
+        "chapter": 8,
+        "description": "Unsolicited electronic communications \u2014 opt-in/opt-out rules",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA directories": {
+        "popia_sections": [
+          "\u00a770"
+        ],
+        "chapter": 8,
+        "description": "Rights regarding directories and automated decision-making",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA enforcement": {
+        "popia_sections": [
+          "\u00a773",
+          "\u00a774",
+          "\u00a775",
+          "\u00a776",
+          "\u00a777",
+          "\u00a778",
+          "\u00a799"
+        ],
+        "chapter": 10,
+        "description": "Complaints, investigations, enforcement notices, civil remedies",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA offences and penalties": {
+        "popia_sections": [
+          "\u00a7100",
+          "\u00a7101",
+          "\u00a7102",
+          "\u00a7103",
+          "\u00a7104",
+          "\u00a7105",
+          "\u00a7106",
+          "\u00a7107"
+        ],
+        "chapter": 11,
+        "description": "Criminal offences, penalties, administrative fines",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA openness (notification)": {
+        "popia_sections": [
+          "\u00a716",
+          "\u00a717",
+          "\u00a718"
+        ],
+        "chapter": 3,
+        "description": "Condition 6: notification to the Regulator and to data subjects",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      },
+      "POPIA information quality": {
+        "popia_sections": [
+          "\u00a716"
+        ],
+        "chapter": 3,
+        "description": "Condition 4 (quality): information must be complete, accurate, up to date",
+        "training_examples": 0,
+        "eval_examples": 0,
+        "training_scenarios": [],
+        "coverage_status": "none"
+      }
+    },
+    "untested_clause_label_combos": [
+      {
+        "clause": "POPIA exemptions",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA exemptions",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA exemptions",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA information officers",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA information officers",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA information officers",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA prior authorisation",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA prior authorisation",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA prior authorisation",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA codes of conduct",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA codes of conduct",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA codes of conduct",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA direct marketing",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA direct marketing",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA direct marketing",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA directories",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA directories",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA directories",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA enforcement",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA enforcement",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA enforcement",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA offences and penalties",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA offences and penalties",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA offences and penalties",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA openness (notification)",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA openness (notification)",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA openness (notification)",
+        "label": "neutral"
+      },
+      {
+        "clause": "POPIA information quality",
+        "label": "entailment"
+      },
+      {
+        "clause": "POPIA information quality",
+        "label": "contradiction"
+      },
+      {
+        "clause": "POPIA information quality",
+        "label": "neutral"
+      }
+    ],
+    "scenario_archetype_coverage": {
+      "first-person": 0,
+      "news": 0,
+      "memo": 0,
+      "audit": 0,
+      "complaint": 0,
+      "contract": 0,
+      "multi-party": 0,
+      "cross-border": 1,
+      "technical": 0,
+      "healthcare": 0,
+      "financial": 0,
+      "education": 0,
+      "employment": 0
+    },
+    "missing_scenario_archetypes": [
+      "first-person",
+      "news",
+      "memo",
+      "audit",
+      "complaint",
+      "contract",
+      "multi-party",
+      "technical",
+      "healthcare",
+      "financial",
+      "education",
+      "employment"
+    ],
+    "clauses_with_zero_training": [
+      "POPIA exemptions",
+      "POPIA information officers",
+      "POPIA prior authorisation",
+      "POPIA codes of conduct",
+      "POPIA direct marketing",
+      "POPIA directories",
+      "POPIA enforcement",
+      "POPIA offences and penalties",
+      "POPIA openness (notification)",
+      "POPIA information quality"
+    ],
+    "clauses_with_sparse_training": []
+  },
+  "priority_scores": [
+    {
+      "clause": "POPIA minimality / purpose limitation",
+      "priority_score": 64.29,
+      "impact": 0.1,
+      "frequency": 0.9,
+      "weakness": 0.7143,
+      "current_training_examples": 27,
+      "current_eval_accuracy": 0.2857,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a79",
+        "\u00a710",
+        "\u00a713",
+        "\u00a714",
+        "\u00a715"
+      ]
+    },
+    {
+      "clause": "POPIA consent",
+      "priority_score": 59.4,
+      "impact": 0.0933,
+      "frequency": 1.0,
+      "weakness": 0.6364,
+      "current_training_examples": 27,
+      "current_eval_accuracy": 0.3636,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a79",
+        "\u00a711",
+        "\u00a711(1)(a)",
+        "\u00a711(3)",
+        "\u00a769",
+        "\u00a769(2)"
+      ]
+    },
+    {
+      "clause": "POPIA data subject rights",
+      "priority_score": 48.28,
+      "impact": 0.0867,
+      "frequency": 0.9,
+      "weakness": 0.619,
+      "current_training_examples": 24,
+      "current_eval_accuracy": 0.381,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a75",
+        "\u00a723",
+        "\u00a724",
+        "\u00a725"
+      ]
+    },
+    {
+      "clause": "POPIA general processing",
+      "priority_score": 42.92,
+      "impact": 0.0867,
+      "frequency": 0.8,
+      "weakness": 0.619,
+      "current_training_examples": 27,
+      "current_eval_accuracy": 0.381,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a78",
+        "\u00a79",
+        "\u00a710",
+        "\u00a711",
+        "\u00a712"
+      ]
+    },
+    {
+      "clause": "POPIA direct marketing",
+      "priority_score": 40.0,
+      "impact": 0.1,
+      "frequency": 0.8,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a769",
+        "\u00a769(1)",
+        "\u00a769(2)",
+        "\u00a769(3)",
+        "\u00a770"
+      ]
+    },
+    {
+      "clause": "POPIA cross-border transfers",
+      "priority_score": 30.55,
+      "impact": 0.08,
+      "frequency": 0.7,
+      "weakness": 0.5455,
+      "current_training_examples": 24,
+      "current_eval_accuracy": 0.4545,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a772"
+      ]
+    },
+    {
+      "clause": "POPIA information officers",
+      "priority_score": 30.0,
+      "impact": 0.1,
+      "frequency": 0.6,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a755",
+        "\u00a756"
+      ]
+    },
+    {
+      "clause": "POPIA openness (notification)",
+      "priority_score": 30.0,
+      "impact": 0.1,
+      "frequency": 0.6,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a716",
+        "\u00a717",
+        "\u00a718"
+      ]
+    },
+    {
+      "clause": "POPIA enforcement",
+      "priority_score": 25.0,
+      "impact": 0.1,
+      "frequency": 0.5,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a773",
+        "\u00a774",
+        "\u00a775",
+        "\u00a776",
+        "\u00a777",
+        "\u00a778",
+        "\u00a799"
+      ]
+    },
+    {
+      "clause": "POPIA offences and penalties",
+      "priority_score": 25.0,
+      "impact": 0.1,
+      "frequency": 0.5,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a7100",
+        "\u00a7101",
+        "\u00a7102",
+        "\u00a7103",
+        "\u00a7104",
+        "\u00a7105",
+        "\u00a7106",
+        "\u00a7107"
+      ]
+    },
+    {
+      "clause": "POPIA information quality",
+      "priority_score": 25.0,
+      "impact": 0.1,
+      "frequency": 0.5,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a716"
+      ]
+    },
+    {
+      "clause": "POPIA exemptions",
+      "priority_score": 20.0,
+      "impact": 0.1,
+      "frequency": 0.4,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a736",
+        "\u00a737",
+        "\u00a738"
+      ]
+    },
+    {
+      "clause": "POPIA prior authorisation",
+      "priority_score": 20.0,
+      "impact": 0.1,
+      "frequency": 0.4,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a757",
+        "\u00a758",
+        "\u00a759"
+      ]
+    },
+    {
+      "clause": "POPIA breach notification",
+      "priority_score": 19.64,
+      "impact": 0.06,
+      "frequency": 0.8,
+      "weakness": 0.4091,
+      "current_training_examples": 24,
+      "current_eval_accuracy": 0.5909,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a722"
+      ]
+    },
+    {
+      "clause": "POPIA security safeguards",
+      "priority_score": 18.29,
+      "impact": 0.0533,
+      "frequency": 0.9,
+      "weakness": 0.381,
+      "current_training_examples": 27,
+      "current_eval_accuracy": 0.619,
+      "suggested_additional_examples": 15,
+      "popia_sections": [
+        "\u00a719",
+        "\u00a720",
+        "\u00a721",
+        "\u00a722"
+      ]
+    },
+    {
+      "clause": "POPIA codes of conduct",
+      "priority_score": 15.0,
+      "impact": 0.1,
+      "frequency": 0.3,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a760",
+        "\u00a761",
+        "\u00a762",
+        "\u00a763",
+        "\u00a764",
+        "\u00a765",
+        "\u00a766",
+        "\u00a767",
+        "\u00a768"
+      ]
+    },
+    {
+      "clause": "POPIA directories",
+      "priority_score": 15.0,
+      "impact": 0.1,
+      "frequency": 0.3,
+      "weakness": 0.5,
+      "current_training_examples": 0,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 30,
+      "popia_sections": [
+        "\u00a770"
+      ]
+    },
+    {
+      "clause": "POPIA children's information",
+      "priority_score": 0.0,
+      "impact": 0.0,
+      "frequency": 0.5,
+      "weakness": 0.3,
+      "current_training_examples": 27,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 5,
+      "popia_sections": [
+        "\u00a734",
+        "\u00a735"
+      ]
+    },
+    {
+      "clause": "POPIA special personal information",
+      "priority_score": 0.0,
+      "impact": 0.0,
+      "frequency": 0.6,
+      "weakness": 0.3,
+      "current_training_examples": 27,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 5,
+      "popia_sections": [
+        "\u00a726",
+        "\u00a727",
+        "\u00a728",
+        "\u00a729",
+        "\u00a730",
+        "\u00a731",
+        "\u00a732",
+        "\u00a733"
+      ]
+    },
+    {
+      "clause": "POPIA automated decision-making",
+      "priority_score": 0.0,
+      "impact": 0.0,
+      "frequency": 0.6,
+      "weakness": 0.3,
+      "current_training_examples": 27,
+      "current_eval_accuracy": null,
+      "suggested_additional_examples": 5,
+      "popia_sections": [
+        "\u00a771"
+      ]
+    }
+  ],
+  "data_generation_brief": [
+    {
+      "target_clauses": [
+        "POPIA minimality / purpose limitation"
+      ],
+      "popia_sections": [
+        "\u00a79",
+        "\u00a710",
+        "\u00a713",
+        "\u00a714",
+        "\u00a715"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 15,
+      "priority_score": 64.29,
+      "rationale": "low accuracy (29%); high real-world frequency; false negatives present"
+    },
+    {
+      "target_clauses": [
+        "POPIA consent"
+      ],
+      "popia_sections": [
+        "\u00a79",
+        "\u00a711",
+        "\u00a711(1)(a)",
+        "\u00a711(3)",
+        "\u00a769",
+        "\u00a769(2)"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 15,
+      "priority_score": 59.4,
+      "rationale": "low accuracy (36%); high real-world frequency; dominated by false positives"
+    },
+    {
+      "target_clauses": [
+        "POPIA data subject rights"
+      ],
+      "popia_sections": [
+        "\u00a75",
+        "\u00a723",
+        "\u00a724",
+        "\u00a725"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 15,
+      "priority_score": 48.28,
+      "rationale": "low accuracy (38%); high real-world frequency; false negatives present"
+    },
+    {
+      "target_clauses": [
+        "POPIA general processing"
+      ],
+      "popia_sections": [
+        "\u00a78",
+        "\u00a79",
+        "\u00a710",
+        "\u00a711",
+        "\u00a712"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 15,
+      "priority_score": 42.92,
+      "rationale": "low accuracy (38%); high real-world frequency; false negatives present"
+    },
+    {
+      "target_clauses": [
+        "POPIA direct marketing"
+      ],
+      "popia_sections": [
+        "\u00a769",
+        "\u00a769(1)",
+        "\u00a769(2)",
+        "\u00a769(3)",
+        "\u00a770"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 40.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause; high real-world frequency"
+    },
+    {
+      "target_clauses": [
+        "POPIA cross-border transfers"
+      ],
+      "popia_sections": [
+        "\u00a772"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 15,
+      "priority_score": 30.55,
+      "rationale": "low accuracy (45%); dominated by false positives"
+    },
+    {
+      "target_clauses": [
+        "POPIA information officers"
+      ],
+      "popia_sections": [
+        "\u00a755",
+        "\u00a756"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 30.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA openness (notification)"
+      ],
+      "popia_sections": [
+        "\u00a716",
+        "\u00a717",
+        "\u00a718"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 30.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA enforcement"
+      ],
+      "popia_sections": [
+        "\u00a773",
+        "\u00a774",
+        "\u00a775",
+        "\u00a776",
+        "\u00a777",
+        "\u00a778",
+        "\u00a799"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 25.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA offences and penalties"
+      ],
+      "popia_sections": [
+        "\u00a7100",
+        "\u00a7101",
+        "\u00a7102",
+        "\u00a7103",
+        "\u00a7104",
+        "\u00a7105",
+        "\u00a7106",
+        "\u00a7107"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 25.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA information quality"
+      ],
+      "popia_sections": [
+        "\u00a716"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 25.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA exemptions"
+      ],
+      "popia_sections": [
+        "\u00a736",
+        "\u00a737",
+        "\u00a738"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 20.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA prior authorisation"
+      ],
+      "popia_sections": [
+        "\u00a757",
+        "\u00a758",
+        "\u00a759"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 20.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA breach notification"
+      ],
+      "popia_sections": [
+        "\u00a722"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 15,
+      "priority_score": 19.64,
+      "rationale": "low accuracy (59%); high real-world frequency; false negatives present"
+    },
+    {
+      "target_clauses": [
+        "POPIA security safeguards"
+      ],
+      "popia_sections": [
+        "\u00a719",
+        "\u00a720",
+        "\u00a721",
+        "\u00a722"
+      ],
+      "suggested_scenario_types": [
+        "hard-negative (contradiction)",
+        "subtle-neutral"
+      ],
+      "focus_labels": [
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "intermediate-to-hard",
+      "expected_count": 15,
+      "priority_score": 18.29,
+      "rationale": "low accuracy (62%); high real-world frequency; dominated by false positives"
+    },
+    {
+      "target_clauses": [
+        "POPIA codes of conduct"
+      ],
+      "popia_sections": [
+        "\u00a760",
+        "\u00a761",
+        "\u00a762",
+        "\u00a763",
+        "\u00a764",
+        "\u00a765",
+        "\u00a766",
+        "\u00a767",
+        "\u00a768"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 15.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    },
+    {
+      "target_clauses": [
+        "POPIA directories"
+      ],
+      "popia_sections": [
+        "\u00a770"
+      ],
+      "suggested_scenario_types": [
+        "first-person",
+        "news",
+        "memo"
+      ],
+      "focus_labels": [
+        "entailment",
+        "contradiction",
+        "neutral"
+      ],
+      "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+      "expected_count": 30,
+      "priority_score": 15.0,
+      "rationale": "ZERO training examples \u2014 completely untested clause"
+    }
+  ]
+}

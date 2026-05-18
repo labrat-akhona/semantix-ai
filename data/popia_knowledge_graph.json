@@ -1,0 +1,4880 @@
+{
+  "metadata": {
+    "act_name": "Protection of Personal Information Act",
+    "act_number": "Act No. 4 of 2013",
+    "country": "South Africa",
+    "short_title": "POPIA",
+    "assented_date": "2013-11-19",
+    "commencement_dates": {
+      "sections_1_partA_ch5_s112_s113": "2014-04-11",
+      "sections_2_to_38_55_to_109": "2020-07-01",
+      "full_enforcement": "2021-07-01"
+    },
+    "total_sections": 115,
+    "total_chapters": 12,
+    "graph_version": "1.0.0",
+    "generated_date": "2026-05-15",
+    "purpose": "Structured knowledge graph for NLI and instruction-tuning training pair generation for Semantix AI",
+    "cross_reference_frameworks": [
+      "GDPR",
+      "FICA",
+      "NCA",
+      "ECT_Act",
+      "PAIA",
+      "Constitution"
+    ],
+    "difficulty_tier_definitions": {
+      "basic_identification": "Simple recall of what a section says or requires",
+      "multi_section_reasoning": "Requires understanding how 2+ sections interact",
+      "exception_analysis": "Identifying when exceptions or exemptions apply",
+      "conflict_resolution": "Resolving apparent conflicts between sections or with other legislation"
+    },
+    "eight_conditions_summary": {
+      "condition_1_accountability": {
+        "section": "s8",
+        "principle": "Responsible party must ensure compliance with all conditions"
+      },
+      "condition_2_processing_limitation": {
+        "sections": [
+          "s9",
+          "s10",
+          "s11",
+          "s12"
+        ],
+        "principle": "Processing must be lawful, minimal, justified, and generally collected directly"
+      },
+      "condition_3_purpose_specification": {
+        "sections": [
+          "s13",
+          "s14"
+        ],
+        "principle": "Collect for specific lawful purpose, retain only as long as necessary"
+      },
+      "condition_4_further_processing_limitation": {
+        "section": "s15",
+        "principle": "Further processing must be compatible with original purpose"
+      },
+      "condition_5_information_quality": {
+        "section": "s16",
+        "principle": "Information must be complete, accurate, and not misleading"
+      },
+      "condition_6_openness": {
+        "sections": [
+          "s17",
+          "s18"
+        ],
+        "principle": "Document processing and notify data subjects"
+      },
+      "condition_7_security_safeguards": {
+        "sections": [
+          "s19",
+          "s20",
+          "s21",
+          "s22"
+        ],
+        "principle": "Secure integrity and confidentiality, notify breaches"
+      },
+      "condition_8_data_subject_participation": {
+        "sections": [
+          "s23",
+          "s24",
+          "s25"
+        ],
+        "principle": "Data subjects may access, correct, and delete their information"
+      }
+    }
+  },
+  "chapters": [
+    {
+      "chapter_number": "1",
+      "chapter_title": "Definitions, Purpose and Application",
+      "sections_range": "1-2",
+      "description": "Foundational definitions and the purpose of the Act"
+    },
+    {
+      "chapter_number": "2",
+      "chapter_title": "Application",
+      "sections_range": "3-7",
+      "description": "Scope of application, data subject rights, exclusions"
+    },
+    {
+      "chapter_number": "3",
+      "chapter_title": "Conditions for Lawful Processing of Personal Information",
+      "sections_range": "8-35",
+      "parts": {
+        "A": "Conditions for lawful processing (8-25)",
+        "B": "Processing of special personal information (26-33)",
+        "C": "Processing of personal information of children (34-35)"
+      },
+      "description": "The eight conditions for lawful processing plus special categories and children"
+    },
+    {
+      "chapter_number": "4",
+      "chapter_title": "Exemption from Conditions for Lawful Processing",
+      "sections_range": "36-38",
+      "description": "Exemptions from conditions in Chapter 3"
+    },
+    {
+      "chapter_number": "5",
+      "chapter_title": "Supervision",
+      "sections_range": "39-56",
+      "parts": {
+        "A": "Information Regulator (39-54)",
+        "B": "Information Officers (55-56)"
+      },
+      "description": "Establishment and powers of the Information Regulator and Information Officers"
+    },
+    {
+      "chapter_number": "6",
+      "chapter_title": "Prior Authorisation",
+      "sections_range": "57-59",
+      "description": "Requirements for prior authorisation of certain processing"
+    },
+    {
+      "chapter_number": "7",
+      "chapter_title": "Codes of Conduct",
+      "sections_range": "60-68",
+      "description": "Framework for issuing and enforcing codes of conduct"
+    },
+    {
+      "chapter_number": "8",
+      "chapter_title": "Direct Marketing, Directories and Automated Decision Making",
+      "sections_range": "69-71",
+      "description": "Rights regarding unsolicited communications, directories, and automated decisions"
+    },
+    {
+      "chapter_number": "9",
+      "chapter_title": "Transborder Information Flows",
+      "sections_range": "72",
+      "description": "Restrictions on transferring personal information outside South Africa"
+    },
+    {
+      "chapter_number": "10",
+      "chapter_title": "Enforcement",
+      "sections_range": "73-99",
+      "description": "Complaints, investigations, enforcement notices, appeals, civil remedies"
+    },
+    {
+      "chapter_number": "11",
+      "chapter_title": "Offences, Penalties and Administrative Fines",
+      "sections_range": "100-109",
+      "description": "Criminal offences, penalties, and administrative fine regime"
+    },
+    {
+      "chapter_number": "12",
+      "chapter_title": "General Provisions",
+      "sections_range": "110-115",
+      "description": "Amendments, fees, regulations, transitional arrangements, commencement"
+    }
+  ],
+  "sections": [
+    {
+      "section_id": "s1",
+      "section_title": "Definitions",
+      "chapter": "1",
+      "part": null,
+      "clause_type": "definition",
+      "subjects": [
+        "all_parties"
+      ],
+      "constraints": [
+        "terms_must_be_interpreted_as_defined"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s2",
+        "s3",
+        "s26",
+        "s34"
+      ],
+      "relationship_types": {
+        "s2": "provides_context_for",
+        "s3": "defines_terms_for",
+        "s26": "defines_special_personal_information"
+      },
+      "key_concepts": [
+        "biometrics",
+        "child",
+        "competent_person",
+        "consent",
+        "data_subject",
+        "de-identify",
+        "direct_marketing",
+        "electronic_communication",
+        "filing_system",
+        "information_officer",
+        "information_regulator",
+        "juristic_person",
+        "operator",
+        "personal_information",
+        "processing",
+        "record",
+        "responsible_party",
+        "special_personal_information",
+        "unique_identifier"
+      ],
+      "scenarios": [
+        "determining_if_entity_is_responsible_party_or_operator",
+        "classifying_data_as_personal_information",
+        "identifying_whether_information_qualifies_as_special_personal_information"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "review_definitions_for_correct_classification",
+        "map_organizational_roles_to_POPIA_terms"
+      ],
+      "gdpr_equivalent": "Article 4 - Definitions",
+      "key_definitions": {
+        "personal_information": "Information relating to an identifiable living natural person or identifiable existing juristic person, including but not limited to name, ID number, contact details, biometrics, personal opinions, correspondence, financial/employment/criminal history",
+        "processing": "Any operation concerning personal information including collection, receipt, recording, organisation, collation, storage, updating, modification, retrieval, alteration, consultation, use, dissemination, merging, linking, restriction, degradation, erasure or destruction",
+        "responsible_party": "A public or private body or any other person which, alone or in conjunction with others, determines the purpose of and means for processing personal information",
+        "operator": "A person who processes personal information for a responsible party in terms of a contract or mandate",
+        "data_subject": "The person to whom personal information relates",
+        "consent": "Any voluntary, specific and informed expression of will in terms of which permission is given for the processing of personal information",
+        "special_personal_information": "Religious or philosophical beliefs, race or ethnic origin, trade union membership, political persuasion, health or sex life, biometric information, criminal behaviour",
+        "child": "A natural person under the age of 18 years who is not legally competent"
+      }
+    },
+    {
+      "section_id": "s2",
+      "section_title": "Purpose of Act",
+      "chapter": "1",
+      "part": null,
+      "clause_type": "definition",
+      "subjects": [
+        "republic_of_south_africa",
+        "all_parties"
+      ],
+      "constraints": [
+        "must_give_effect_to_constitutional_right_to_privacy"
+      ],
+      "conditions": [],
+      "exceptions": [
+        "subject_to_justifiable_limitations_aimed_at_protecting_other_rights"
+      ],
+      "related_sections": [
+        "s1",
+        "s3",
+        "s4"
+      ],
+      "relationship_types": {
+        "s1": "relies_on_definitions_from",
+        "s3": "application_scope_follows"
+      },
+      "key_concepts": [
+        "constitutional_right_to_privacy",
+        "section_14_constitution",
+        "balance_of_rights",
+        "free_flow_of_information",
+        "information_regulator_establishment"
+      ],
+      "scenarios": [
+        "balancing_privacy_against_access_to_information",
+        "determining_if_processing_aligns_with_act_purpose"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "ensure_processing_aligns_with_constitutional_privacy_right"
+      ],
+      "gdpr_equivalent": "Recitals 1-4"
+    },
+    {
+      "section_id": "s3",
+      "section_title": "Application and Interpretation of Act",
+      "chapter": "2",
+      "part": null,
+      "clause_type": "definition",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "applies_to_processing_by_or_for_responsible_party_domiciled_in_SA",
+        "applies_to_processing_using_means_in_SA"
+      ],
+      "conditions": [
+        "responsible_party_domiciled_in_republic",
+        "processing_of_personal_information_entered_in_record"
+      ],
+      "exceptions": [
+        "processing_by_natural_person_for_personal_or_household_activity"
+      ],
+      "related_sections": [
+        "s1",
+        "s6",
+        "s7"
+      ],
+      "relationship_types": {
+        "s6": "exclusions_further_limit_application",
+        "s7": "journalistic_exemption_limits_application"
+      },
+      "key_concepts": [
+        "territorial_scope",
+        "extraterritorial_application",
+        "domicile",
+        "automated_processing",
+        "non_automated_filing_system"
+      ],
+      "scenarios": [
+        "foreign_company_processing_SA_data_through_SA_means",
+        "SA_company_processing_data_of_foreign_nationals",
+        "determining_if_personal_household_exemption_applies"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "determine_territorial_applicability",
+        "assess_whether_processing_falls_within_scope"
+      ],
+      "gdpr_equivalent": "Article 3 - Territorial scope"
+    },
+    {
+      "section_id": "s4",
+      "section_title": "Lawful Processing of Personal Information",
+      "chapter": "2",
+      "part": null,
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_comply_with_conditions_in_chapter_3",
+        "processing_must_be_lawful"
+      ],
+      "conditions": [
+        "conditions_for_lawful_processing_met"
+      ],
+      "exceptions": [
+        "exemptions_in_chapter_4"
+      ],
+      "related_sections": [
+        "s8",
+        "s9",
+        "s36",
+        "s37"
+      ],
+      "relationship_types": {
+        "s8": "first_condition_accountability",
+        "s36": "exemptions_may_apply"
+      },
+      "key_concepts": [
+        "lawful_processing",
+        "conditions_compliance",
+        "chapter_3_conditions"
+      ],
+      "scenarios": [
+        "assessing_whether_all_eight_conditions_are_met"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "conduct_lawful_processing_assessment",
+        "document_compliance_with_all_conditions"
+      ],
+      "gdpr_equivalent": "Article 5 - Principles relating to processing"
+    },
+    {
+      "section_id": "s5",
+      "section_title": "Rights of Data Subjects",
+      "chapter": "2",
+      "part": null,
+      "clause_type": "right",
+      "subjects": [
+        "data_subject"
+      ],
+      "constraints": [
+        "rights_subject_to_limitations_in_act"
+      ],
+      "conditions": [],
+      "exceptions": [
+        "limitations_in_terms_of_act"
+      ],
+      "related_sections": [
+        "s23",
+        "s24",
+        "s25",
+        "s11",
+        "s18",
+        "s69",
+        "s71"
+      ],
+      "relationship_types": {
+        "s23": "elaborates_access_right",
+        "s24": "elaborates_correction_right",
+        "s11": "elaborates_objection_right"
+      },
+      "key_concepts": [
+        "right_to_be_notified",
+        "right_to_access",
+        "right_to_correction",
+        "right_to_deletion",
+        "right_to_object",
+        "right_to_withdraw_consent",
+        "right_to_complain",
+        "right_not_to_be_subject_to_automated_decision"
+      ],
+      "scenarios": [
+        "data_subject_requesting_access_to_their_records",
+        "data_subject_objecting_to_direct_marketing",
+        "data_subject_withdrawing_consent"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "establish_data_subject_request_procedures",
+        "create_rights_exercise_mechanisms"
+      ],
+      "gdpr_equivalent": "Articles 12-22 (Chapter III)"
+    },
+    {
+      "section_id": "s6",
+      "section_title": "Exclusions",
+      "chapter": "2",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "public_body"
+      ],
+      "constraints": [],
+      "conditions": [
+        "processing_falls_within_listed_exclusion_categories"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s3",
+        "s7",
+        "s37"
+      ],
+      "relationship_types": {
+        "s3": "limits_scope_of",
+        "s7": "further_exclusion_for_journalism"
+      },
+      "key_concepts": [
+        "personal_household_activity",
+        "national_security",
+        "defence",
+        "public_safety",
+        "law_enforcement",
+        "cabinet_processing",
+        "judicial_functions",
+        "de_identified_information"
+      ],
+      "scenarios": [
+        "government_agency_processing_for_national_security",
+        "individual_maintaining_personal_address_book",
+        "court_processing_case_records"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "assess_whether_exclusion_applies",
+        "document_basis_for_claimed_exclusion"
+      ],
+      "gdpr_equivalent": "Article 2(2) - Material scope exclusions",
+      "exclusion_categories": [
+        "purely_personal_or_household_activity",
+        "national_security_defence_public_safety_law_enforcement",
+        "cabinet_and_executive_council_processing",
+        "judicial_functions",
+        "de_identified_information"
+      ]
+    },
+    {
+      "section_id": "s7",
+      "section_title": "Exclusion for Journalistic, Literary or Artistic Purposes",
+      "chapter": "2",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "journalist",
+        "author",
+        "artist"
+      ],
+      "constraints": [
+        "must_adhere_to_professional_codes_of_ethics"
+      ],
+      "conditions": [
+        "processing_solely_for_journalistic_literary_or_artistic_expression"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s6",
+        "s3",
+        "s36"
+      ],
+      "relationship_types": {
+        "s6": "companion_exclusion_to",
+        "s36": "alternative_exemption_mechanism"
+      },
+      "key_concepts": [
+        "freedom_of_expression",
+        "freedom_of_press",
+        "journalistic_purpose",
+        "literary_expression",
+        "artistic_expression",
+        "professional_ethics"
+      ],
+      "scenarios": [
+        "journalist_investigating_public_official",
+        "author_writing_biography_without_consent"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "verify_purpose_is_genuinely_journalistic_literary_artistic",
+        "ensure_adherence_to_professional_codes"
+      ],
+      "gdpr_equivalent": "Article 85 - Processing and freedom of expression"
+    },
+    {
+      "section_id": "s8",
+      "section_title": "Condition 1: Accountability",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_ensure_compliance_with_all_conditions_in_chapter_3"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s4",
+        "s9",
+        "s13",
+        "s16",
+        "s17",
+        "s19",
+        "s23",
+        "s55"
+      ],
+      "relationship_types": {
+        "s4": "implements",
+        "s9": "condition_2_follows",
+        "s55": "information_officer_assists_compliance"
+      },
+      "key_concepts": [
+        "accountability_principle",
+        "compliance_responsibility",
+        "demonstrable_compliance"
+      ],
+      "scenarios": [
+        "company_documenting_compliance_measures",
+        "responsible_party_appointing_information_officer"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "appoint_information_officer",
+        "establish_compliance_framework",
+        "document_processing_activities",
+        "conduct_regular_audits"
+      ],
+      "gdpr_equivalent": "Article 5(2) - Accountability principle",
+      "condition_number": 1
+    },
+    {
+      "section_id": "s9",
+      "section_title": "Processing Limitation - Lawfulness of Processing",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "processing_must_be_lawful",
+        "must_not_infringe_privacy_of_data_subject"
+      ],
+      "conditions": [
+        "lawful_basis_exists",
+        "processing_adequate_relevant_not_excessive"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s10",
+        "s11",
+        "s12",
+        "s8"
+      ],
+      "relationship_types": {
+        "s10": "minimality_requirement_follows",
+        "s11": "justification_grounds_follow",
+        "s8": "part_of_accountability"
+      },
+      "key_concepts": [
+        "lawfulness",
+        "reasonableness",
+        "privacy_infringement",
+        "adequate_relevant_not_excessive"
+      ],
+      "scenarios": [
+        "assessing_whether_data_collection_is_proportionate",
+        "evaluating_if_processing_infringes_privacy"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "conduct_privacy_impact_assessment",
+        "ensure_lawful_basis_documented"
+      ],
+      "gdpr_equivalent": "Article 5(1)(a) - Lawfulness, fairness, transparency",
+      "condition_number": 2
+    },
+    {
+      "section_id": "s10",
+      "section_title": "Processing Limitation - Minimality",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "personal_information_must_be_adequate_relevant_not_excessive"
+      ],
+      "conditions": [
+        "purpose_for_processing_defined"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s9",
+        "s11",
+        "s13"
+      ],
+      "relationship_types": {
+        "s9": "elaborates_on",
+        "s13": "purpose_must_be_specified"
+      },
+      "key_concepts": [
+        "data_minimisation",
+        "adequacy",
+        "relevance",
+        "not_excessive"
+      ],
+      "scenarios": [
+        "employer_collecting_only_necessary_employee_data",
+        "website_requesting_excessive_personal_details"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "audit_data_fields_collected",
+        "remove_unnecessary_data_collection_points"
+      ],
+      "gdpr_equivalent": "Article 5(1)(c) - Data minimisation",
+      "condition_number": 2
+    },
+    {
+      "section_id": "s11",
+      "section_title": "Consent, Justification and Objection",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "must_have_valid_legal_basis_for_processing",
+        "burden_of_proof_on_responsible_party"
+      ],
+      "conditions": [
+        "data_subject_consent",
+        "necessary_for_contract_performance",
+        "legal_obligation_compliance",
+        "protection_of_legitimate_interest_of_data_subject",
+        "public_law_duty_performance",
+        "legitimate_interest_of_responsible_party_or_third_party"
+      ],
+      "exceptions": [
+        "data_subject_may_object_on_reasonable_grounds"
+      ],
+      "related_sections": [
+        "s9",
+        "s12",
+        "s69",
+        "s5",
+        "s18"
+      ],
+      "relationship_types": {
+        "s9": "provides_justification_for",
+        "s12": "collection_directly_linked",
+        "s69": "consent_relevant_to_direct_marketing"
+      },
+      "key_concepts": [
+        "consent",
+        "voluntary_specific_informed",
+        "contract_performance",
+        "legal_obligation",
+        "legitimate_interest",
+        "public_law_duty",
+        "right_to_object",
+        "withdrawal_of_consent",
+        "balancing_test"
+      ],
+      "scenarios": [
+        "obtaining_consent_for_marketing",
+        "processing_employee_data_for_contract",
+        "public_body_processing_for_statutory_mandate",
+        "data_subject_objecting_to_processing",
+        "company_relying_on_legitimate_interest"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "identify_and_document_lawful_basis",
+        "implement_consent_mechanisms",
+        "establish_objection_handling_process"
+      ],
+      "gdpr_equivalent": "Article 6 - Lawfulness of processing",
+      "condition_number": 2,
+      "lawful_bases": [
+        "consent",
+        "contract_performance",
+        "legal_obligation",
+        "legitimate_interest_of_data_subject",
+        "public_law_duty",
+        "legitimate_interest_of_responsible_party"
+      ]
+    },
+    {
+      "section_id": "s12",
+      "section_title": "Collection Directly from Data Subject",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "must_collect_directly_from_data_subject_unless_exception_applies"
+      ],
+      "conditions": [
+        "information_in_public_record",
+        "deliberately_made_public_by_data_subject",
+        "data_subject_consented_to_other_source",
+        "collection_would_not_prejudice_legitimate_interest"
+      ],
+      "exceptions": [
+        "information_from_public_record",
+        "consent_to_collect_from_other_source",
+        "no_prejudice_to_legitimate_interest"
+      ],
+      "related_sections": [
+        "s11",
+        "s10",
+        "s13",
+        "s18"
+      ],
+      "relationship_types": {
+        "s11": "elaborates_collection_under",
+        "s13": "purpose_must_be_specified_for"
+      },
+      "key_concepts": [
+        "direct_collection",
+        "indirect_collection",
+        "public_record",
+        "legitimate_interest"
+      ],
+      "scenarios": [
+        "collecting_employee_references_from_third_parties",
+        "obtaining_credit_information_from_credit_bureau"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "document_source_of_personal_information",
+        "justify_indirect_collection"
+      ],
+      "gdpr_equivalent": "Article 14 - Information where data not obtained from data subject",
+      "condition_number": 2
+    },
+    {
+      "section_id": "s13",
+      "section_title": "Condition 3: Purpose Specification - Collection for Specific Purpose",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_collect_for_specific_explicitly_defined_lawful_purpose"
+      ],
+      "conditions": [
+        "purpose_explicitly_defined",
+        "purpose_is_lawful",
+        "data_subject_aware_of_purpose"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s14",
+        "s15",
+        "s10",
+        "s18"
+      ],
+      "relationship_types": {
+        "s14": "retention_follows_purpose",
+        "s15": "further_processing_must_be_compatible"
+      },
+      "key_concepts": [
+        "purpose_specification",
+        "specific_purpose",
+        "explicit_definition",
+        "lawful_purpose"
+      ],
+      "scenarios": [
+        "defining_purpose_before_collecting_customer_data"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "define_and_document_processing_purposes",
+        "include_purpose_in_privacy_notices"
+      ],
+      "gdpr_equivalent": "Article 5(1)(b) - Purpose limitation",
+      "condition_number": 3
+    },
+    {
+      "section_id": "s14",
+      "section_title": "Retention and Restriction of Records",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_not_retain_longer_than_necessary",
+        "must_destroy_or_de_identify_when_no_longer_needed"
+      ],
+      "conditions": [
+        "retention_required_by_law",
+        "retention_reasonably_necessary_for_purpose",
+        "data_subject_consented_to_retention"
+      ],
+      "exceptions": [
+        "record_may_be_retained_for_historical_statistical_research_purposes"
+      ],
+      "related_sections": [
+        "s13",
+        "s15",
+        "s1"
+      ],
+      "relationship_types": {
+        "s13": "retention_follows_purpose_from",
+        "s1": "de_identify_defined_in"
+      },
+      "key_concepts": [
+        "retention_limitation",
+        "destruction",
+        "de_identification",
+        "restriction_of_processing",
+        "storage_limitation"
+      ],
+      "scenarios": [
+        "determining_how_long_to_keep_customer_records",
+        "destroying_employee_records_after_employment_ends"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "create_data_retention_schedule",
+        "implement_data_destruction_procedures"
+      ],
+      "gdpr_equivalent": "Article 5(1)(e) - Storage limitation",
+      "condition_number": 3,
+      "cross_reference_sa_law": [
+        "FICA_retention_requirements",
+        "Companies_Act_record_keeping",
+        "Tax_Administration_Act"
+      ]
+    },
+    {
+      "section_id": "s15",
+      "section_title": "Condition 4: Further Processing Limitation",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "further_processing_must_be_compatible_with_original_purpose"
+      ],
+      "conditions": [
+        "data_subject_consented",
+        "information_from_public_record",
+        "necessary_for_law_enforcement",
+        "information_de_identified"
+      ],
+      "exceptions": [
+        "compatible_purpose_assessment_factors_met"
+      ],
+      "related_sections": [
+        "s13",
+        "s14",
+        "s11"
+      ],
+      "relationship_types": {
+        "s13": "extends_purpose_limitation_from",
+        "s11": "consent_may_authorise"
+      },
+      "key_concepts": [
+        "compatible_purpose",
+        "further_processing",
+        "purpose_limitation",
+        "compatibility_assessment"
+      ],
+      "scenarios": [
+        "using_customer_data_collected_for_service_for_marketing",
+        "sharing_employee_data_with_group_company"
+      ],
+      "difficulty_tiers": [
+        "multi_section_reasoning",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "conduct_compatibility_assessment",
+        "document_further_processing_justification"
+      ],
+      "gdpr_equivalent": "Article 5(1)(b) - Purpose limitation (further processing)",
+      "condition_number": 4
+    },
+    {
+      "section_id": "s16",
+      "section_title": "Condition 5: Information Quality",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_take_reasonable_steps_to_ensure_complete_accurate_not_misleading"
+      ],
+      "conditions": [
+        "having_regard_to_purpose_of_collection_or_processing"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s24",
+        "s13"
+      ],
+      "relationship_types": {
+        "s24": "data_subject_can_request_correction",
+        "s13": "quality_assessed_against_purpose"
+      },
+      "key_concepts": [
+        "accuracy",
+        "completeness",
+        "not_misleading",
+        "up_to_date",
+        "information_quality"
+      ],
+      "scenarios": [
+        "ensuring_customer_contact_details_are_current",
+        "correcting_inaccurate_credit_records"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "implement_data_quality_procedures",
+        "establish_regular_data_verification"
+      ],
+      "gdpr_equivalent": "Article 5(1)(d) - Accuracy",
+      "condition_number": 5
+    },
+    {
+      "section_id": "s17",
+      "section_title": "Condition 6: Openness - Documentation",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_maintain_documentation_of_all_processing_operations",
+        "must_notify_regulator_before_processing"
+      ],
+      "conditions": [],
+      "exceptions": [
+        "regulator_may_exempt_categories_from_notification"
+      ],
+      "related_sections": [
+        "s18",
+        "s55",
+        "s8"
+      ],
+      "relationship_types": {
+        "s18": "notification_to_data_subject_follows",
+        "s55": "information_officer_maintains_documentation"
+      },
+      "key_concepts": [
+        "documentation",
+        "processing_records",
+        "notification_to_regulator",
+        "PAIA_manual"
+      ],
+      "scenarios": [
+        "maintaining_register_of_processing_activities"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "create_processing_activity_register",
+        "update_PAIA_manual",
+        "notify_regulator"
+      ],
+      "gdpr_equivalent": "Article 30 - Records of processing activities",
+      "condition_number": 6,
+      "cross_reference_sa_law": [
+        "PAIA_section_51_manual"
+      ]
+    },
+    {
+      "section_id": "s18",
+      "section_title": "Notification to Data Subject When Collecting Personal Information",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "must_take_reasonably_practicable_steps_to_ensure_data_subject_is_aware"
+      ],
+      "conditions": [
+        "information_being_collected"
+      ],
+      "exceptions": [
+        "data_subject_already_aware",
+        "non_compliance_would_not_prejudice_legitimate_interests",
+        "compliance_would_prejudice_lawful_purpose"
+      ],
+      "related_sections": [
+        "s17",
+        "s12",
+        "s13",
+        "s5"
+      ],
+      "relationship_types": {
+        "s17": "part_of_openness_condition",
+        "s12": "especially_important_for_indirect_collection"
+      },
+      "key_concepts": [
+        "privacy_notice",
+        "transparency",
+        "notification_requirements",
+        "right_to_access",
+        "right_to_object"
+      ],
+      "scenarios": [
+        "drafting_website_privacy_policy",
+        "providing_privacy_notice_to_employees"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "draft_comprehensive_privacy_notices",
+        "ensure_notices_cover_all_required_elements"
+      ],
+      "gdpr_equivalent": "Articles 13-14 - Information to be provided",
+      "condition_number": 6,
+      "required_notification_elements": [
+        "information_being_collected",
+        "name_and_address_of_responsible_party",
+        "purpose_of_collection",
+        "whether_supply_voluntary_or_mandatory",
+        "consequences_of_failure_to_provide",
+        "any_law_authorising_collection",
+        "intended_recipients_or_categories",
+        "whether_transferred_outside_SA",
+        "right_of_access_and_correction",
+        "right_to_object",
+        "right_to_lodge_complaint"
+      ]
+    },
+    {
+      "section_id": "s19",
+      "section_title": "Condition 7: Security Safeguards - Integrity and Confidentiality",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_secure_integrity_and_confidentiality",
+        "must_take_appropriate_technical_and_organisational_measures"
+      ],
+      "conditions": [
+        "generally_accepted_information_security_practices"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s20",
+        "s21",
+        "s22"
+      ],
+      "relationship_types": {
+        "s20": "information_officer_obligation_follows",
+        "s21": "operator_security_follows",
+        "s22": "breach_notification_follows"
+      },
+      "key_concepts": [
+        "security_safeguards",
+        "integrity",
+        "confidentiality",
+        "technical_measures",
+        "organisational_measures",
+        "risk_assessment",
+        "unauthorised_access"
+      ],
+      "scenarios": [
+        "implementing_encryption",
+        "establishing_access_controls",
+        "conducting_security_risk_assessment"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "conduct_security_risk_assessment",
+        "implement_technical_and_organisational_measures"
+      ],
+      "gdpr_equivalent": "Article 32 - Security of processing",
+      "condition_number": 7,
+      "security_measures_include": [
+        "identify_reasonably_foreseeable_risks",
+        "establish_and_maintain_safeguards",
+        "regularly_verify_safeguards",
+        "ensure_safeguards_continually_updated"
+      ]
+    },
+    {
+      "section_id": "s20",
+      "section_title": "Information Officer Obligations Regarding Security",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "information_officer",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_ensure_compliance_with_s19"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s19",
+        "s55",
+        "s56"
+      ],
+      "relationship_types": {
+        "s19": "ensures_compliance_with",
+        "s55": "duties_defined_in"
+      },
+      "key_concepts": [
+        "information_officer_duties",
+        "security_oversight"
+      ],
+      "scenarios": [
+        "information_officer_conducting_security_review"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "assign_security_compliance_to_information_officer"
+      ],
+      "gdpr_equivalent": "Articles 37-39 - Data Protection Officer",
+      "condition_number": 7
+    },
+    {
+      "section_id": "s21",
+      "section_title": "Security Measures Regarding Information Processed by Operator",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "operator"
+      ],
+      "constraints": [
+        "must_ensure_operator_maintains_security_measures",
+        "must_have_written_contract"
+      ],
+      "conditions": [
+        "operator_processes_on_behalf_of_responsible_party"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s19",
+        "s22",
+        "s1"
+      ],
+      "relationship_types": {
+        "s19": "operator_must_meet_same_standard",
+        "s1": "operator_defined_in"
+      },
+      "key_concepts": [
+        "operator_agreement",
+        "data_processing_agreement",
+        "written_contract",
+        "third_party_processing"
+      ],
+      "scenarios": [
+        "drafting_agreement_with_cloud_provider",
+        "auditing_operator_security",
+        "outsourcing_payroll"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "execute_operator_agreements",
+        "include_security_requirements_in_contracts",
+        "audit_operator_compliance"
+      ],
+      "gdpr_equivalent": "Article 28 - Processor",
+      "condition_number": 7
+    },
+    {
+      "section_id": "s22",
+      "section_title": "Notification of Security Compromises",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "information_regulator",
+        "data_subject"
+      ],
+      "constraints": [
+        "must_notify_regulator_and_data_subject_as_soon_as_reasonably_possible"
+      ],
+      "conditions": [
+        "reasonable_grounds_to_believe_unauthorised_access"
+      ],
+      "exceptions": [
+        "may_delay_if_criminal_investigation_impeded",
+        "may_delay_if_police_or_state_security_request"
+      ],
+      "related_sections": [
+        "s19",
+        "s21",
+        "s73",
+        "s99"
+      ],
+      "relationship_types": {
+        "s19": "breach_of_safeguards_triggers",
+        "s73": "may_constitute_interference"
+      },
+      "key_concepts": [
+        "data_breach_notification",
+        "security_compromise",
+        "unauthorised_access",
+        "notification_timing",
+        "protective_measures"
+      ],
+      "scenarios": [
+        "ransomware_attack_exposing_customer_data",
+        "employee_email_compromised",
+        "physical_theft_of_devices",
+        "accidental_disclosure"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning",
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "establish_breach_detection_procedures",
+        "create_notification_templates",
+        "define_breach_response_team"
+      ],
+      "gdpr_equivalent": "Articles 33-34 - Notification of personal data breach",
+      "condition_number": 7,
+      "notification_must_include": [
+        "description_of_possible_consequences",
+        "measures_taken_or_intended",
+        "recommendation_for_data_subject",
+        "identity_of_unauthorised_person_if_known"
+      ]
+    },
+    {
+      "section_id": "s23",
+      "section_title": "Condition 8: Data Subject Participation - Access to Personal Information",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "right",
+      "subjects": [
+        "data_subject",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_provide_access_upon_adequate_proof_of_identity"
+      ],
+      "conditions": [
+        "data_subject_provides_adequate_proof_of_identity"
+      ],
+      "exceptions": [
+        "grounds_for_refusal_under_PAIA"
+      ],
+      "related_sections": [
+        "s24",
+        "s25",
+        "s5",
+        "s18"
+      ],
+      "relationship_types": {
+        "s24": "correction_right_follows",
+        "s25": "manner_of_access_defined"
+      },
+      "key_concepts": [
+        "right_of_access",
+        "subject_access_request",
+        "proof_of_identity",
+        "PAIA_application"
+      ],
+      "scenarios": [
+        "customer_requesting_copy_of_personal_information",
+        "employee_accessing_personnel_file"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "establish_subject_access_request_process",
+        "set_up_identity_verification"
+      ],
+      "gdpr_equivalent": "Article 15 - Right of access",
+      "condition_number": 8,
+      "cross_reference_sa_law": [
+        "PAIA_section_18",
+        "PAIA_section_53"
+      ]
+    },
+    {
+      "section_id": "s24",
+      "section_title": "Correction of Personal Information",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "right",
+      "subjects": [
+        "data_subject",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_correct_or_delete_as_soon_as_reasonably_practicable"
+      ],
+      "conditions": [
+        "information_inaccurate_irrelevant_excessive_out_of_date_incomplete_misleading"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s23",
+        "s25",
+        "s16",
+        "s5"
+      ],
+      "relationship_types": {
+        "s23": "follows_access_right",
+        "s16": "information_quality_supports"
+      },
+      "key_concepts": [
+        "right_to_rectification",
+        "right_to_erasure",
+        "correction",
+        "deletion",
+        "destruction",
+        "annotation"
+      ],
+      "scenarios": [
+        "requesting_correction_of_incorrect_address",
+        "requesting_deletion_of_outdated_medical_records"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "implement_correction_and_deletion_procedures",
+        "notify_third_parties_of_corrections"
+      ],
+      "gdpr_equivalent": "Articles 16-17 - Right to rectification and erasure",
+      "condition_number": 8
+    },
+    {
+      "section_id": "s25",
+      "section_title": "Manner of Access",
+      "chapter": "3",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "data_subject",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_inform_data_subject_of_right_to_request_correction"
+      ],
+      "conditions": [
+        "personal_information_communicated_to_data_subject"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s23",
+        "s24"
+      ],
+      "relationship_types": {
+        "s23": "follows_from",
+        "s24": "must_inform_of_right_under"
+      },
+      "key_concepts": [
+        "manner_of_access",
+        "communication_of_information"
+      ],
+      "scenarios": [
+        "providing_personal_information_in_accessible_format"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "ensure_access_responses_include_correction_rights_notification"
+      ],
+      "gdpr_equivalent": "Article 12 - Transparent information",
+      "condition_number": 8
+    },
+    {
+      "section_id": "s26",
+      "section_title": "Prohibition on Processing of Special Personal Information",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "prohibition",
+      "subjects": [
+        "responsible_party",
+        "data_subject",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_not_process_special_personal_information_unless_exception"
+      ],
+      "conditions": [],
+      "exceptions": [
+        "s27_general_authorisation",
+        "s28_religious_beliefs",
+        "s29_race_ethnicity",
+        "s30_trade_union",
+        "s31_political",
+        "s32_health_sex_life",
+        "s33_criminal_biometric"
+      ],
+      "related_sections": [
+        "s27",
+        "s28",
+        "s29",
+        "s30",
+        "s31",
+        "s32",
+        "s33",
+        "s1"
+      ],
+      "relationship_types": {
+        "s27": "exception_to",
+        "s28": "exception_for_religion",
+        "s29": "exception_for_race",
+        "s30": "exception_for_trade_union",
+        "s31": "exception_for_political",
+        "s32": "exception_for_health",
+        "s33": "exception_for_criminal_biometric",
+        "s1": "defines_special_personal_information"
+      },
+      "key_concepts": [
+        "special_personal_information",
+        "religious_beliefs",
+        "philosophical_beliefs",
+        "race",
+        "ethnic_origin",
+        "trade_union_membership",
+        "political_persuasion",
+        "health",
+        "sex_life",
+        "biometric_information",
+        "criminal_behaviour"
+      ],
+      "scenarios": [
+        "employer_collecting_health_data",
+        "research_on_racial_demographics",
+        "biometric_access_control"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "obtain_explicit_consent_or_identify_exception",
+        "implement_additional_safeguards"
+      ],
+      "gdpr_equivalent": "Article 9 - Processing of special categories"
+    },
+    {
+      "section_id": "s27",
+      "section_title": "General Authorisation Concerning Special Personal Information",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "data_subject",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_meet_one_of_the_general_authorisation_grounds"
+      ],
+      "conditions": [
+        "data_subject_consent",
+        "necessary_for_employment_law",
+        "deliberately_made_public",
+        "necessary_for_legal_proceedings",
+        "historical_statistical_research",
+        "regulator_authorisation"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s28",
+        "s29",
+        "s30",
+        "s31",
+        "s32",
+        "s33"
+      ],
+      "relationship_types": {
+        "s26": "general_exception_to"
+      },
+      "key_concepts": [
+        "general_authorisation",
+        "employment_law",
+        "legal_proceedings",
+        "historical_research",
+        "public_interest"
+      ],
+      "scenarios": [
+        "processing_health_data_with_explicit_consent",
+        "using_race_data_for_BEE_compliance"
+      ],
+      "difficulty_tiers": [
+        "multi_section_reasoning",
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "document_authorisation_basis",
+        "ensure_additional_safeguards"
+      ],
+      "gdpr_equivalent": "Article 9(2) - Exceptions for special categories"
+    },
+    {
+      "section_id": "s28",
+      "section_title": "Authorisation Concerning Religious or Philosophical Beliefs",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "religious_institution",
+        "spiritual_organisation"
+      ],
+      "constraints": [
+        "processing_limited_to_members_and_related_persons"
+      ],
+      "conditions": [
+        "processing_by_spiritual_or_religious_organisation"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s27"
+      ],
+      "relationship_types": {
+        "s26": "specific_exception_to"
+      },
+      "key_concepts": [
+        "religious_beliefs",
+        "philosophical_beliefs",
+        "religious_organisations"
+      ],
+      "scenarios": [
+        "church_maintaining_member_database"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "limit_processing_to_members_and_related_persons"
+      ],
+      "gdpr_equivalent": "Article 9(2)(d)"
+    },
+    {
+      "section_id": "s29",
+      "section_title": "Authorisation Concerning Race or Ethnic Origin",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "processing_for_identification_or_laws_protecting_disadvantaged"
+      ],
+      "conditions": [
+        "identification_essential",
+        "compliance_with_BEE_or_employment_equity"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s27"
+      ],
+      "relationship_types": {
+        "s26": "specific_exception_to"
+      },
+      "key_concepts": [
+        "race",
+        "ethnic_origin",
+        "BEE",
+        "employment_equity",
+        "identification"
+      ],
+      "scenarios": [
+        "collecting_race_data_for_Employment_Equity_Act_reporting"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "document_legal_basis_for_race_data_processing"
+      ],
+      "gdpr_equivalent": "Article 9(2)(g)",
+      "cross_reference_sa_law": [
+        "Employment_Equity_Act",
+        "BEE_Act"
+      ]
+    },
+    {
+      "section_id": "s30",
+      "section_title": "Authorisation Concerning Trade Union Membership",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "trade_union",
+        "federation_of_trade_unions"
+      ],
+      "constraints": [
+        "processing_only_by_union_for_its_aims",
+        "no_disclosure_without_consent"
+      ],
+      "conditions": [
+        "processing_by_trade_union_for_legitimate_aims"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s27"
+      ],
+      "relationship_types": {
+        "s26": "specific_exception_to"
+      },
+      "key_concepts": [
+        "trade_union_membership",
+        "federation",
+        "legitimate_aims"
+      ],
+      "scenarios": [
+        "union_processing_member_data_for_collective_bargaining"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "ensure_processing_limited_to_union_aims"
+      ],
+      "gdpr_equivalent": "Article 9(2)(d)"
+    },
+    {
+      "section_id": "s31",
+      "section_title": "Authorisation Concerning Political Persuasion",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "political_party",
+        "political_organisation"
+      ],
+      "constraints": [
+        "processing_only_by_political_party_for_its_aims"
+      ],
+      "conditions": [
+        "processing_by_political_party_for_legitimate_aims"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s27"
+      ],
+      "relationship_types": {
+        "s26": "specific_exception_to"
+      },
+      "key_concepts": [
+        "political_persuasion",
+        "political_party"
+      ],
+      "scenarios": [
+        "political_party_maintaining_supporter_database"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "limit_processing_to_party_aims"
+      ],
+      "gdpr_equivalent": "Article 9(2)(d)"
+    },
+    {
+      "section_id": "s32",
+      "section_title": "Authorisation Concerning Health or Sex Life",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "medical_professional",
+        "healthcare_institution",
+        "insurance_provider"
+      ],
+      "constraints": [
+        "processing_by_specified_entities_for_specified_purposes"
+      ],
+      "conditions": [
+        "by_medical_professional_for_treatment",
+        "by_healthcare_institution",
+        "necessary_for_insurance_pension",
+        "necessary_for_public_health"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s27"
+      ],
+      "relationship_types": {
+        "s26": "specific_exception_to"
+      },
+      "key_concepts": [
+        "health_data",
+        "sex_life",
+        "medical_professional",
+        "healthcare_institution",
+        "insurance",
+        "pension"
+      ],
+      "scenarios": [
+        "hospital_processing_patient_records",
+        "insurance_company_underwriting_health_policy"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "verify_authorised_entity_status",
+        "limit_to_permitted_purposes"
+      ],
+      "gdpr_equivalent": "Article 9(2)(h)",
+      "cross_reference_sa_law": [
+        "National_Health_Act",
+        "Medical_Schemes_Act"
+      ]
+    },
+    {
+      "section_id": "s33",
+      "section_title": "Authorisation Concerning Criminal Behaviour or Biometric Information",
+      "chapter": "3",
+      "part": "B",
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "public_body"
+      ],
+      "constraints": [
+        "criminal_info_limited_to_law_enforcement_or_lawful_obtainment",
+        "biometric_must_be_in_normal_course_with_safeguards"
+      ],
+      "conditions": [
+        "processing_by_body_applying_criminal_law",
+        "information_obtained_lawfully",
+        "biometric_uniquely_identifies"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s26",
+        "s27",
+        "s1"
+      ],
+      "relationship_types": {
+        "s26": "specific_exception_to",
+        "s1": "biometrics_defined_in"
+      },
+      "key_concepts": [
+        "criminal_behaviour",
+        "biometric_information",
+        "fingerprints",
+        "facial_recognition"
+      ],
+      "scenarios": [
+        "employer_conducting_criminal_background_checks",
+        "biometric_fingerprint_access_at_workplace"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "document_lawful_basis_for_criminal_data",
+        "implement_biometric_safeguards"
+      ],
+      "gdpr_equivalent": "Article 10"
+    },
+    {
+      "section_id": "s34",
+      "section_title": "Prohibition on Processing Personal Information of Children",
+      "chapter": "3",
+      "part": "C",
+      "clause_type": "prohibition",
+      "subjects": [
+        "responsible_party",
+        "child",
+        "competent_person"
+      ],
+      "constraints": [
+        "must_not_process_personal_information_of_child_unless_exception"
+      ],
+      "conditions": [],
+      "exceptions": [
+        "s35_general_authorisation"
+      ],
+      "related_sections": [
+        "s35",
+        "s1",
+        "s26"
+      ],
+      "relationship_types": {
+        "s35": "exceptions_defined_in",
+        "s1": "child_defined_in"
+      },
+      "key_concepts": [
+        "children",
+        "minor",
+        "under_18",
+        "competent_person",
+        "parental_consent"
+      ],
+      "scenarios": [
+        "school_collecting_student_data",
+        "social_media_processing_minor_data"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "implement_age_verification",
+        "obtain_competent_person_consent"
+      ],
+      "gdpr_equivalent": "Article 8"
+    },
+    {
+      "section_id": "s35",
+      "section_title": "General Authorisation Concerning Personal Information of Children",
+      "chapter": "3",
+      "part": "C",
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "child",
+        "competent_person",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_meet_one_of_the_authorisation_grounds"
+      ],
+      "conditions": [
+        "consent_of_competent_person",
+        "necessary_for_right_in_law",
+        "comply_with_international_public_law",
+        "historical_statistical_research",
+        "deliberately_made_public_with_competent_person_consent"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s34",
+        "s27",
+        "s1"
+      ],
+      "relationship_types": {
+        "s34": "exception_to",
+        "s27": "analogous_to_special_info_authorisation"
+      },
+      "key_concepts": [
+        "competent_person_consent",
+        "parental_consent",
+        "guardian_consent",
+        "child_protection"
+      ],
+      "scenarios": [
+        "school_obtaining_parental_consent",
+        "research_involving_children"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "verify_competent_person_identity",
+        "obtain_verifiable_consent"
+      ],
+      "gdpr_equivalent": "Article 8"
+    },
+    {
+      "section_id": "s36",
+      "section_title": "General Exemptions",
+      "chapter": "4",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [
+        "processing_falls_within_exemption_categories"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s37",
+        "s38",
+        "s6"
+      ],
+      "relationship_types": {
+        "s37": "regulator_may_grant_further",
+        "s6": "exclusions_distinct_from_exemptions"
+      },
+      "key_concepts": [
+        "exemption",
+        "conditions_exemption",
+        "public_interest"
+      ],
+      "scenarios": [
+        "assessing_whether_processing_qualifies_for_exemption"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "document_exemption_basis"
+      ],
+      "gdpr_equivalent": "Article 23 - Restrictions"
+    },
+    {
+      "section_id": "s37",
+      "section_title": "Regulator May Exempt Processing",
+      "chapter": "4",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "public_interest_must_substantially_outweigh_privacy_interference"
+      ],
+      "conditions": [
+        "application_by_responsible_party",
+        "regulator_satisfied_public_interest_outweighs_privacy"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s36",
+        "s38",
+        "s44"
+      ],
+      "relationship_types": {
+        "s36": "specific_mechanism_under"
+      },
+      "key_concepts": [
+        "regulator_exemption",
+        "public_interest_test",
+        "proportionality"
+      ],
+      "scenarios": [
+        "research_institution_applying_for_exemption"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "submit_exemption_application_to_regulator"
+      ],
+      "gdpr_equivalent": "Article 23"
+    },
+    {
+      "section_id": "s38",
+      "section_title": "Exemption in Respect of Certain Functions",
+      "chapter": "4",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [],
+      "conditions": [
+        "processing_for_specified_functions"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s36",
+        "s37"
+      ],
+      "relationship_types": {
+        "s36": "additional_exemption_under"
+      },
+      "key_concepts": [
+        "functional_exemption"
+      ],
+      "scenarios": [
+        "public_body_processing_for_exempted_function"
+      ],
+      "difficulty_tiers": [
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "verify_function_qualifies"
+      ],
+      "gdpr_equivalent": "Article 23"
+    },
+    {
+      "section_id": "s39",
+      "section_title": "Establishment of Information Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "national_assembly"
+      ],
+      "constraints": [
+        "must_be_independent_and_impartial"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s40",
+        "s41",
+        "s42"
+      ],
+      "relationship_types": {
+        "s40": "powers_follow"
+      },
+      "key_concepts": [
+        "information_regulator",
+        "independence",
+        "juristic_person"
+      ],
+      "scenarios": [
+        "understanding_role_of_regulator"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Articles 51-54"
+    },
+    {
+      "section_id": "s40",
+      "section_title": "Powers, Duties and Functions of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39",
+        "s44",
+        "s73",
+        "s89",
+        "s95"
+      ],
+      "relationship_types": {
+        "s73": "handles_complaints",
+        "s89": "conducts_assessments",
+        "s95": "issues_enforcement_notices"
+      },
+      "key_concepts": [
+        "regulator_powers",
+        "education",
+        "monitoring",
+        "enforcement",
+        "public_awareness"
+      ],
+      "scenarios": [
+        "regulator_issuing_guidance",
+        "regulator_investigating_complaint"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 57"
+    },
+    {
+      "section_id": "s41",
+      "section_title": "Constitution of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "chairperson"
+      ],
+      "constraints": [
+        "must_consist_of_chairperson_and_four_members"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "regulator_composition",
+        "chairperson",
+        "qualifications"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 53"
+    },
+    {
+      "section_id": "s42",
+      "section_title": "Vacancies",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "vacancy_must_be_filled_within_specified_period"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "vacancy",
+        "term_of_office",
+        "removal"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 53"
+    },
+    {
+      "section_id": "s43",
+      "section_title": "Powers, Duties and Functions of Chairperson",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "chairperson",
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "chairperson_duties",
+        "leadership"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 53"
+    },
+    {
+      "section_id": "s44",
+      "section_title": "Regulator to Have Regard to Certain Matters",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_have_regard_to_listed_matters"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "proportionality",
+        "public_interest",
+        "balance_of_rights",
+        "international_standards"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 57"
+    },
+    {
+      "section_id": "s45",
+      "section_title": "Conflict of Interest",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "information_regulator",
+        "chairperson",
+        "members"
+      ],
+      "constraints": [
+        "must_disclose_conflicts_and_recuse"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "conflict_of_interest",
+        "recusal",
+        "disclosure"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 52"
+    },
+    {
+      "section_id": "s46",
+      "section_title": "Remuneration, Allowances, Benefits and Privileges",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "members"
+      ],
+      "constraints": [
+        "determined_by_minister"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "remuneration",
+        "allowances"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s47",
+      "section_title": "Staff of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "CEO"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "staff_appointments"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s48",
+      "section_title": "Powers, Duties and Functions of CEO",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "CEO",
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "CEO_duties",
+        "administrative_head",
+        "accounting_officer"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s49",
+      "section_title": "Committees of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "may_establish_committees"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "committees",
+        "advisory_bodies"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s50",
+      "section_title": "Establishment of Enforcement Committee",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "enforcement_committee"
+      ],
+      "constraints": [
+        "must_consist_of_no_fewer_than_three_members"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s49",
+        "s92",
+        "s93",
+        "s95"
+      ],
+      "relationship_types": {
+        "s92": "receives_referrals",
+        "s93": "functions_defined",
+        "s95": "recommendations_lead_to_enforcement"
+      },
+      "key_concepts": [
+        "enforcement_committee",
+        "adjudication",
+        "recommendations"
+      ],
+      "scenarios": [
+        "enforcement_committee_hearing_complaint"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s51",
+      "section_title": "Meetings of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "quorum_requirements"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "meetings",
+        "quorum"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s52",
+      "section_title": "Funds of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "national_revenue_fund"
+      ],
+      "constraints": [
+        "funded_from_parliamentary_appropriation"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "funding",
+        "financial_management"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 52"
+    },
+    {
+      "section_id": "s53",
+      "section_title": "Protection of Regulator",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "members",
+        "staff"
+      ],
+      "constraints": [
+        "protected_from_liability_for_good_faith_actions"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s39"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "immunity",
+        "good_faith"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s54",
+      "section_title": "Duty of Confidentiality",
+      "chapter": "5",
+      "part": "A",
+      "clause_type": "obligation",
+      "subjects": [
+        "information_regulator",
+        "members",
+        "staff"
+      ],
+      "constraints": [
+        "must_not_disclose_information_obtained_in_functions"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s101"
+      ],
+      "relationship_types": {
+        "s101": "breach_constitutes_offence"
+      },
+      "key_concepts": [
+        "confidentiality",
+        "duty_of_secrecy"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 54"
+    },
+    {
+      "section_id": "s55",
+      "section_title": "Duties and Responsibilities of Information Officer",
+      "chapter": "5",
+      "part": "B",
+      "clause_type": "obligation",
+      "subjects": [
+        "information_officer",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_ensure_compliance_with_POPIA",
+        "must_be_registered_with_regulator"
+      ],
+      "conditions": [
+        "every_responsible_party_must_have_information_officer"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s56",
+        "s8",
+        "s17",
+        "s20"
+      ],
+      "relationship_types": {
+        "s56": "deputy_officers",
+        "s8": "accountability",
+        "s17": "documentation"
+      },
+      "key_concepts": [
+        "information_officer",
+        "registration",
+        "compliance_duties",
+        "impact_assessment",
+        "awareness_training"
+      ],
+      "scenarios": [
+        "registering_information_officer",
+        "conducting_compliance_audit",
+        "handling_data_subject_request"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "appoint_information_officer",
+        "register_with_regulator",
+        "define_responsibilities"
+      ],
+      "gdpr_equivalent": "Articles 37-39",
+      "cross_reference_sa_law": [
+        "PAIA_section_1_information_officer"
+      ]
+    },
+    {
+      "section_id": "s56",
+      "section_title": "Designation and Delegation of Deputy Information Officers",
+      "chapter": "5",
+      "part": "B",
+      "clause_type": "procedure",
+      "subjects": [
+        "information_officer",
+        "deputy_information_officer"
+      ],
+      "constraints": [
+        "delegation_must_be_in_writing"
+      ],
+      "conditions": [
+        "organisational_size_warrants_deputies"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s55"
+      ],
+      "relationship_types": {
+        "s55": "delegates_from"
+      },
+      "key_concepts": [
+        "deputy_information_officer",
+        "delegation",
+        "written_delegation"
+      ],
+      "scenarios": [
+        "large_organisation_designating_multiple_deputies"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "assess_need_for_deputies",
+        "document_delegations"
+      ],
+      "gdpr_equivalent": "Article 37(6)"
+    },
+    {
+      "section_id": "s57",
+      "section_title": "Processing Subject to Prior Authorisation",
+      "chapter": "6",
+      "part": null,
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_obtain_prior_authorisation_for_specified_processing"
+      ],
+      "conditions": [
+        "unique_identifier_for_different_purpose",
+        "transfer_special_info_to_foreign_country",
+        "credit_reporting"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s58",
+        "s59",
+        "s26",
+        "s72"
+      ],
+      "relationship_types": {
+        "s58": "notification_follows",
+        "s59": "failure_consequence",
+        "s72": "transborder_relates"
+      },
+      "key_concepts": [
+        "prior_authorisation",
+        "unique_identifier",
+        "special_information_transfer",
+        "credit_reporting"
+      ],
+      "scenarios": [
+        "company_using_ID_numbers_for_new_purpose",
+        "transferring_health_data_internationally"
+      ],
+      "difficulty_tiers": [
+        "multi_section_reasoning",
+        "exception_analysis"
+      ],
+      "compliance_actions": [
+        "identify_processing_requiring_prior_authorisation",
+        "submit_application"
+      ],
+      "gdpr_equivalent": "Article 36"
+    },
+    {
+      "section_id": "s58",
+      "section_title": "Responsible Party to Notify Regulator",
+      "chapter": "6",
+      "part": null,
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_notify_regulator_of_processing_subject_to_prior_authorisation"
+      ],
+      "conditions": [
+        "processing_falls_within_s57"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s57",
+        "s59"
+      ],
+      "relationship_types": {
+        "s57": "triggered_by"
+      },
+      "key_concepts": [
+        "notification_obligation"
+      ],
+      "scenarios": [
+        "notifying_regulator_before_credit_reporting"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "submit_notification"
+      ],
+      "gdpr_equivalent": "Article 36"
+    },
+    {
+      "section_id": "s59",
+      "section_title": "Failure to Notify Processing Subject to Prior Authorisation",
+      "chapter": "6",
+      "part": null,
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "failure_to_notify_is_offence"
+      ],
+      "conditions": [
+        "processing_commenced_without_authorisation"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s57",
+        "s58",
+        "s107"
+      ],
+      "relationship_types": {
+        "s57": "failure_to_comply_with",
+        "s107": "penalties_under"
+      },
+      "key_concepts": [
+        "offence",
+        "failure_to_notify",
+        "penalty"
+      ],
+      "scenarios": [
+        "commencing_processing_without_authorisation"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "ensure_prior_authorisation_before_processing"
+      ],
+      "gdpr_equivalent": "Article 83"
+    },
+    {
+      "section_id": "s60",
+      "section_title": "Issuing of Codes of Conduct",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "codes_must_apply_chapter_3_to_specific_sectors"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s61",
+        "s62",
+        "s68"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "codes_of_conduct",
+        "sector_specific_guidance"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Articles 40-41"
+    },
+    {
+      "section_id": "s61",
+      "section_title": "Process for Issuing Codes of Conduct",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_follow_consultation_process"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "consultation_process",
+        "public_comment"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 40"
+    },
+    {
+      "section_id": "s62",
+      "section_title": "Notification, Availability and Commencement of Code",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_be_published_in_gazette"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60",
+        "s61"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "gazette_publication",
+        "commencement_date"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 40"
+    },
+    {
+      "section_id": "s63",
+      "section_title": "Procedure for Dealing with Complaints Under Code",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "adjudicator"
+      ],
+      "constraints": [
+        "code_must_establish_complaint_handling"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60",
+        "s74"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "complaints_under_codes",
+        "adjudication"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 41"
+    },
+    {
+      "section_id": "s64",
+      "section_title": "Amendment and Revocation of Codes of Conduct",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "same_process_as_issuing_applies"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60",
+        "s61"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "code_amendment",
+        "code_revocation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 40"
+    },
+    {
+      "section_id": "s65",
+      "section_title": "Guidelines About Codes of Conduct",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "guidelines",
+        "best_practice"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 40"
+    },
+    {
+      "section_id": "s66",
+      "section_title": "Register of Approved Codes of Conduct",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_maintain_register"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "register",
+        "approved_codes"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 40"
+    },
+    {
+      "section_id": "s67",
+      "section_title": "Review of Operation of Approved Code",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_periodically_review"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60",
+        "s64"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "periodic_review",
+        "code_effectiveness"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 41"
+    },
+    {
+      "section_id": "s68",
+      "section_title": "Effect of Failure to Comply with Code",
+      "chapter": "7",
+      "part": null,
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "failure_deemed_breach_of_chapter_3"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s60",
+        "s73",
+        "s95"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "breach_of_code",
+        "deemed_breach",
+        "enforcement"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "comply_with_applicable_codes"
+      ],
+      "gdpr_equivalent": "Article 41"
+    },
+    {
+      "section_id": "s69",
+      "section_title": "Direct Marketing by Means of Unsolicited Electronic Communications",
+      "chapter": "8",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "must_not_process_for_direct_marketing_without_consent_or_customer_relationship"
+      ],
+      "conditions": [
+        "data_subject_consent",
+        "existing_customer_similar_products",
+        "reasonable_opportunity_to_object"
+      ],
+      "exceptions": [
+        "existing_customer_may_be_marketed_similar_products_if_opt_out_provided"
+      ],
+      "related_sections": [
+        "s11",
+        "s5",
+        "s70",
+        "s71"
+      ],
+      "relationship_types": {
+        "s11": "consent_basis",
+        "s70": "directories_follow",
+        "s71": "automated_decisions_follow"
+      },
+      "key_concepts": [
+        "direct_marketing",
+        "unsolicited_electronic_communication",
+        "opt_in",
+        "opt_out",
+        "existing_customer_exception",
+        "SMS",
+        "email",
+        "automatic_calling_machines",
+        "sender_identification",
+        "unsubscribe"
+      ],
+      "scenarios": [
+        "sending_marketing_emails_to_prospects",
+        "SMS_campaign_to_existing_customers",
+        "providing_opt_out_in_emails"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "implement_opt_in_consent",
+        "maintain_opt_out_registers",
+        "include_sender_details"
+      ],
+      "gdpr_equivalent": "Article 21(2-3)",
+      "cross_reference_sa_law": [
+        "ECT_Act_section_45"
+      ]
+    },
+    {
+      "section_id": "s70",
+      "section_title": "Directories",
+      "chapter": "8",
+      "part": null,
+      "clause_type": "obligation",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "must_give_opportunity_to_verify_correct_and_opt_out"
+      ],
+      "conditions": [
+        "personal_information_in_directory"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s69",
+        "s5",
+        "s24"
+      ],
+      "relationship_types": {
+        "s69": "related_marketing_provision",
+        "s24": "correction_right_applies"
+      },
+      "key_concepts": [
+        "directories",
+        "telephone_directories",
+        "opt_out_from_directory"
+      ],
+      "scenarios": [
+        "publishing_employee_directory",
+        "data_subject_requesting_removal"
+      ],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "provide_opt_out_option",
+        "allow_verification_and_correction"
+      ],
+      "gdpr_equivalent": "Article 21"
+    },
+    {
+      "section_id": "s71",
+      "section_title": "Automated Decision Making",
+      "chapter": "8",
+      "part": null,
+      "clause_type": "right",
+      "subjects": [
+        "data_subject",
+        "responsible_party"
+      ],
+      "constraints": [
+        "not_to_be_subject_to_solely_automated_decision_with_legal_consequences"
+      ],
+      "conditions": [
+        "decision_has_legal_consequences_or_substantially_affects"
+      ],
+      "exceptions": [
+        "during_contract_negotiation_or_performance",
+        "authorised_by_law_with_safeguards"
+      ],
+      "related_sections": [
+        "s5",
+        "s69",
+        "s11"
+      ],
+      "relationship_types": {
+        "s5": "implements_right_from"
+      },
+      "key_concepts": [
+        "automated_decision_making",
+        "profiling",
+        "algorithmic_decision",
+        "legal_consequences",
+        "human_intervention"
+      ],
+      "scenarios": [
+        "automated_credit_scoring",
+        "algorithmic_hiring_screening",
+        "AI_loan_approval"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "ensure_human_review",
+        "provide_challenge_mechanism"
+      ],
+      "gdpr_equivalent": "Article 22"
+    },
+    {
+      "section_id": "s72",
+      "section_title": "Transfer of Personal Information Outside Republic",
+      "chapter": "9",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "responsible_party",
+        "data_subject",
+        "third_party_in_foreign_country"
+      ],
+      "constraints": [
+        "must_not_transfer_unless_conditions_met"
+      ],
+      "conditions": [
+        "recipient_subject_to_adequate_laws",
+        "binding_corporate_rules",
+        "data_subject_consent",
+        "contractual_necessity",
+        "benefit_of_data_subject_impracticable_to_get_consent"
+      ],
+      "exceptions": [
+        "adequate_protection_in_recipient_country",
+        "binding_corporate_rules",
+        "consent",
+        "contractual_necessity"
+      ],
+      "related_sections": [
+        "s57",
+        "s19",
+        "s21"
+      ],
+      "relationship_types": {
+        "s57": "may_require_prior_authorisation",
+        "s19": "security_safeguards_apply"
+      },
+      "key_concepts": [
+        "transborder_information_flow",
+        "cross_border_transfer",
+        "adequacy",
+        "binding_corporate_rules",
+        "standard_contractual_clauses"
+      ],
+      "scenarios": [
+        "cloud_provider_storing_data_in_EU",
+        "multinational_transferring_employee_data",
+        "using_US_SaaS_product"
+      ],
+      "difficulty_tiers": [
+        "multi_section_reasoning",
+        "exception_analysis",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "assess_adequacy_of_recipient_country",
+        "implement_binding_corporate_rules",
+        "execute_transfer_agreements"
+      ],
+      "gdpr_equivalent": "Articles 44-49",
+      "cross_reference_sa_law": [
+        "ECT_Act"
+      ]
+    },
+    {
+      "section_id": "s73",
+      "section_title": "Interference with Protection of Personal Information",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "definition",
+      "subjects": [
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [
+        "breach_of_chapter_3",
+        "breach_of_s69",
+        "breach_of_s71",
+        "breach_of_s72"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s74",
+        "s95",
+        "s99"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "interference",
+        "breach_of_conditions",
+        "actionable_breach"
+      ],
+      "scenarios": [
+        "failing_to_comply_with_security_safeguards",
+        "processing_without_lawful_basis"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "identify_and_remediate_interferences"
+      ],
+      "gdpr_equivalent": "Article 83"
+    },
+    {
+      "section_id": "s74",
+      "section_title": "Complaints to Regulator",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "data_subject",
+        "information_regulator"
+      ],
+      "constraints": [
+        "complaint_must_relate_to_interference"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s73",
+        "s75",
+        "s76"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "complaint",
+        "data_subject_complaint"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 77"
+    },
+    {
+      "section_id": "s75",
+      "section_title": "Mode of Complaint",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "data_subject",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_be_in_writing"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s74"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "written_complaint",
+        "complaint_format"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 77"
+    },
+    {
+      "section_id": "s76",
+      "section_title": "Action on Receipt of Complaint",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_acknowledge_and_investigate_or_decline"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s74",
+        "s77",
+        "s79"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "complaint_acknowledgement",
+        "investigation_decision"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s77",
+      "section_title": "Regulator May Decide to Take No Action",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_provide_reasons"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s76"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "no_action_decision",
+        "frivolous_complaint",
+        "vexatious"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s78",
+      "section_title": "Referral of Complaint to Regulatory Body",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "other_regulatory_body"
+      ],
+      "constraints": [
+        "may_refer_where_other_body_better_placed"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s76"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "referral",
+        "regulatory_cooperation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 56"
+    },
+    {
+      "section_id": "s79",
+      "section_title": "Pre-investigation Proceedings",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s76",
+        "s80",
+        "s81"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "pre_investigation",
+        "preliminary_inquiry"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s80",
+      "section_title": "Settlement of Complaints",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "responsible_party",
+        "data_subject"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s79",
+        "s81"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "settlement",
+        "conciliation",
+        "mediation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s81",
+      "section_title": "Investigation Proceedings",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_follow_prescribed_procedures"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s79",
+        "s82",
+        "s89",
+        "s92"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "investigation",
+        "formal_inquiry",
+        "evidence_gathering"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 58(1)"
+    },
+    {
+      "section_id": "s82",
+      "section_title": "Issue of Warrants",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "magistrate"
+      ],
+      "constraints": [
+        "warrant_issued_by_magistrate_or_judge"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s83",
+        "s84",
+        "s85",
+        "s86",
+        "s87",
+        "s88"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "search_warrant",
+        "seizure_warrant",
+        "judicial_oversight"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 58(1)(f)"
+    },
+    {
+      "section_id": "s83",
+      "section_title": "Requirements for Issuing of Warrant",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "magistrate",
+        "information_regulator"
+      ],
+      "constraints": [
+        "reasonable_grounds_required"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s82"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "warrant_requirements",
+        "reasonable_grounds"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s84",
+      "section_title": "Execution of Warrants",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_execute_within_validity_period"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s82",
+        "s83"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "warrant_execution",
+        "search_and_seizure"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s85",
+      "section_title": "Matters Exempt from Search and Seizure",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s82",
+        "s86"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "legal_privilege",
+        "exempt_material"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s86",
+      "section_title": "Communication Between Legal Adviser and Client Exempt",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "exception",
+      "subjects": [
+        "responsible_party",
+        "legal_adviser"
+      ],
+      "constraints": [
+        "legal_professional_privilege_applies"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s85"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "legal_professional_privilege",
+        "attorney_client_privilege"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s87",
+      "section_title": "Objection to Search and Seizure",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "right",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s82",
+        "s85"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "objection_to_search",
+        "procedural_rights"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s88",
+      "section_title": "Return of Warrants",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "magistrate"
+      ],
+      "constraints": [
+        "warrant_must_be_returned"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s82"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "warrant_return",
+        "judicial_accountability"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s89",
+      "section_title": "Assessment",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "may_conduct_assessment_on_own_initiative_or_request"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s90",
+        "s81",
+        "s40"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "assessment",
+        "compliance_audit"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 58(1)(b)"
+    },
+    {
+      "section_id": "s90",
+      "section_title": "Information Notice",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_specify_information_required_and_deadline"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s89",
+        "s95",
+        "s103"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "information_notice",
+        "compulsory_request",
+        "compliance_deadline"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 58(1)(a)"
+    },
+    {
+      "section_id": "s91",
+      "section_title": "Parties to Be Informed of Result of Assessment",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_inform_parties"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s89"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "assessment_result",
+        "notification_of_findings"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s92",
+      "section_title": "Matters Referred to Enforcement Committee",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "enforcement_committee"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s50",
+        "s93",
+        "s81"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "referral_to_enforcement_committee"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s93",
+      "section_title": "Functions of Enforcement Committee",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "enforcement_committee"
+      ],
+      "constraints": [
+        "must_consider_and_recommend"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s50",
+        "s92",
+        "s95"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "enforcement_committee_functions",
+        "recommendations",
+        "hearing"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s94",
+      "section_title": "Parties to Be Informed During and After Investigation",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "parties"
+      ],
+      "constraints": [
+        "must_keep_parties_informed"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s81",
+        "s92"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "procedural_fairness",
+        "investigation_updates"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s95",
+      "section_title": "Enforcement Notice",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "may_require_specified_steps_or_cessation"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s73",
+        "s93",
+        "s96",
+        "s97",
+        "s103"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "enforcement_notice",
+        "compliance_order",
+        "cease_processing"
+      ],
+      "scenarios": [
+        "company_ordered_to_stop_processing",
+        "ordered_to_implement_security"
+      ],
+      "difficulty_tiers": [
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "comply_within_deadline",
+        "consider_appeal_rights"
+      ],
+      "gdpr_equivalent": "Article 58(2)"
+    },
+    {
+      "section_id": "s96",
+      "section_title": "Cancellation of Enforcement Notice",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s95"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "enforcement_notice_cancellation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s97",
+      "section_title": "Right of Appeal",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "right",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "appeal_to_high_court"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s95",
+        "s90",
+        "s98"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "right_of_appeal",
+        "high_court",
+        "judicial_review"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 78"
+    },
+    {
+      "section_id": "s98",
+      "section_title": "Consideration of Appeal",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "high_court"
+      ],
+      "constraints": [],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s97"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "appeal_consideration",
+        "court_powers"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 78"
+    },
+    {
+      "section_id": "s99",
+      "section_title": "Civil Remedies",
+      "chapter": "10",
+      "part": null,
+      "clause_type": "right",
+      "subjects": [
+        "data_subject",
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "court_having_jurisdiction"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s73",
+        "s95",
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "civil_action",
+        "damages",
+        "compensation",
+        "aggravated_damages",
+        "interdict",
+        "no_fault_liability"
+      ],
+      "scenarios": [
+        "data_subject_suing_for_damages",
+        "class_action_for_privacy_violation"
+      ],
+      "difficulty_tiers": [
+        "multi_section_reasoning",
+        "conflict_resolution"
+      ],
+      "compliance_actions": [
+        "maintain_insurance",
+        "establish_remediation"
+      ],
+      "gdpr_equivalent": "Article 82"
+    },
+    {
+      "section_id": "s100",
+      "section_title": "Obstruction of Regulator",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "any_person"
+      ],
+      "constraints": [
+        "must_not_obstruct_regulator"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "obstruction",
+        "interference_with_regulator"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "cooperate_with_regulator"
+      ],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s101",
+      "section_title": "Breach of Confidentiality",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "information_regulator",
+        "staff"
+      ],
+      "constraints": [
+        "must_not_disclose_confidential_information"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s54",
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "breach_of_confidentiality",
+        "official_secrets"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s102",
+      "section_title": "Obstruction of Execution of Warrant",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "any_person"
+      ],
+      "constraints": [
+        "must_not_obstruct_warrant_execution"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s82",
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "obstruction_of_warrant"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "cooperate_with_regulator"
+      ],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s103",
+      "section_title": "Failure to Comply with Enforcement or Information Notice",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_comply_with_notices"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s90",
+        "s95",
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "non_compliance",
+        "notice_violation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 83"
+    },
+    {
+      "section_id": "s104",
+      "section_title": "Offences by Witnesses",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "witness"
+      ],
+      "constraints": [
+        "must_not_give_false_evidence"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "false_evidence",
+        "contempt"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s105",
+      "section_title": "Unlawful Acts by Responsible Party re Account Number",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "responsible_party"
+      ],
+      "constraints": [
+        "must_not_knowingly_obtain_or_disclose_without_authority"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s106",
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "account_number_fraud",
+        "unlawful_disclosure"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s106",
+      "section_title": "Unlawful Acts by Third Party re Account Number",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "prohibition",
+      "subjects": [
+        "third_party"
+      ],
+      "constraints": [
+        "must_not_obtain_or_disclose_without_authority"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s105",
+        "s107"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "third_party_offence",
+        "account_number_misuse"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s107",
+      "section_title": "Penalties",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "responsible_party",
+        "any_person"
+      ],
+      "constraints": [],
+      "conditions": [
+        "conviction_for_offence"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s100",
+        "s101",
+        "s102",
+        "s103",
+        "s104",
+        "s105",
+        "s106",
+        "s59",
+        "s109"
+      ],
+      "relationship_types": {
+        "s109": "administrative_fines_separate"
+      },
+      "key_concepts": [
+        "criminal_penalties",
+        "imprisonment",
+        "fine",
+        "ten_year_maximum",
+        "twelve_month_maximum"
+      ],
+      "scenarios": [
+        "company_director_sentenced",
+        "individual_imprisoned_for_identity_fraud"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "understand_penalty_framework"
+      ],
+      "gdpr_equivalent": "Articles 83-84",
+      "penalty_framework": {
+        "serious_offences": {
+          "sections": [
+            "s100",
+            "s103(1)",
+            "s104(2)",
+            "s105(1)",
+            "s106(1)",
+            "s106(3)",
+            "s106(4)"
+          ],
+          "maximum_penalty": "Fine or imprisonment up to 10 years, or both"
+        },
+        "lesser_offences": {
+          "sections": [
+            "s59",
+            "s101",
+            "s102",
+            "s103(2)",
+            "s104(1)"
+          ],
+          "maximum_penalty": "Fine or imprisonment up to 12 months, or both"
+        }
+      }
+    },
+    {
+      "section_id": "s108",
+      "section_title": "Magistrates Court Jurisdiction",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "magistrates_court"
+      ],
+      "constraints": [
+        "jurisdiction_to_impose_maximum_penalties"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s107"
+      ],
+      "relationship_types": {
+        "s107": "jurisdiction_over"
+      },
+      "key_concepts": [
+        "magistrates_court_jurisdiction"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s109",
+      "section_title": "Administrative Fines",
+      "chapter": "11",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "information_regulator",
+        "responsible_party"
+      ],
+      "constraints": [
+        "alternative_to_criminal_prosecution"
+      ],
+      "conditions": [
+        "interference_established"
+      ],
+      "exceptions": [],
+      "related_sections": [
+        "s107",
+        "s73",
+        "s95"
+      ],
+      "relationship_types": {
+        "s107": "alternative_to_criminal"
+      },
+      "key_concepts": [
+        "administrative_fine",
+        "regulatory_penalty",
+        "proportionality"
+      ],
+      "scenarios": [
+        "regulator_imposing_fine_for_breach",
+        "company_fined_for_non_compliance"
+      ],
+      "difficulty_tiers": [
+        "basic_identification",
+        "multi_section_reasoning"
+      ],
+      "compliance_actions": [
+        "budget_for_potential_fines"
+      ],
+      "gdpr_equivalent": "Article 83",
+      "maximum_fine": "R10_million"
+    },
+    {
+      "section_id": "s110",
+      "section_title": "Amendment of Laws",
+      "chapter": "12",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [],
+      "constraints": [
+        "laws_in_schedule_amended"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [],
+      "relationship_types": {},
+      "key_concepts": [
+        "amendment_of_laws",
+        "consequential_amendments"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s111",
+      "section_title": "Fees",
+      "chapter": "12",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "minister_of_justice",
+        "data_subject",
+        "responsible_party"
+      ],
+      "constraints": [
+        "fees_prescribed_after_consultation"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s112"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "prescribed_fees",
+        "access_request_fees"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s112",
+      "section_title": "Regulations",
+      "chapter": "12",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "minister_of_justice",
+        "information_regulator"
+      ],
+      "constraints": [
+        "must_consult_regulator",
+        "must_follow_s113_procedure"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s111",
+        "s113"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "regulation_making_power",
+        "subordinate_legislation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [
+        "monitor_new_regulations"
+      ],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s113",
+      "section_title": "Procedure for Making Regulations",
+      "chapter": "12",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "minister_of_justice"
+      ],
+      "constraints": [
+        "must_publish_draft_in_gazette",
+        "must_invite_comments"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s112"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "gazette_publication",
+        "public_consultation"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": null
+    },
+    {
+      "section_id": "s114",
+      "section_title": "Transitional Arrangements",
+      "chapter": "12",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [
+        "responsible_party",
+        "minister_of_justice"
+      ],
+      "constraints": [
+        "all_processing_must_conform_within_one_year"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s115"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "transitional_period",
+        "compliance_deadline",
+        "grace_period",
+        "extension"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 99"
+    },
+    {
+      "section_id": "s115",
+      "section_title": "Short Title and Commencement",
+      "chapter": "12",
+      "part": null,
+      "clause_type": "procedure",
+      "subjects": [],
+      "constraints": [
+        "commencement_on_date_by_president"
+      ],
+      "conditions": [],
+      "exceptions": [],
+      "related_sections": [
+        "s114"
+      ],
+      "relationship_types": {},
+      "key_concepts": [
+        "short_title",
+        "commencement_date",
+        "POPIA",
+        "Act_No_4_of_2013"
+      ],
+      "scenarios": [],
+      "difficulty_tiers": [
+        "basic_identification"
+      ],
+      "compliance_actions": [],
+      "gdpr_equivalent": "Article 99"
+    }
+  ],
+  "cross_references": {
+    "GDPR": {
+      "full_name": "General Data Protection Regulation (EU) 2016/679",
+      "jurisdiction": "European Union",
+      "relevance": "POPIA was heavily influenced by GDPR. Many concepts are parallel.",
+      "key_differences": [
+        "POPIA applies to juristic persons; GDPR does not",
+        "POPIA has criminal penalties up to 10 years imprisonment; GDPR relies on administrative fines",
+        "GDPR fines up to 4% of global turnover or EUR 20M; POPIA administrative fines up to R10M",
+        "POPIA has a single regulator; GDPR has one per member state",
+        "POPIA requires prior authorisation for certain processing; GDPR uses DPIA and prior consultation",
+        "GDPR has explicit right to data portability; POPIA does not",
+        "POPIA defines consent as voluntary, specific and informed; GDPR adds freely given and unambiguous"
+      ],
+      "section_mappings": {
+        "s1": "Art 4",
+        "s3": "Art 3",
+        "s5": "Arts 12-22",
+        "s6": "Art 2(2)",
+        "s8": "Art 5(2)",
+        "s9": "Art 5(1)(a)",
+        "s10": "Art 5(1)(c)",
+        "s11": "Art 6",
+        "s13": "Art 5(1)(b)",
+        "s14": "Art 5(1)(e)",
+        "s15": "Art 5(1)(b)",
+        "s16": "Art 5(1)(d)",
+        "s17": "Art 30",
+        "s18": "Arts 13-14",
+        "s19": "Art 32",
+        "s21": "Art 28",
+        "s22": "Arts 33-34",
+        "s23": "Art 15",
+        "s24": "Arts 16-17",
+        "s26": "Art 9",
+        "s34": "Art 8",
+        "s55": "Arts 37-39",
+        "s57": "Art 36",
+        "s69": "Art 21(2-3)",
+        "s71": "Art 22",
+        "s72": "Arts 44-49",
+        "s95": "Art 58(2)",
+        "s99": "Art 82",
+        "s107": "Arts 83-84",
+        "s109": "Art 83"
+      }
+    },
+    "FICA": {
+      "full_name": "Financial Intelligence Centre Act 38 of 2001",
+      "jurisdiction": "South Africa",
+      "relevance": "FICA mandates retention of financial records which may conflict with POPIA retention limits.",
+      "key_interactions": [
+        "FICA requires 5-year retention of customer identification and transaction records",
+        "POPIA s14 retention must yield to FICA retention obligations",
+        "KYC/CDD data collection under FICA provides lawful basis under POPIA s11 (legal obligation)",
+        "Account number protections in POPIA s105-s106 complement FICA anti-fraud provisions"
+      ]
+    },
+    "NCA": {
+      "full_name": "National Credit Act 34 of 2005",
+      "jurisdiction": "South Africa",
+      "relevance": "NCA governs credit information which is personal information under POPIA.",
+      "key_interactions": [
+        "Credit bureau processing requires prior authorisation under POPIA s57",
+        "NCA prescribes retention periods for credit information that override POPIA s14",
+        "Consumers right to access credit records aligns with POPIA s23",
+        "Credit scoring is automated decision making under POPIA s71"
+      ]
+    },
+    "ECT_Act": {
+      "full_name": "Electronic Communications and Transactions Act 25 of 2002",
+      "jurisdiction": "South Africa",
+      "relevance": "ECT Act section 45 regulates unsolicited communications alongside POPIA s69.",
+      "key_interactions": [
+        "ECT Act s45 prohibits spam; POPIA s69 adds consent requirements for direct marketing",
+        "ECT Act defines electronic communications referenced in POPIA",
+        "Both acts apply to transborder data flows",
+        "ECT Act cybercrime provisions complement POPIA breach notification"
+      ]
+    },
+    "PAIA": {
+      "full_name": "Promotion of Access to Information Act 2 of 2000",
+      "jurisdiction": "South Africa",
+      "relevance": "PAIA governs access to information and shares the Information Regulator with POPIA.",
+      "key_interactions": [
+        "PAIA s51 manual must be updated to include POPIA processing information",
+        "POPIA s23 access requests follow PAIA procedures (s18 and s53)",
+        "The Information Regulator administers both PAIA and POPIA",
+        "PAIA grounds for refusal may limit POPIA access rights"
+      ]
+    },
+    "Constitution": {
+      "full_name": "Constitution of the Republic of South Africa, 1996",
+      "jurisdiction": "South Africa",
+      "relevance": "Section 14 of the Constitution enshrines the right to privacy which POPIA gives effect to.",
+      "key_interactions": [
+        "POPIA s2 explicitly references the constitutional right to privacy",
+        "Constitutional right to freedom of expression (s16) balanced against privacy in POPIA s7",
+        "Right to administrative justice (s33) underpins enforcement provisions",
+        "Right to access information (s32) implemented through PAIA and intersects with POPIA"
+      ]
+    }
+  },
+  "training_generation_hints": {
+    "nli_pair_strategies": [
+      "entailment: section X requires Y, premise restates requirement -> entailment",
+      "contradiction: section X prohibits Z, premise claims Z is allowed -> contradiction",
+      "neutral: section X addresses topic A, premise discusses related but distinct topic B -> neutral",
+      "exception_entailment: section X prohibits Y except when Z, premise states Z applies -> entails processing is allowed",
+      "multi_hop: section X references section Y which defines term Z -> chain reasoning"
+    ],
+    "instruction_tuning_strategies": [
+      "compliance_question: What must a responsible party do under section X?",
+      "scenario_analysis: Company does Y - is this compliant with POPIA?",
+      "exception_identification: When can special personal information be processed?",
+      "comparison: How does POPIA section X differ from GDPR article Y?",
+      "multi_section: A company collects health data and transfers it abroad - which sections apply?",
+      "penalty_assessment: What penalties apply for failing to comply with an enforcement notice?",
+      "rights_exercise: How does a data subject exercise their right to access under POPIA?"
+    ],
+    "difficulty_distribution": {
+      "recommended_basic": 0.3,
+      "recommended_multi_section": 0.35,
+      "recommended_exception": 0.2,
+      "recommended_conflict": 0.15
+    }
+  }
+}

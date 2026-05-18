@@ -1,0 +1,413 @@
+[
+  {
+    "target_clauses": [
+      "POPIA minimality / purpose limitation"
+    ],
+    "popia_sections": [
+      "\u00a79",
+      "\u00a710",
+      "\u00a713",
+      "\u00a714",
+      "\u00a715"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 15,
+    "priority_score": 64.29,
+    "rationale": "low accuracy (29%); high real-world frequency; false negatives present"
+  },
+  {
+    "target_clauses": [
+      "POPIA consent"
+    ],
+    "popia_sections": [
+      "\u00a79",
+      "\u00a711",
+      "\u00a711(1)(a)",
+      "\u00a711(3)",
+      "\u00a769",
+      "\u00a769(2)"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 15,
+    "priority_score": 59.4,
+    "rationale": "low accuracy (36%); high real-world frequency; dominated by false positives"
+  },
+  {
+    "target_clauses": [
+      "POPIA data subject rights"
+    ],
+    "popia_sections": [
+      "\u00a75",
+      "\u00a723",
+      "\u00a724",
+      "\u00a725"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 15,
+    "priority_score": 48.28,
+    "rationale": "low accuracy (38%); high real-world frequency; false negatives present"
+  },
+  {
+    "target_clauses": [
+      "POPIA general processing"
+    ],
+    "popia_sections": [
+      "\u00a78",
+      "\u00a79",
+      "\u00a710",
+      "\u00a711",
+      "\u00a712"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 15,
+    "priority_score": 42.92,
+    "rationale": "low accuracy (38%); high real-world frequency; false negatives present"
+  },
+  {
+    "target_clauses": [
+      "POPIA direct marketing"
+    ],
+    "popia_sections": [
+      "\u00a769",
+      "\u00a769(1)",
+      "\u00a769(2)",
+      "\u00a769(3)",
+      "\u00a770"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 40.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause; high real-world frequency"
+  },
+  {
+    "target_clauses": [
+      "POPIA cross-border transfers"
+    ],
+    "popia_sections": [
+      "\u00a772"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 15,
+    "priority_score": 30.55,
+    "rationale": "low accuracy (45%); dominated by false positives"
+  },
+  {
+    "target_clauses": [
+      "POPIA information officers"
+    ],
+    "popia_sections": [
+      "\u00a755",
+      "\u00a756"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 30.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA openness (notification)"
+    ],
+    "popia_sections": [
+      "\u00a716",
+      "\u00a717",
+      "\u00a718"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 30.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA enforcement"
+    ],
+    "popia_sections": [
+      "\u00a773",
+      "\u00a774",
+      "\u00a775",
+      "\u00a776",
+      "\u00a777",
+      "\u00a778",
+      "\u00a799"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 25.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA offences and penalties"
+    ],
+    "popia_sections": [
+      "\u00a7100",
+      "\u00a7101",
+      "\u00a7102",
+      "\u00a7103",
+      "\u00a7104",
+      "\u00a7105",
+      "\u00a7106",
+      "\u00a7107"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 25.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA information quality"
+    ],
+    "popia_sections": [
+      "\u00a716"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 25.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA exemptions"
+    ],
+    "popia_sections": [
+      "\u00a736",
+      "\u00a737",
+      "\u00a738"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 20.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA prior authorisation"
+    ],
+    "popia_sections": [
+      "\u00a757",
+      "\u00a758",
+      "\u00a759"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 20.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA breach notification"
+    ],
+    "popia_sections": [
+      "\u00a722"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 15,
+    "priority_score": 19.64,
+    "rationale": "low accuracy (59%); high real-world frequency; false negatives present"
+  },
+  {
+    "target_clauses": [
+      "POPIA security safeguards"
+    ],
+    "popia_sections": [
+      "\u00a719",
+      "\u00a720",
+      "\u00a721",
+      "\u00a722"
+    ],
+    "suggested_scenario_types": [
+      "hard-negative (contradiction)",
+      "subtle-neutral"
+    ],
+    "focus_labels": [
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "intermediate-to-hard",
+    "expected_count": 15,
+    "priority_score": 18.29,
+    "rationale": "low accuracy (62%); high real-world frequency; dominated by false positives"
+  },
+  {
+    "target_clauses": [
+      "POPIA codes of conduct"
+    ],
+    "popia_sections": [
+      "\u00a760",
+      "\u00a761",
+      "\u00a762",
+      "\u00a763",
+      "\u00a764",
+      "\u00a765",
+      "\u00a766",
+      "\u00a767",
+      "\u00a768"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 15.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  },
+  {
+    "target_clauses": [
+      "POPIA directories"
+    ],
+    "popia_sections": [
+      "\u00a770"
+    ],
+    "suggested_scenario_types": [
+      "first-person",
+      "news",
+      "memo"
+    ],
+    "focus_labels": [
+      "entailment",
+      "contradiction",
+      "neutral"
+    ],
+    "desired_difficulty": "mixed (50% basic, 30% intermediate, 20% hard)",
+    "expected_count": 30,
+    "priority_score": 15.0,
+    "rationale": "ZERO training examples \u2014 completely untested clause"
+  }
+]

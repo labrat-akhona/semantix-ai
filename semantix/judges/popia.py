@@ -56,6 +56,15 @@ class POPIAJudge(QuantizedNLIJudge):
         decision-making).
     model_variant:
         Optional override for the ONNX quantization variant to load.
+    calibrated:
+        When ``True``, fetch the temperature constant from the model's
+        ``calibration.json`` on HF and apply it at softmax so
+        ``verdict.score`` is a well-calibrated probability. Only ``v2``
+        ships a calibration constant (``T*=2.5492``, ECE 0.171 → 0.075
+        on a stratified 60% test split); ``v1`` silently falls back to
+        ``T=1.0``. Defaults to ``False`` for backwards compatibility —
+        flipping the default is slated for v0.3.0 when the recommended
+        threshold can be re-tuned to the calibrated operating point.
     """
 
     _REPO_ID: ClassVar[str] = "labrat-aiko/nli-popia-v1"  # back-compat default
@@ -65,6 +74,8 @@ class POPIAJudge(QuantizedNLIJudge):
         self,
         version: str = "v1",
         model_variant: str | None = None,
+        *,
+        calibrated: bool = False,
     ) -> None:
         if version not in _VERSION_TO_REPO:
             raise ValueError(
@@ -72,10 +83,12 @@ class POPIAJudge(QuantizedNLIJudge):
             )
         self._version = version
         repo_id = _VERSION_TO_REPO[version]
+        self._REPO_ID = repo_id  # let inherited _load_temperature_constant find the right repo
         variant = model_variant or _qnli._detect_onnx_variant()
         self._session = _qnli._load_session(variant, repo_id=repo_id)
         self._tokenizer = _qnli._load_tokenizer(repo_id=repo_id)
         self._input_names = {inp.name for inp in self._session.get_inputs()}
+        self._temperature = _qnli._load_temperature_constant(repo_id) if calibrated else 1.0
 
     @property
     def version(self) -> str:

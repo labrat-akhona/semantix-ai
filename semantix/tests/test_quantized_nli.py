@@ -167,3 +167,125 @@ class TestQuantizedNLIJudge:
         judge = QuantizedNLIJudge()
         verdict = judge.evaluate("text", "intent", 0.5)
         assert 0.0 <= verdict.score <= 1.0
+
+
+# ---------------------------------------------------------------------------
+# Unit: temperature scaling
+# ---------------------------------------------------------------------------
+
+
+class TestSoftmaxTemperature:
+    def test_temperature_one_is_identity(self):
+        logits = np.array([-1.0, 5.0, 0.5])
+        assert np.allclose(_softmax(logits), _softmax(logits, temperature=1.0))
+
+    def test_high_temperature_flattens(self):
+        logits = np.array([0.0, 5.0, 0.0])
+        sharp = _softmax(logits, temperature=1.0)
+        flat = _softmax(logits, temperature=10.0)
+        # Argmax preserved, but max prob is smaller.
+        assert np.argmax(sharp) == np.argmax(flat) == 1
+        assert flat[1] < sharp[1]
+        # Bounds: flat should be much closer to uniform (1/3).
+        assert flat[1] - 1 / 3 < sharp[1] - 1 / 3
+
+    def test_low_temperature_sharpens(self):
+        logits = np.array([0.0, 1.0, 0.5])
+        normal = _softmax(logits, temperature=1.0)
+        sharp = _softmax(logits, temperature=0.1)
+        assert sharp[1] > normal[1]
+
+    def test_rejects_zero_or_negative_temperature(self):
+        import pytest
+        logits = np.array([1.0, 2.0, 3.0])
+        with pytest.raises(ValueError):
+            _softmax(logits, temperature=0.0)
+        with pytest.raises(ValueError):
+            _softmax(logits, temperature=-1.0)
+
+
+# ---------------------------------------------------------------------------
+# Unit: _load_temperature_constant
+# ---------------------------------------------------------------------------
+
+
+class TestLoadTemperatureConstant:
+    def test_missing_calibration_returns_one(self):
+        from huggingface_hub.errors import EntryNotFoundError
+        from semantix.judges.quantized_nli import _load_temperature_constant
+        with patch("huggingface_hub.hf_hub_download", side_effect=EntryNotFoundError("nope")):
+            assert _load_temperature_constant("foo/bar") == 1.0
+
+    def test_network_failure_returns_one(self):
+        from semantix.judges.quantized_nli import _load_temperature_constant
+        with patch("huggingface_hub.hf_hub_download", side_effect=RuntimeError("offline")):
+            assert _load_temperature_constant("foo/bar") == 1.0
+
+    def test_loads_temperature_when_present(self, tmp_path):
+        from semantix.judges.quantized_nli import _load_temperature_constant
+        cal = tmp_path / "calibration.json"
+        cal.write_text('{"temperature": 2.5492, "ece_pre": 0.171, "ece_post": 0.075}')
+        with patch("huggingface_hub.hf_hub_download", return_value=str(cal)):
+            assert _load_temperature_constant("foo/bar") == 2.5492
+
+    def test_malformed_calibration_returns_one(self, tmp_path):
+        from semantix.judges.quantized_nli import _load_temperature_constant
+        cal = tmp_path / "calibration.json"
+        cal.write_text("not valid json {{")
+        with patch("huggingface_hub.hf_hub_download", return_value=str(cal)):
+            assert _load_temperature_constant("foo/bar") == 1.0
+
+
+# ---------------------------------------------------------------------------
+# Integration: calibrated QuantizedNLIJudge
+# ---------------------------------------------------------------------------
+
+
+class TestQuantizedNLIJudgeCalibration:
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    @patch("semantix.judges.quantized_nli._load_temperature_constant", return_value=2.5)
+    def test_calibrated_true_flattens_score(self, mock_T, mock_load_session, mock_load_tokenizer):
+        # Same logits, threshold 0.5 — un-calibrated passes, calibrated fails.
+        mock_load_session.return_value = _mock_session([0.0, 1.6, 0.0])
+        mock_load_tokenizer.return_value = _mock_tokenizer()
+
+        un_cal = QuantizedNLIJudge()
+        cal = QuantizedNLIJudge(calibrated=True)
+
+        v_un = un_cal.evaluate("output", "Intent must hold", 0.5)
+        v_cal = cal.evaluate("output", "Intent must hold", 0.5)
+
+        # un-calibrated: peaked at entailment (idx 1); score > 0.5
+        # calibrated (T=2.5): flattened; score < 0.5
+        assert v_un.score > 0.5
+        assert v_cal.score < 0.5
+        assert v_un.passed is True
+        assert v_cal.passed is False
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    @patch("semantix.judges.quantized_nli._load_temperature_constant", return_value=1.0)
+    def test_calibrated_true_with_T_one_is_no_op(self, mock_T, mock_load_session, mock_load_tokenizer):
+        # When the model has no calibration constant, T=1.0 is returned and
+        # behaviour matches calibrated=False.
+        mock_load_session.return_value = _mock_session([0.1, 2.0, 0.5])
+        mock_load_tokenizer.return_value = _mock_tokenizer()
+
+        un_cal = QuantizedNLIJudge()
+        cal = QuantizedNLIJudge(calibrated=True)
+
+        v_un = un_cal.evaluate("output", "Intent must hold", 0.5)
+        v_cal = cal.evaluate("output", "Intent must hold", 0.5)
+
+        assert v_un.score == v_cal.score
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_default_is_uncalibrated(self, mock_load_session, mock_load_tokenizer):
+        # calibrated defaults to False; _load_temperature_constant should not be called.
+        mock_load_session.return_value = _mock_session([0.0, 1.0, 0.0])
+        mock_load_tokenizer.return_value = _mock_tokenizer()
+        with patch("semantix.judges.quantized_nli._load_temperature_constant") as mock_T:
+            QuantizedNLIJudge()
+            mock_T.assert_not_called()

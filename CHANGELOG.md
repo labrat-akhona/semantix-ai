@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- **Opt-in probability calibration for `QuantizedNLIJudge` / `POPIAJudge`.**
+  Passing `calibrated=True` fetches `calibration.json` from the model's HF
+  repo and applies the fitted temperature constant at softmax so
+  `verdict.score` is a well-calibrated probability (Guo et al., 2017).
+  `nli-popia-v2` ships with `T*=2.5492`; ECE on a 116-pair stratified
+  test split drops from 0.171 to 0.075 (−56.1%). Models without a
+  `calibration.json` (base model, `nli-popia-v1`) silently fall back to
+  `T=1.0`. Default remains `calibrated=False` for backwards compatibility;
+  flipping the default is slated for v0.3.0 alongside a re-tuned
+  `recommended_threshold`. Distinct from the existing *threshold*
+  calibration in `semantix.training.calibrate` — see the new
+  `\subsection{Calibration}` in the POPIAJudge preprint for methodology.
+
 ## v0.2.1 — Dogfooding fixes (2026-05-15)
 
 Two correctness bugs surfaced while integrating semantix-ai into a sibling

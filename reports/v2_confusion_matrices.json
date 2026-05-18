@@ -1,0 +1,368 @@
+{
+  "summary": {
+    "n_eval": 197,
+    "n_correct": 153,
+    "argmax_accuracy": 0.7766497461928934,
+    "labels_order": [
+      "contradiction",
+      "entailment",
+      "neutral"
+    ],
+    "label_id_map": {
+      "contradiction": 0,
+      "entailment": 1,
+      "neutral": 2
+    },
+    "artifact": "labrat-aiko/nli-popia-v2 (onnx/model.onnx, FP32)",
+    "eval_sources": [
+      "out/nli-popia-v2/eval.jsonl",
+      "out/nli-popia-v2/eval_v2.jsonl"
+    ]
+  },
+  "per_clause": {
+    "POPIA consent": {
+      "n": 22,
+      "n_correct": 18,
+      "accuracy": 0.8181818181818182,
+      "confusion": [
+        [
+          6,
+          0,
+          1
+        ],
+        [
+          0,
+          7,
+          0
+        ],
+        [
+          3,
+          0,
+          5
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA minimality / purpose limitation": {
+      "n": 21,
+      "n_correct": 13,
+      "accuracy": 0.6190476190476191,
+      "confusion": [
+        [
+          3,
+          4,
+          0
+        ],
+        [
+          2,
+          5,
+          0
+        ],
+        [
+          2,
+          0,
+          5
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA security safeguards": {
+      "n": 21,
+      "n_correct": 12,
+      "accuracy": 0.5714285714285714,
+      "confusion": [
+        [
+          3,
+          3,
+          1
+        ],
+        [
+          1,
+          5,
+          1
+        ],
+        [
+          3,
+          0,
+          4
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA breach notification": {
+      "n": 22,
+      "n_correct": 16,
+      "accuracy": 0.7272727272727273,
+      "confusion": [
+        [
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          7,
+          0
+        ],
+        [
+          4,
+          2,
+          2
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA cross-border transfers": {
+      "n": 22,
+      "n_correct": 19,
+      "accuracy": 0.8636363636363636,
+      "confusion": [
+        [
+          7,
+          0,
+          0
+        ],
+        [
+          1,
+          5,
+          1
+        ],
+        [
+          0,
+          1,
+          7
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA general processing": {
+      "n": 21,
+      "n_correct": 17,
+      "accuracy": 0.8095238095238095,
+      "confusion": [
+        [
+          6,
+          1,
+          0
+        ],
+        [
+          0,
+          6,
+          1
+        ],
+        [
+          1,
+          1,
+          5
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA data subject rights": {
+      "n": 21,
+      "n_correct": 17,
+      "accuracy": 0.8095238095238095,
+      "confusion": [
+        [
+          7,
+          0,
+          0
+        ],
+        [
+          1,
+          5,
+          1
+        ],
+        [
+          2,
+          0,
+          5
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA children's information": {
+      "n": 16,
+      "n_correct": 15,
+      "accuracy": 0.9375,
+      "confusion": [
+        [
+          3,
+          1,
+          0
+        ],
+        [
+          0,
+          6,
+          0
+        ],
+        [
+          0,
+          0,
+          6
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA special personal information": {
+      "n": 16,
+      "n_correct": 13,
+      "accuracy": 0.8125,
+      "confusion": [
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          0
+        ],
+        [
+          3,
+          0,
+          3
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    },
+    "POPIA automated decision-making": {
+      "n": 15,
+      "n_correct": 13,
+      "accuracy": 0.8666666666666667,
+      "confusion": [
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          0
+        ],
+        [
+          2,
+          0,
+          3
+        ]
+      ],
+      "labels": [
+        "contradiction",
+        "entailment",
+        "neutral"
+      ]
+    }
+  },
+  "top_confidently_wrong": [
+    {
+      "clause": "POPIA breach notification",
+      "scenario": "memo-assessment-limbo",
+      "premise": "Jira INC-2244: we believe the incident may rise to a notifiable compromise but legal is still assessing; no notifications sent yet as at day 12 after the initial alert.",
+      "hypothesis": "The responsible party has complied with the \u00a722(2) 'as soon as reasonably possible' standard.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9982849955558777
+    },
+    {
+      "clause": "POPIA minimality / purpose limitation",
+      "scenario": "first-person-etoll-employer",
+      "premise": "I asked the Sanral e-toll agent why they needed my employer name to process my account \u2014 she said it was on the form.",
+      "hypothesis": "Sanral's collection of employer name is adequate, relevant and not excessive for e-toll account management.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9978868365287781
+    },
+    {
+      "clause": "POPIA data subject rights",
+      "scenario": "memo-backup-not-purged",
+      "premise": "Incident report INC-2213: a customer's deletion request was processed in production but the nightly backup tape from that week has not yet been purged; legal is assessing whether that still meets \u00a724.",
+      "hypothesis": "The organisation has fully complied with the \u00a724 destruction right for this request.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9973592162132263
+    },
+    {
+      "clause": "POPIA general processing",
+      "scenario": "first-person-broker-onboarding",
+      "premise": "I signed up with a new online broker; the onboarding flow felt normal but I didn't read the privacy notice in detail.",
+      "hypothesis": "The broker is processing my personal information lawfully and reasonably.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9970781803131104
+    },
+    {
+      "clause": "POPIA automated decision-making",
+      "scenario": "logistics-route",
+      "premise": "A logistics company's route-optimisation engine assigns delivery sequences to drivers based on geofencing rules, with no individual customer decision being made.",
+      "hypothesis": "The responsible party is making an automated decision with legal or substantial effect on a data subject within the scope of \u00a771.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9969128370285034
+    },
+    {
+      "clause": "POPIA security safeguards",
+      "scenario": "memo-risk-register-draft",
+      "premise": "Sprint note: the security team has drafted a risk register but hasn't yet completed the review of external threats.",
+      "hypothesis": "The responsible party has identified all reasonably foreseeable internal and external risks.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9962969422340393
+    },
+    {
+      "clause": "POPIA data subject rights",
+      "scenario": "memo-id-verification-pending",
+      "premise": "Sprint note: we discussed how to prove identity for \u00a723 access requests coming in by email; no decision has been locked in yet.",
+      "hypothesis": "The organisation currently has a \u00a723-compliant identity-verification mechanism in production.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.9961167573928833
+    },
+    {
+      "clause": "POPIA breach notification",
+      "scenario": "first-person-broker-vague",
+      "premise": "My Momentum broker phoned me to say there was 'some kind of issue' with the portal last weekend, but didn't know any details.",
+      "hypothesis": "Momentum has fulfilled its \u00a722 notification obligations.",
+      "true_label": "neutral",
+      "predicted_label": "contradiction",
+      "confidence": 0.994392454624176
+    }
+  ]
+}

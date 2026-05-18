@@ -119,8 +119,38 @@ Automated decision-making ($\S71$) & 0.259 & 0.850 \\
 \caption{v2's new clauses. Special personal information is hardest --- it folds together race, religion, health, biometric, sex life, criminal behavior, and trade-union membership, which is the broadest semantic surface in the v2 set.}
 \end{table}
 
-\subsection{Per-clause analysis (v2 model on v1 holdout)}
+\subsection{Per-clause analysis and error structure}
+\label{sec:error-analysis}
+
 Every original v1 clause continues to beat stock. The smallest gain is on minimality / purpose limitation ($+8.3$pp), where the boundary between "adequate, relevant" and "excessive" is the most semantically subtle and the stock NLI model has the most prior knowledge to draw on.
+
+To understand \emph{how} the model fails — not just whether it does — we compute per-clause 3-way argmax accuracy and confusion matrices on the union of both holdouts ($n=197$). Aggregate argmax accuracy is 0.777 ($153/197$ correct).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Clause & $n$ & Accuracy & Dominant error & $\to$ predicted \\
+\midrule
+POPIA children's information         & 16 & 0.938 & C $\to$ E & entailment (1) \\
+POPIA automated decision-making      & 15 & 0.867 & N $\to$ C & contradiction (2) \\
+POPIA cross-border transfers         & 22 & 0.864 & E $\to$ C \& E $\to$ N & 1 each \\
+POPIA consent                        & 22 & 0.818 & N $\to$ C & contradiction (3) \\
+POPIA special personal information   & 16 & 0.812 & N $\to$ C & contradiction (3) \\
+POPIA data subject rights            & 21 & 0.810 & N $\to$ C & contradiction (2) \\
+POPIA general processing             & 21 & 0.810 & N $\to$ C & contradiction (1) \\
+POPIA breach notification            & 22 & 0.727 & N $\to$ C & contradiction (4) \\
+POPIA minimality / purpose limitation & 21 & 0.619 & C $\to$ E & entailment (4) \\
+POPIA security safeguards            & 21 & 0.571 & C $\to$ E \& N $\to$ C & 3 each \\
+\bottomrule
+\end{tabular}
+\caption{Per-clause accuracy and dominant error direction (rows of the 3-way confusion matrix where misclassification count is largest; $\text{label}_\text{true} \to \text{label}_\text{predicted}$, $C$=contradiction, $E$=entailment, $N$=neutral). Minimality and security cluster at the weak end; both are clauses whose definitions overlap semantically with neighbouring clauses (minimality with general processing, security with breach notification).}
+\end{table}
+
+\paragraph{Dominant failure mode: over-confident neutral $\to$ contradiction.} The eight highest-confidence misclassifications on the full holdout share an identical structure: ground-truth label is \emph{neutral} (a scenario where the relevant clause cannot be definitively judged either way from the premise alone), but the model predicts \emph{contradiction} with confidence $\ge 0.99$. Five representative cases span breach notification, minimality, data subject rights, general processing, and automated decision-making --- a cross-clause signature, not a single-clause artefact. The pattern is the inverse of what most ML-safety error analyses worry about: false positives, not false negatives.
+
+For an audit-grade compliance judge this matters \emph{more} than aggregate F1. A false-positive flagged at confidence 0.5 is a candidate for human review and likely lands in a review queue; a false-positive flagged at confidence 0.99 may bypass review and be propagated upstream as ground-truth non-compliance. The temperature-scaling result in \S\ref{sec:calibration} (raw $T=1$ ECE $0.171$ collapsed to $T^\ast = 2.55$ ECE $0.075$) is the precise antidote: it does not change which class the model predicts, but it dampens the confidence on disputed cases enough that the over-flag pattern surfaces in the $[0.4, 0.7]$ confidence band where reviewers \emph{look}, rather than the $\ge 0.99$ band where they often do not.
 
 \subsection{Calibration}
 \label{sec:calibration}

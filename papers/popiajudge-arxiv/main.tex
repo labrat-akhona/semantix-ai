@@ -122,6 +122,39 @@ Automated decision-making ($\S71$) & 0.259 & 0.850 \\
 \subsection{Per-clause analysis (v2 model on v1 holdout)}
 Every original v1 clause continues to beat stock. The smallest gain is on minimality / purpose limitation ($+8.3$pp), where the boundary between "adequate, relevant" and "excessive" is the most semantically subtle and the stock NLI model has the most prior knowledge to draw on.
 
+\subsection{Calibration}
+\label{sec:calibration}
+
+Macro F1 measures whether the argmax prediction is correct; for an audit-grade compliance judge, the \emph{probability} attached to that prediction matters too. A judge that says ``88\% confident this passes POPIA \S 11'' is only useful if calibrated against frequency: among all predictions made at 88\% confidence, roughly 88\% should be correct.
+
+We apply single-parameter temperature scaling \cite{guo2017calibration} to the shipped ONNX artifact. The 197-pair eval union (v1 holdout + v2 holdout) is split per (clause, label) stratum into a 40\% calibration fit set ($n=81$) and a 60\% test set ($n=116$); a single scalar temperature $T$ is fit on the calibration set by minimizing negative log-likelihood (\texttt{scipy.optimize.minimize\_scalar}, bounded $[0.05, 10]$), and ECE is measured on the held-out test set with 10 equal-width confidence bins.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lc}
+\toprule
+ & ECE (test, 10 bins) \\
+\midrule
+Raw softmax ($T=1$) & 0.171 \\
+Temperature-scaled ($T^\ast=2.55$) & \textbf{0.075} \\
+\midrule
+Reduction & $-56.1\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Calibration before and after temperature scaling. $T^\ast > 1$ means the un-scaled logits are over-peaked: the model is systematically over-confident at the raw output. Scaling cuts ECE by more than half.}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\linewidth]{figures/reliability_pre.png}
+\includegraphics[width=0.48\linewidth]{figures/reliability_post.png}
+\caption{Reliability diagrams (test set, $n=116$, 10 equal-width confidence bins). Left: raw softmax — confidence systematically exceeds empirical accuracy across the high-confidence band, the signature of over-peaked logits. Right: after temperature scaling with $T^\ast = 2.55$ — the 0.7--0.9 band (where 78\% of predictions live) is now well-calibrated to within 3pp. Residual ECE is driven by the sparse low-confidence bins.}
+\end{figure}
+
+In the bands where the model actually operates --- 78\% of test predictions fall in $[0.7, 0.9]$ confidence --- post-scaling calibration gap is below 3.5pp. The remaining ECE is concentrated in the sparsely populated $[0.4, 0.6]$ bins, where per-bin counts are too small ($n \le 6$) for stable estimation. The fitted temperature constant is published alongside the model artifacts (\texttt{calibration.json}) so that downstream callers can apply the same scaling deterministically.
+
+To our knowledge no published cross-encoder regulator-NLI judge has reported calibration statistics; Llama Guard, Patronus Lynx, and Guardrails Hub classifiers all expose raw argmax outputs.
+
 \section{Companion artifacts}
 \label{sec:companion}
 

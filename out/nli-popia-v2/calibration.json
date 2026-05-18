@@ -1,0 +1,100 @@
+{
+  "model": "labrat-aiko/nli-popia-v2",
+  "artifact": "onnx/model.onnx",
+  "method": "single-parameter temperature scaling (Guo et al. 2017) fit by NLL minimization with scipy.optimize.minimize_scalar (bounded, brent)",
+  "temperature": 2.5492217429081805,
+  "fit_nll": 0.6346972462907677,
+  "ece_pre": 0.17068321848737786,
+  "ece_post": 0.07499005825355136,
+  "n_fit": 81,
+  "n_test": 116,
+  "n_bins": 10,
+  "fit_frac": 0.4,
+  "seed": 42,
+  "eval_paths": [
+    "out/nli-popia-v2/eval.jsonl",
+    "out/nli-popia-v2/eval_v2.jsonl"
+  ],
+  "test_bins": [
+    {
+      "lo": 0.0,
+      "hi": 0.1,
+      "count": 0,
+      "accuracy": 0.0,
+      "confidence": 0.0,
+      "gap": 0.0
+    },
+    {
+      "lo": 0.1,
+      "hi": 0.2,
+      "count": 0,
+      "accuracy": 0.0,
+      "confidence": 0.0,
+      "gap": 0.0
+    },
+    {
+      "lo": 0.2,
+      "hi": 0.30000000000000004,
+      "count": 0,
+      "accuracy": 0.0,
+      "confidence": 0.0,
+      "gap": 0.0
+    },
+    {
+      "lo": 0.30000000000000004,
+      "hi": 0.4,
+      "count": 1,
+      "accuracy": 0.0,
+      "confidence": 0.3856368064880371,
+      "gap": 0.3856368064880371
+    },
+    {
+      "lo": 0.4,
+      "hi": 0.5,
+      "count": 6,
+      "accuracy": 0.8333333333333334,
+      "confidence": 0.48217907547950745,
+      "gap": 0.3511542578538259
+    },
+    {
+      "lo": 0.5,
+      "hi": 0.6000000000000001,
+      "count": 6,
+      "accuracy": 0.16666666666666666,
+      "confidence": 0.541632354259491,
+      "gap": 0.37496568759282434
+    },
+    {
+      "lo": 0.6000000000000001,
+      "hi": 0.7000000000000001,
+      "count": 10,
+      "accuracy": 0.8,
+      "confidence": 0.6515324711799622,
+      "gap": 0.1484675288200379
+    },
+    {
+      "lo": 0.7000000000000001,
+      "hi": 0.8,
+      "count": 31,
+      "accuracy": 0.7741935483870968,
+      "confidence": 0.7634683847427368,
+      "gap": 0.010725163644359936
+    },
+    {
+      "lo": 0.8,
+      "hi": 0.9,
+      "count": 60,
+      "accuracy": 0.8833333333333333,
+      "confidence": 0.8509461283683777,
+      "gap": 0.03238720496495562
+    },
+    {
+      "lo": 0.9,
+      "hi": 1.0,
+      "count": 2,
+      "accuracy": 1.0,
+      "confidence": 0.9019486904144287,
+      "gap": 0.09805130958557129
+    }
+  ]
+}

@@ -99,6 +99,8 @@ A future v3 with a larger base model (e.g. `nli-deberta-v3-base`) is expected to
 
 ## Usage
 
+> **Bundled artifacts:** ONNX (fp32 + 4 quantized variants). PyTorch weights will be added in a follow-up release — for now, load via `optimum.onnxruntime` as shown below.
+
 Drop-in via [`semantix-ai`](https://pypi.org/project/semantix-ai/) (0.2.1+):
 
 ```python
@@ -113,14 +115,16 @@ verdict = judge.evaluate(
 # Verdict(passed=False, score=...)
 ```
 
-Or raw `transformers`:
+Or raw ONNX runtime via `optimum`:
 
 ```python
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
+from optimum.onnxruntime import ORTModelForSequenceClassification
+from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("labrat-aiko/nli-popia-v2")
-model = AutoModelForSequenceClassification.from_pretrained("labrat-aiko/nli-popia-v2")
+model = ORTModelForSequenceClassification.from_pretrained(
+    "labrat-aiko/nli-popia-v2", file_name="onnx/model.onnx"
+)
 
 inputs = tokenizer(premise, hypothesis, return_tensors="pt", truncation=True, max_length=256)
 logits = model(**inputs).logits

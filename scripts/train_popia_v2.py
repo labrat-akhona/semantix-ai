@@ -23,9 +23,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import random
 import shutil
 import sys
+from collections import defaultdict
 from pathlib import Path
+
+SEED = 42
 
 BASE_MODEL = "cross-encoder/nli-MiniLM2-L6-H768"
 V1_SEEDS = Path("data/popia_seeds.jsonl")
@@ -111,11 +115,14 @@ def main() -> int:
         action="store_true",
         help="Skip ONNX export + quantization (faster for iteration)",
     )
+    ap.add_argument("--seed", type=int, default=SEED)
     args = ap.parse_args()
+    seed = args.seed
 
     verify_eval_integrity(V1_EVAL, V1_EVAL_HASH)
     verify_eval_integrity(V2_EVAL, V2_EVAL_HASH)
 
+    import numpy as np
     import torch
     from datasets import Dataset
     from transformers import (
@@ -123,13 +130,39 @@ def main() -> int:
         AutoTokenizer,
         Trainer,
         TrainingArguments,
+        set_seed,
     )
+
+    # Pin all RNGs so per-clause F1 is reproducible across runs.
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    set_seed(seed)
 
     train_rows = load_rows(V1_SEEDS) + load_rows(V1_PARAPHRASES) + load_rows(V2_SEEDS) + load_rows(V2_PARAPHRASES)
     print(f"loaded {len(train_rows)} training rows (v1 + v2)")
 
-    split_idx = int(len(train_rows) * 0.9)
-    train_split, dev_split = train_rows[:split_idx], train_rows[split_idx:]
+    # Stratified dev split: at least 1 item per (clause, label) so checkpoint
+    # selection has signal on every clause. Tail-slicing the concatenated rows
+    # put the entire dev set into v2_paraphrases, leaving v1 clauses (especially
+    # minimality) unmoored from `load_best_model_at_end`.
+    buckets: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for r in train_rows:
+        buckets[(r["clause"], r["label"])].append(r)
+    rng = random.Random(seed)
+    train_split: list[dict] = []
+    dev_split: list[dict] = []
+    for key in sorted(buckets):
+        items = buckets[key][:]
+        rng.shuffle(items)
+        n_dev = max(1, len(items) // 10)
+        dev_split.extend(items[:n_dev])
+        train_split.extend(items[n_dev:])
+    rng.shuffle(train_split)
+    rng.shuffle(dev_split)
+    print(f"stratified split: train={len(train_split)}, dev={len(dev_split)}")
 
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
     model = AutoModelForSequenceClassification.from_pretrained(BASE_MODEL, num_labels=3)
@@ -174,6 +207,8 @@ def main() -> int:
         greater_is_better=False,
         logging_steps=50,
         report_to=[],
+        seed=seed,
+        data_seed=seed,
     )
 
     trainer = Trainer(
@@ -181,7 +216,7 @@ def main() -> int:
         args=targs,
         train_dataset=to_ds(train_split),
         eval_dataset=to_ds(dev_split),
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
     )
     trainer.train()
     trainer.save_model(str(pytorch_out))

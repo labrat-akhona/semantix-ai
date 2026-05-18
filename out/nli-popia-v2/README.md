@@ -14,23 +14,28 @@ tags:
 - ai-act
 base_model: cross-encoder/nli-MiniLM2-L6-H768
 datasets:
-- labrat-aiko/popia-training
-- labrat-aiko/popia-eval
+- labrat-aiko/popia-compliance-nli
 metrics:
 - f1
 model-index:
 - name: nli-popia-v2
   results:
   - task:
-      type: natural-language-inference
-      name: NLI on POPIA clauses (v1 holdout, 7 clauses)
+      type: text-classification
+      name: Natural Language Inference (POPIA, v1 holdout, 7 clauses)
+    dataset:
+      type: labrat-aiko/popia-compliance-nli
+      name: POPIA-Bench v1 holdout (7 clauses)
     metrics:
     - type: f1
       value: 0.7465
       name: Macro F1 (v1 holdout)
   - task:
-      type: natural-language-inference
-      name: NLI on POPIA clauses (v2 holdout, 3 new clauses)
+      type: text-classification
+      name: Natural Language Inference (POPIA, v2 holdout, 3 new clauses)
+    dataset:
+      type: labrat-aiko/popia-compliance-nli
+      name: POPIA-Bench v2 holdout (3 new clauses)
     metrics:
     - type: f1
       value: 0.8621
@@ -93,7 +98,7 @@ Per-clause F1 on v2 holdout:
 
 ### Honest comparison vs v1
 
-v1 model (`nli-popia-v1`) reported macro F1 0.813 on its 7-clause holdout. v2 model scores **0.7465 on the same holdout** — a ~7pp regression on v1 territory, with the same 22M-parameter base spread across 3 more clauses. If you only need the original 7 clauses, v1 is still the stronger model on that narrow scope. v2 is the right choice when you need the 3 new AI-critical clauses or want a single judge across the full set.
+v1 model (`nli-popia-v1`) reported macro F1 0.813 on its 7-clause holdout. v2 model scores **0.7465 on the same holdout** — a ~7pp regression on v1 territory, with the same 82M-parameter base spread across 3 more clauses. If you only need the original 7 clauses, v1 is still the stronger model on that narrow scope. v2 is the right choice when you need the 3 new AI-critical clauses or want a single judge across the full set.
 
 A future v3 with a larger base model (e.g. `nli-deberta-v3-base`) is expected to close this gap.
 
@@ -131,7 +136,7 @@ logits = model(**inputs).logits
 # label order: 0=contradiction, 1=entailment, 2=neutral
 ```
 
-ONNX quantized variants (~25 MB each) are bundled in `onnx/`:
+ONNX quantized variants (~79 MB each) are bundled in `onnx/`:
 
 - `model_quint8_avx2.onnx` — broad CPU compatibility
 - `model_qint8_avx512.onnx` — modern x86 servers
@@ -140,7 +145,7 @@ ONNX quantized variants (~25 MB each) are bundled in `onnx/`:
 
 ## Training
 
-- **Base:** `cross-encoder/nli-MiniLM2-L6-H768` (22M params, label order: contradiction=0, entailment=1, neutral=2)
+- **Base:** `cross-encoder/nli-MiniLM2-L6-H768` (82M params — 6 transformer layers, hidden 768; label order: contradiction=0, entailment=1, neutral=2)
 - **Training rows:** 261 (180 from v1 + 81 from v2 — seeds + paraphrases for the new clauses)
 - **Epochs:** 6, learning rate 2e-5, batch 16, warmup ratio 0.1, weight decay 0.01
 - **Best model:** lowest eval_loss across 6 epochs (load_best_model_at_end)
@@ -158,7 +163,7 @@ ONNX quantized variants (~25 MB each) are bundled in `onnx/`:
 - **Single-clause focus.** Composite clauses (e.g., consent AND cross-border) should be evaluated per-leaf — the `semantix` decorator handles this automatically as of v0.2.1.
 - **POPIA-specific.** Training scenarios reference South African institutions and statutes. For GDPR, see `GDPRJudge` (sibling model, currently in v0 scaffold).
 - **Not legal advice.** Verdicts are statistical entailment estimates, not legal determinations. Treat as one input among many in a compliance review.
-- **22M-param base.** A larger base would likely improve in-domain F1. v2 retained the small base for ONNX deployability (~25 MB quantized).
+- **82M-param base.** A larger base would likely improve in-domain F1. v2 retained the small base for ONNX deployability (~79 MB quantized).
 
 ## Bias and fair use
 
@@ -184,4 +189,4 @@ Apache-2.0 — both code and model weights. Free for commercial use.
 
 - [`labrat-aiko/nli-popia-v1`](https://huggingface.co/labrat-aiko/nli-popia-v1) — predecessor, 7-clause coverage, higher F1 on v1 holdout
 - [`semantix-ai`](https://pypi.org/project/semantix-ai/) — Python library that uses this judge
-- [`labrat-aiko/popia-training`](https://huggingface.co/datasets/labrat-aiko/popia-training) / [`labrat-aiko/popia-eval`](https://huggingface.co/datasets/labrat-aiko/popia-eval) — training & eval datasets
+- [`labrat-aiko/popia-compliance-nli`](https://huggingface.co/datasets/labrat-aiko/popia-compliance-nli) — training & eval dataset

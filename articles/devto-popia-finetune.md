@@ -81,7 +81,7 @@ python scripts/train_popia.py
 
 Under the hood it's unremarkable:
 
-- Base: `cross-encoder/nli-MiniLM2-L6-H768` (~22M params, tiny)
+- Base: `cross-encoder/nli-MiniLM2-L6-H768` (~82M params — six transformer layers, hidden 768)
 - 5 epochs, batch 16, lr 2e-5, warmup 10%, weight decay 0.01
 - Cross-entropy loss, early stopping on `eval_loss` against a 10% dev split
 - CPU training on 180 rows: **~6 minutes**

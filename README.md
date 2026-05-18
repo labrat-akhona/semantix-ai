@@ -255,7 +255,7 @@ from semantix import NLIJudge, EmbeddingJudge, LLMJudge, CachingJudge
 @validate_intent(judge=CachingJudge(NLIJudge(), maxsize=256))  # LRU-wrapped
 ```
 
-Quantized mode (INT8 ONNX, ~25 MB, no PyTorch):
+Quantized mode (INT8 ONNX, ~79 MB, no PyTorch):
 
 ```bash
 pip install "semantix-ai[turbo]"

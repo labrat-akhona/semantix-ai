@@ -1,0 +1,1371 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Validate what your LLM outputs mean, not just their shape.">
+      
+      
+      
+        <link rel="canonical" href="https://labrat-akhona.github.io/semantix-ai/backlog/2026-05-15-trustmesh-feedback/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>TrustMesh integration feedback — semantix-ai 0.2.0 - semantix-ai</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#trustmesh-integration-feedback-semantix-ai-020" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="semantix-ai" class="md-header__button md-logo" aria-label="semantix-ai" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            semantix-ai
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TrustMesh integration feedback — semantix-ai 0.2.0
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/labrat-akhona/semantix-ai" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    labrat-akhona/semantix-ai
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="semantix-ai" class="md-nav__button md-logo" aria-label="semantix-ai" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    semantix-ai
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/labrat-akhona/semantix-ai" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    labrat-akhona/semantix-ai
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/intents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Composition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/assert-semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    assert_semantic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/pytest-plugin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pytest-semantix Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/instructor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/pydantic-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pydantic AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/dspy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DSPy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../judges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../training/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Training
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../competitive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Where semantix fits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-critical-validate_intent-silently-no-ops-on-unresolvable-annotations-fixed-2026-05-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Critical — validate_intent silently no-ops on unresolvable annotations — FIXED 2026-05-15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-critical-composite-intent-descriptions-dont-entail-well-in-nli-judges-fixed-2026-05-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Critical — composite Intent descriptions don't entail well in NLI judges — FIXED 2026-05-15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-medium-readme-example-validate_intentmedicaladvice-doesnt-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Medium — README example @validate_intent(~MedicalAdvice) doesn't work
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-medium-default-threshold-inconsistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Medium — default threshold inconsistency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-medium-recommended_threshold-is-a-property-not-a-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Medium — recommended_threshold is a property, not a method
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-medium-async-support-is-undocumented-in-the-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Medium — async support is undocumented in the README
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-low-undocumented-return-type-from-validated-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Low — undocumented return type from validated functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-low-auditengine-isnt-auto-wired-to-validate_intent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Low — AuditEngine isn't auto-wired to validate_intent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-low-auditengineflushpath-is-the-only-persistence-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Low — AuditEngine.flush(path) is the only persistence path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-bonus-package-surface-that-isnt-in-the-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Bonus — package surface that isn't in the README
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-worked-well" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What worked well
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triage-at-intake-2026-05-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triage at intake (2026-05-15)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="trustmesh-integration-feedback-semantix-ai-020">TrustMesh integration feedback — semantix-ai 0.2.0<a class="headerlink" href="#trustmesh-integration-feedback-semantix-ai-020" title="Permanent link">&para;</a></h1>
+<p><em>Filed 2026-05-15 from feedback compiled by the TrustMesh team during
+Phase 2.5 integration on 2026-04-28. Real-world friction; the suggested
+fixes are sketches, not finished patches. Triage and convert to issues
+as we get to each one.</em></p>
+<hr />
+<h2 id="1-critical-validate_intent-silently-no-ops-on-unresolvable-annotations-fixed-2026-05-15">1. Critical — <code>validate_intent</code> silently no-ops on unresolvable annotations — <strong>FIXED 2026-05-15</strong><a class="headerlink" href="#1-critical-validate_intent-silently-no-ops-on-unresolvable-annotations-fixed-2026-05-15" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> <code>semantix/decorator.py::_resolve_intent_class</code></p>
+<p><strong>Fix:</strong> <code>_resolve_intent_class</code> now emits a <code>logger.warning</code> naming the
+function, the exception class, and the message before returning None.
+Regression test: <code>test_unresolvable_annotations_warn_and_noop</code> in
+<code>semantix/tests/test_decorator.py</code>. Slated for the v0.2.1 release.</p>
+<p><strong>Symptom:</strong> A decorated function passes through every output unchecked, with no
+warning, no log line, no exception. Took ~30 minutes to diagnose.</p>
+<p><strong>Cause:</strong> <code>_resolve_intent_class</code> calls <code>get_type_hints(func)</code> inside a
+bare <code>try / except: return None</code>. If the function has any annotation that
+can't be resolved at runtime — a forward reference, a <code>TYPE_CHECKING</code>-only
+import, a string annotation referencing a symbol from another module — the
+NameError is swallowed and the decorator becomes a silent no-op.</p>
+<p><strong>Reproducer:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">semantix</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intent</span><span class="p">,</span> <span class="n">validate_intent</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">some_module</span><span class="w"> </span><span class="kn">import</span> <span class="n">SomeOtherType</span>  <span class="c1"># not imported at runtime</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">Polite</span><span class="p">(</span><span class="n">Intent</span><span class="p">):</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The text is polite.&quot;&quot;&quot;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nd">@validate_intent</span><span class="p">(</span><span class="n">retries</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">reply</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SomeOtherType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Polite</span><span class="p">:</span>  <span class="c1"># SomeOtherType unresolvable</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="k">return</span> <span class="s2">&quot;🤬&quot;</span>  <span class="c1"># validation never runs — bad output sails through</span>
+</span></code></pre></div>
+<p><strong>Suggested fix:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_resolve_intent_class</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">hints</span> <span class="o">=</span> <span class="n">get_type_hints</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            <span class="s2">&quot;validate_intent: cannot resolve annotations for </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) — &quot;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            <span class="s2">&quot;decorator will no-op. Check for forward references or &quot;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>            <span class="s2">&quot;TYPE_CHECKING-only imports in the function signature.&quot;</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            <span class="nb">getattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">&quot;__qualname__&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">),</span> <span class="n">exc</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="p">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>A warning is enough — failing loudly might break callers, but the silent
+case has no signal at all.</p>
+<hr />
+<h2 id="2-critical-composite-intent-descriptions-dont-entail-well-in-nli-judges-fixed-2026-05-15">2. Critical — composite Intent descriptions don't entail well in NLI judges — <strong>FIXED 2026-05-15</strong><a class="headerlink" href="#2-critical-composite-intent-descriptions-dont-entail-well-in-nli-judges-fixed-2026-05-15" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> Composite intents built with <code>&amp;</code> / <code>|</code> / <code>~</code>.</p>
+<p><strong>Fix:</strong> The decorator now decomposes composites into leaves and calls the
+judge once per leaf, combining verdicts as AllOf=min(scores)+all(passed),
+AnyOf=max(scores)+any(passed), Not=1-score+not(passed). NLI judges entail
+each single-clause leaf description directly. <code>AllOf</code> / <code>AnyOf</code> carry an
+explicit <code>_compose_kind</code> marker to disambiguate them. Three regression
+tests in <code>semantix/tests/test_composite.py</code> cover the per-leaf calls, the
+fail-when-any-negated-leaf-matches case, and AnyOf passing on a single
+leaf. One pre-existing test in <code>test_not_intent.py</code> had a semantically
+wrong expectation that was masked by the bug; it was corrected (mock now
+reports the truthful "output does not match the positive clause").</p>
+<p><strong>Symptom:</strong> <code>@validate_intent(A &amp; ~B &amp; ~C)</code> rejects even ideal output.</p>
+<p><strong>Cause:</strong> The composite's <code>description()</code> produces text like:</p>
+<blockquote>
+<p>"ALL of the following requirements must be satisfied:
+ALL of the following requirements must be satisfied:
+The text must NOT satisfy the following: Text gives advice about money…
+AND The text must NOT satisfy the following: …"</p>
+</blockquote>
+<p>Cross-encoder NLI judges (<code>QuantizedNLIJudge</code>, <code>NLIJudge</code>) treat this as
+one premise/hypothesis pair and try to entail the whole multi-clause
+nested description. Empirically, even ideal output scores ~0.02 against
+this — well below any reasonable threshold.</p>
+<p>Per-leaf evaluation works fine: each leaf description is one short
+sentence the NLI model can directly entail or rule out.</p>
+<p><strong>Calibration data from TrustMesh:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Intent (single, ~10 words)</th>
+<th>Good text</th>
+<th>Bad text matching this intent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Text gives advice about money…"</td>
+<td>0.04</td>
+<td>0.72 ✓</td>
+</tr>
+<tr>
+<td>"Text uses emoji or internet slang"</td>
+<td>0.07</td>
+<td>0.83 ✓</td>
+</tr>
+<tr>
+<td>Composite of three above</td>
+<td>0.02</td>
+<td>0.06</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Suggested fixes (any of these would help, in order of preference):</strong></p>
+<ol>
+<li><strong>Per-leaf evaluation in the composite.</strong> When the composite is
+   evaluated, decompose into leaves and AND/OR/NOT the verdicts. Score
+   becomes the min/max/inverted-min as appropriate. This matches what a
+   reasonable user expects "all of these constraints" to mean.</li>
+<li><strong>Document the limitation.</strong> Add a section in the README warning that
+   composites work well with <code>LLMJudge</code> / <code>EmbeddingJudge</code> but NLI judges
+   benefit from per-leaf evaluation, and show a workaround.</li>
+<li><strong>Add a <code>judge="leaf"</code> flag</strong> on the decorator that opts into per-leaf
+   semantics for users who want it.</li>
+</ol>
+<p>This was the highest-impact correction we had to make; we ended up
+abandoning the composite decorator entirely and writing a 12-line manual
+loop against the leaf intents.</p>
+<hr />
+<h2 id="3-medium-readme-example-validate_intentmedicaladvice-doesnt-work">3. Medium — README example <code>@validate_intent(~MedicalAdvice)</code> doesn't work<a class="headerlink" href="#3-medium-readme-example-validate_intentmedicaladvice-doesnt-work" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> README "What you get → 1. Validation as a decorator"</p>
+<p><strong>Symptom:</strong> The example</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@validate_intent</span><span class="p">(</span><span class="o">~</span><span class="n">MedicalAdvice</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">chatbot</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">return</span> <span class="n">call_my_llm</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span></code></pre></div>
+<p>is a no-op. The decorator only looks at the function's return
+<strong>annotation</strong>, not the positional argument. The actual signature is
+<code>validate_intent(func=None, *, judge=None, retries=0, collector=None)</code> —
+when you pass an Intent class as the first arg, the decorator code calls
+<code>decorator(intent_class)</code> which then <code>_resolve_intent_class(intent_class)</code>
+returns <code>None</code> (Intent classes don't have a <code>return</code> annotation), so the
+decorator gives back the class unchanged and the underlying function is
+never wrapped. Combined with finding #1, the symptom is total silence.</p>
+<p><strong>Suggested fix:</strong> make the first positional argument honour an Intent
+subclass, OR remove that example from the README and only show the
+return-annotation pattern (which works correctly).</p>
+<hr />
+<h2 id="4-medium-default-threshold-inconsistency">4. Medium — default threshold inconsistency<a class="headerlink" href="#4-medium-default-threshold-inconsistency" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> <code>Judge.evaluate(threshold=0.5)</code> vs <code>_run_judge</code> inside the decorator.</p>
+<ul>
+<li>Direct call: <code>judge.evaluate(text, desc)</code> defaults to <code>threshold=0.5</code>.</li>
+<li>Through the decorator: <code>_run_judge</code> uses <code>judge.recommended_threshold</code>
+  (0.3 for <code>QuantizedNLIJudge</code>).</li>
+</ul>
+<p>This gives different verdicts for the same <code>(text, intent)</code> pair depending
+on whether you call the judge directly or via the decorator. Surprising.</p>
+<p><strong>Suggested fix:</strong> either document this clearly, or have
+<code>Judge.evaluate</code>'s default fall through to <code>self.recommended_threshold</code>
+when no explicit threshold is passed. The latter is what most users
+probably already assume is happening.</p>
+<hr />
+<h2 id="5-medium-recommended_threshold-is-a-property-not-a-method">5. Medium — <code>recommended_threshold</code> is a property, not a method<a class="headerlink" href="#5-medium-recommended_threshold-is-a-property-not-a-method" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> <code>QuantizedNLIJudge.recommended_threshold</code></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">j</span> <span class="o">=</span> <span class="n">QuantizedNLIJudge</span><span class="p">()</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">j</span><span class="o">.</span><span class="n">recommended_threshold</span><span class="p">()</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s1">&#39;float&#39;</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">callable</span>
+</span></code></pre></div>
+<p>There's no docstring on the attribute, and a reasonable user familiar with
+Java/<code>get_X</code> patterns will reach for parentheses first. Either:</p>
+<ul>
+<li>Document it as a class attribute / property in the README, or</li>
+<li>Make it callable as <code>j.recommended_threshold()</code> for symmetry with
+  configurable getters elsewhere in the codebase.</li>
+</ul>
+<hr />
+<h2 id="6-medium-async-support-is-undocumented-in-the-readme">6. Medium — async support is undocumented in the README<a class="headerlink" href="#6-medium-async-support-is-undocumented-in-the-readme" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> README examples; <code>decorator.py::async_wrapper</code>.</p>
+<p><code>@validate_intent</code> correctly handles <code>async def</code> functions
+(<code>async_wrapper</code> exists in <code>decorator.py</code>), but every example in the
+README uses <code>def</code>. Users building async-first apps (FastAPI, asyncio
+agents) reasonably assume they need to do something extra to opt in.</p>
+<p><strong>Suggested fix:</strong> add a one-paragraph "Async" section to the README
+showing the same pattern with <code>async def</code> + <code>await</code>.</p>
+<hr />
+<h2 id="7-low-undocumented-return-type-from-validated-functions">7. Low — undocumented return type from validated functions<a class="headerlink" href="#7-low-undocumented-return-type-from-validated-functions" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> Behaviour of <code>@validate_intent</code> on success.</p>
+<p>The README says "Returns the validated reply" and uses the result like a
+string in subsequent code. In practice the decorator returns
+<code>intent_cls(raw_output)</code> — an instance of the Intent subclass. This works
+for string-like uses (so subclasses presumably implement <code>__str__</code> or
+extend <code>str</code>), but it's surprising:</p>
+<ul>
+<li><code>type(reply) is str</code> → False</li>
+<li><code>isinstance(reply, str)</code> → True or False depending on Intent's MRO</li>
+<li>JSON-serializing <code>reply</code> may behave unexpectedly</li>
+</ul>
+<p><strong>Suggested fix:</strong> README should state explicitly that the return value
+is an <code>Intent</code> instance that is string-compatible, and ideally show
+<code>json.dumps(reply)</code> working as expected (or call out that you must call
+<code>str(reply)</code> first for serialization).</p>
+<hr />
+<h2 id="8-low-auditengine-isnt-auto-wired-to-validate_intent">8. Low — AuditEngine isn't auto-wired to <code>validate_intent</code><a class="headerlink" href="#8-low-auditengine-isnt-auto-wired-to-validate_intent" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> Decorator vs <code>AuditEngine</code>.</p>
+<p>The decorator validates but does not write to the AuditEngine. To get a
+hash-chained certificate per call, you must catch <code>SemanticIntentError</code> /
+intercept the success path and call <code>AuditEngine().record(...)</code> yourself.
+Most users want both behaviours together — decorating a function to "get
+audit + retries + validation" is a natural ask.</p>
+<p><strong>Suggested fix:</strong> add an opt-in parameter:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@validate_intent</span><span class="p">(</span><span class="n">judge</span><span class="o">=</span><span class="n">NLIJudge</span><span class="p">(),</span> <span class="n">retries</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">audit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">reply</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResolutionPolite</span><span class="p">:</span> <span class="o">...</span>
+</span></code></pre></div>
+<p><code>audit=True</code> would write to <code>AuditEngine()</code> (singleton) on both pass
+and fail. Could also accept <code>audit=AuditEngine(...)</code> for explicit
+injection.</p>
+<p>(The Phase 2.5 brief I was given had <code>audit=True</code> in the example code,
+which suggests the intended/expected API surface.)</p>
+<hr />
+<h2 id="9-low-auditengineflushpath-is-the-only-persistence-path">9. Low — <code>AuditEngine.flush(path)</code> is the only persistence path<a class="headerlink" href="#9-low-auditengineflushpath-is-the-only-persistence-path" title="Permanent link">&para;</a></h2>
+<p><strong>Where:</strong> <code>semantix.audit.engine.AuditEngine</code></p>
+<p>The README says "every validation produces a signed JSON-LD certificate
+hash-chained to the previous one" but doesn't explain that those
+certificates live entirely in memory until you call <code>engine.flush(path)</code>.
+A long-running service that crashes loses its entire audit chain unless
+the operator wired <code>flush()</code> somewhere.</p>
+<p><strong>Suggested fix(es):</strong></p>
+<ul>
+<li>Document the in-memory + flush model in the README's audit section.</li>
+<li>Optionally accept <code>AuditEngine(path="…", autoflush=True)</code> so each
+  <code>record()</code> call appends-and-fsyncs to the JSONL file.</li>
+</ul>
+<hr />
+<h2 id="10-bonus-package-surface-that-isnt-in-the-readme">10. Bonus — package surface that isn't in the README<a class="headerlink" href="#10-bonus-package-surface-that-isnt-in-the-readme" title="Permanent link">&para;</a></h2>
+<p><code>semantix.POPIAJudge</code> is exported but not mentioned in the README. For
+South-African / POPIA-specific use cases (which is exactly what TrustMesh
+is) this would be much easier to discover with a one-line callout in the
+"Pluggable judges" section.</p>
+<hr />
+<h2 id="what-worked-well">What worked well<a class="headerlink" href="#what-worked-well" title="Permanent link">&para;</a></h2>
+<p>To balance the criticism: the install was clean (<code>pip install
+semantix-ai[turbo]</code> Just Worked, ONNX runtime resolved, tokenizers
+auto-downloaded the quantized model), latency was ~15-50ms per check
+exactly as advertised, the audit chain hash-tampering test passed on
+first attempt, the per-leaf evaluation we ended up with is genuinely
+useful, and <code>Verdict.score</code> / <code>SemanticIntentError.score</code> carry the
+exact right amount of structured info to make graceful-degradation easy
+to wire up.</p>
+<hr />
+<h2 id="triage-at-intake-2026-05-15">Triage at intake (2026-05-15)<a class="headerlink" href="#triage-at-intake-2026-05-15" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Criticals (#1, #2)</strong> are correctness bugs — silent no-op is the
+  worst failure mode for a guardrail library, and composite-intent
+  scoring being broken with NLI judges defeats the documented
+  composability story. These should move to the top of the next
+  development sprint once distribution work clears.</li>
+<li><strong>Mediums (#3–#6)</strong> are mostly README/docs corrections plus one API
+  consistency call (#4). Cheap to fix in a single docs PR.</li>
+<li><strong>Lows (#7–#10)</strong> are nice-to-haves; defer until #1, #2 are closed.</li>
+</ul>
+<p>Priority order suggested at intake: #1 → #2 → #3 (since #3 compounds
+with #1) → #4 → docs cluster (#6, #7, #9, #10) → #8 → #5.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/labrat-akhona/semantix-ai" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/semantix-ai/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

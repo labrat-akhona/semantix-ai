@@ -29,11 +29,16 @@ ONNX export locally after the pytorch weights are pulled from HF.
 from __future__ import annotations
 
 import json
+import os
 
 import modal
 
 APP_NAME = "popia-v3-train"
 REPO_URL = "https://github.com/labrat-akhona/semantix-ai.git"
+# Branch the remote container clones + trains from. Defaults to master; override
+# with TRAIN_BRANCH to verify a fix branch before merging (the container only
+# ever sees committed+pushed code, never local edits).
+GIT_BRANCH = os.environ.get("TRAIN_BRANCH", "master")
 HF_REPO = "labrat-aiko/nli-popia-v3"
 BASE_MODEL = "cross-encoder/nli-deberta-v3-base"
 OUT_DIR = "out/nli-popia-v3"
@@ -50,6 +55,8 @@ image = (
         "sentencepiece",  # required by deberta-v3 tokenizer
         "accelerate",
         "protobuf",
+        "optimum[onnxruntime]",  # ONNX export + quantization (drop --skip-quantize)
+        "onnx",
     )
 )
 
@@ -66,8 +73,8 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
     import subprocess
     from pathlib import Path
 
-    print(f"[modal] cloning {REPO_URL}")
-    subprocess.run(["git", "clone", "--depth", "1", REPO_URL, "/work"], check=True)
+    print(f"[modal] cloning {REPO_URL} @ {GIT_BRANCH}")
+    subprocess.run(["git", "clone", "--depth", "1", "--branch", GIT_BRANCH, REPO_URL, "/work"], check=True)
     os.chdir("/work")
 
     cmd = [
@@ -77,7 +84,8 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
         "--out-dir", OUT_DIR,
         "--epochs", str(epochs),
         "--seed", str(seed),
-        "--skip-quantize",
+        # ONNX export + quantization runs on the cloud now (image includes optimum);
+        # produces the 4 quantized variants + bundles eval sets for the library to load.
     ]
     print(f"[modal] running: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)

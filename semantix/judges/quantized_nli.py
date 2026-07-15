@@ -105,12 +105,32 @@ def _load_session(variant: str, repo_id: str = _REPO_ID):
 
 
 def _load_tokenizer(repo_id: str = _REPO_ID):
-    """Load the Rust-based tokenizer from HuggingFace Hub."""
+    """Load the Rust-based tokenizer from HuggingFace Hub.
+
+    Repo layouts differ across model versions (verified live 2026-07-15):
+    ``nli-popia-v1`` ships ``tokenizer.json`` at the repo root, ``v2`` carries
+    it under ``onnx/``, and ``v3`` under ``pytorch/`` only. The file is the same
+    self-contained Rust tokenizer in every case, so try each known location so
+    every published model loads regardless of which layout its pipeline used.
+    """
     from huggingface_hub import hf_hub_download
     from tokenizers import Tokenizer
 
-    path = hf_hub_download(repo_id=repo_id, filename="tokenizer.json")
-    return Tokenizer.from_file(path)
+    try:
+        from huggingface_hub.errors import EntryNotFoundError
+    except ImportError:  # older huggingface_hub exposes it under .utils
+        from huggingface_hub.utils import EntryNotFoundError
+
+    last_err: Exception | None = None
+    for filename in ("tokenizer.json", "onnx/tokenizer.json", "pytorch/tokenizer.json"):
+        try:
+            path = hf_hub_download(repo_id=repo_id, filename=filename)
+            return Tokenizer.from_file(path)
+        except EntryNotFoundError as err:
+            last_err = err
+    raise FileNotFoundError(
+        f"no tokenizer.json found in {repo_id!r} (tried repo root and onnx/)"
+    ) from last_err
 
 
 class QuantizedNLIJudge(Judge):

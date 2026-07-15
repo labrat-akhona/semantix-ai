@@ -197,6 +197,7 @@ class TestSoftmaxTemperature:
 
     def test_rejects_zero_or_negative_temperature(self):
         import pytest
+
         logits = np.array([1.0, 2.0, 3.0])
         with pytest.raises(ValueError):
             _softmax(logits, temperature=0.0)
@@ -212,17 +213,21 @@ class TestSoftmaxTemperature:
 class TestLoadTemperatureConstant:
     def test_missing_calibration_returns_one(self):
         from huggingface_hub.errors import EntryNotFoundError
+
         from semantix.judges.quantized_nli import _load_temperature_constant
+
         with patch("huggingface_hub.hf_hub_download", side_effect=EntryNotFoundError("nope")):
             assert _load_temperature_constant("foo/bar") == 1.0
 
     def test_network_failure_returns_one(self):
         from semantix.judges.quantized_nli import _load_temperature_constant
+
         with patch("huggingface_hub.hf_hub_download", side_effect=RuntimeError("offline")):
             assert _load_temperature_constant("foo/bar") == 1.0
 
     def test_loads_temperature_when_present(self, tmp_path):
         from semantix.judges.quantized_nli import _load_temperature_constant
+
         cal = tmp_path / "calibration.json"
         cal.write_text('{"temperature": 2.5492, "ece_pre": 0.171, "ece_post": 0.075}')
         with patch("huggingface_hub.hf_hub_download", return_value=str(cal)):
@@ -230,6 +235,7 @@ class TestLoadTemperatureConstant:
 
     def test_malformed_calibration_returns_one(self, tmp_path):
         from semantix.judges.quantized_nli import _load_temperature_constant
+
         cal = tmp_path / "calibration.json"
         cal.write_text("not valid json {{")
         with patch("huggingface_hub.hf_hub_download", return_value=str(cal)):
@@ -266,7 +272,9 @@ class TestQuantizedNLIJudgeCalibration:
     @patch("semantix.judges.quantized_nli._load_tokenizer")
     @patch("semantix.judges.quantized_nli._load_session")
     @patch("semantix.judges.quantized_nli._load_temperature_constant", return_value=1.0)
-    def test_calibrated_true_with_T_one_is_no_op(self, mock_T, mock_load_session, mock_load_tokenizer):
+    def test_calibrated_true_with_T_one_is_no_op(
+        self, mock_T, mock_load_session, mock_load_tokenizer
+    ):
         # When the model has no calibration constant, T=1.0 is returned and
         # behaviour matches calibrated=False.
         mock_load_session.return_value = _mock_session([0.1, 2.0, 0.5])

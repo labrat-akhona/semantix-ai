@@ -2,7 +2,7 @@
 
 import pytest
 
-from semantix.composite import AllOf, AnyOf, Not
+from semantix.composite import AllOf, AnyOf
 from semantix.decorator import validate_intent
 from semantix.exceptions import SemanticIntentError
 from semantix.intent import Intent

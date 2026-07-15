@@ -83,8 +83,7 @@ def test_unresolvable_annotations_warn_and_noop(caplog):
 
     # The user must see a warning explaining why validation was skipped.
     assert any(
-        "validate_intent" in rec.message and "no-op" in rec.message
-        for rec in caplog.records
+        "validate_intent" in rec.message and "no-op" in rec.message for rec in caplog.records
     ), f"expected no-op warning, got: {[r.message for r in caplog.records]}"
 
 

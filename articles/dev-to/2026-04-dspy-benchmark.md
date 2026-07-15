@@ -1,5 +1,5 @@
 ---
-title: "A 70ms Local NLI Judge Hits 0.596 Pearson r With Groq Llama 3.3 70B on DSPy Reward Scoring"
+title: "A 51ms Local NLI Judge Hits 0.596 Pearson r With Groq Llama 3.3 70B on DSPy Reward Scoring"
 description: "One paired comparison, 50 customer-support examples, semantix-ai vs Groq Llama 3.3 70B as a DSPy reward_fn. No cherry-picking, no extra tasks, no filled-in holes."
 tags: dspy, llm, python, benchmarking
 published: false
@@ -7,15 +7,15 @@ published: false
 
 ## TL;DR
 
-- **`semantic_reward` is a drop-in DSPy reward function powered by a local quantized NLI cross-encoder** — no API call, no key, deterministic, ~70ms per evaluation on CPU.
-- On **50 paired customer-support examples**, semantix reaches **Pearson r = 0.596** with Groq Llama 3.3 70B, and **Cohen's kappa 0.633 at threshold 0.3** (substantial agreement), at **~11× lower latency and $0.13 cheaper per 1k calls**.
+- **`semantic_reward` is a drop-in DSPy reward function powered by a local quantized NLI cross-encoder** — no API call, no key, deterministic, ~51ms per evaluation on CPU.
+- On **50 paired customer-support examples**, semantix reaches **Pearson r = 0.596** with Groq Llama 3.3 70B, and **Cohen's kappa 0.633 at threshold 0.3** (substantial agreement), at **~16× lower latency and $0.13 cheaper per 1k calls**.
 - Full reproducibility: code, dataset, raw CSVs at [github.com/labrat-akhona/semantix-ai/benchmarks](https://github.com/labrat-akhona/semantix-ai/tree/master/benchmarks).
 
 ## Why another reward function?
 
 DSPy's `BestOfN` and `Refine` lean on a `reward_fn` that scores each candidate from 0 to 1. In practice most users wire up another LLM call — cheap per-request but adds 300–1000 ms and a few cents per optimization run. If you're iterating, that adds up fast.
 
-semantix-ai ships a ~79 MB INT8 quantized NLI cross-encoder (one of four CPU-specific variants, auto-selected based on your hardware) that scores "does text X entail intent Y?" in ~70ms on CPU. Plugging it into DSPy takes one line:
+semantix-ai ships a ~79 MB INT8 quantized NLI cross-encoder (one of four CPU-specific variants, auto-selected based on your hardware) that scores "does text X entail intent Y?" in ~51ms on CPU. Plugging it into DSPy takes one line:
 
 ```python
 import dspy
@@ -67,12 +67,12 @@ The actionable knob: **if you want semantix to track Groq Llama 3.3 70B's polite
 
 | | semantix | groq-llama-3.3-70b |
 |---|---|---|
-| Mean latency | 70 ms | 799 ms |
-| p50 | 64 ms | 777 ms |
-| p95 | 121 ms | 992 ms |
+| Mean latency | 51 ms | 799 ms |
+| p50 | 44 ms | 777 ms |
+| p95 | 96 ms | 992 ms |
 | Paid cost / 1k calls | $0.0000 | $0.1312 |
 
-**~11× lower latency.** On a paid Groq plan, 1M calls per day would cost ~$131/day in Groq API fees alone; semantix adds $0 and never leaves your machine. For a DSPy optimization loop calling the reward function hundreds of times per trial, the difference compounds into hours saved.
+**~16× lower latency.** On a paid Groq plan, 1M calls per day would cost ~$131/day in Groq API fees alone; semantix adds $0 and never leaves your machine. For a DSPy optimization loop calling the reward function hundreds of times per trial, the difference compounds into hours saved.
 
 ## What this means in practice
 

@@ -162,6 +162,44 @@ def onnx_macro_f1(
     return macro, len(set(y_pred))
 
 
+# Max macro-F1 the quantized artifact may lose vs the PyTorch model before we
+# refuse to ship it. 10pp is generous for honest INT8 rounding but catches the
+# kind of collapse that made v3-quant unshippable (−21pp v1 / −38pp v2).
+ARTIFACT_TOL = 0.10
+
+
+def artifact_gate_verdict(
+    q_v1_f1: float,
+    q_v1_distinct: int,
+    q_v2_f1: float,
+    q_v2_distinct: int,
+    trained_v1_f1: float,
+    trained_v2_f1: float,
+    tol: float = ARTIFACT_TOL,
+) -> tuple[bool, str]:
+    """Decide whether a quantized ONNX artifact is shippable. Pure + testable.
+
+    Two independent failure modes, both learned the expensive way:
+
+    - **Constant predictor** (``distinct <= 1`` on either holdout). Per-tensor
+      INT8 can collapse a healthy model into always-one-class. macro-F1 alone
+      will NOT catch this — a constant predictor can still post a plausible F1 —
+      so the distinct-prediction count is the cheap, decisive tell.
+    - **Regression** (macro-F1 more than ``tol`` below the PyTorch model on
+      either holdout). The file the user loads is materially worse than what the
+      upstream release gate scored.
+
+    Returns ``(passed, reason)``; ``reason`` is empty on pass. This is the exact
+    logic the shipped ONNX must clear before upload — extracted from ``main`` so
+    it can be unit-tested without a GPU or a real model.
+    """
+    if q_v1_distinct <= 1 or q_v2_distinct <= 1:
+        return False, "CONSTANT PREDICTOR (distinct predictions <= 1)"
+    if q_v1_f1 < trained_v1_f1 - tol or q_v2_f1 < trained_v2_f1 - tol:
+        return False, f"macro F1 regressed >{tol} from PyTorch"
+    return True, ""
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--epochs", type=int, default=3)
@@ -391,7 +429,6 @@ def main() -> int:
     # of it and can silently ship a dead artifact that still returns plausible
     # scores. Score every quantized variant on the real eval and refuse to ship a
     # constant predictor or a >10pp macro-F1 regression from PyTorch.
-    ARTIFACT_TOL = 0.10
     for filename in variants:
         q_v1_f1, q_v1_distinct = onnx_macro_f1(
             onnx_dir / filename, tokenizer, v1_rows, args.batch_size
@@ -404,12 +441,11 @@ def main() -> int:
             f"v2 F1={q_v2_f1:.4f} (torch {trained_v2_f1:.4f}), "
             f"distinct preds v1={q_v1_distinct} v2={q_v2_distinct}"
         )
-        if q_v1_distinct <= 1 or q_v2_distinct <= 1:
-            sys.exit(f"ARTIFACT GATE FAIL: {filename} is a CONSTANT PREDICTOR — not shipping")
-        if q_v1_f1 < trained_v1_f1 - ARTIFACT_TOL or q_v2_f1 < trained_v2_f1 - ARTIFACT_TOL:
-            sys.exit(
-                f"ARTIFACT GATE FAIL: {filename} macro F1 regressed >{ARTIFACT_TOL} from PyTorch — not shipping"
-            )
+        passed, reason = artifact_gate_verdict(
+            q_v1_f1, q_v1_distinct, q_v2_f1, q_v2_distinct, trained_v1_f1, trained_v2_f1
+        )
+        if not passed:
+            sys.exit(f"ARTIFACT GATE FAIL: {filename} — {reason} — not shipping")
     print("[artifact-gate] PASS — all quantized variants preserve the model")
 
     shutil.copy(str(V1_EVAL), str(out_dir / "eval.jsonl"))

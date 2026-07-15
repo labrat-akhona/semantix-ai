@@ -26,7 +26,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import sys
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass, field
@@ -170,10 +169,25 @@ POPIA_SECTIONS: dict[str, dict[str, Any]] = {
 
 # Scenario complexity heuristics — keywords that indicate multi-hop reasoning.
 _MULTI_HOP_KEYWORDS = [
-    "cross-border", "multi-", "exception", "exemption", "conflict",
-    "override", "despite", "notwithstanding", "however", "unless",
-    "both", "combined", "interaction", "together with", "in addition to",
-    "simultaneously", "competing", "multiple", "two or more",
+    "cross-border",
+    "multi-",
+    "exception",
+    "exemption",
+    "conflict",
+    "override",
+    "despite",
+    "notwithstanding",
+    "however",
+    "unless",
+    "both",
+    "combined",
+    "interaction",
+    "together with",
+    "in addition to",
+    "simultaneously",
+    "competing",
+    "multiple",
+    "two or more",
 ]
 
 
@@ -181,28 +195,31 @@ _MULTI_HOP_KEYWORDS = [
 # 1.  Per-example evaluation
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class ExampleResult:
     """Result for a single eval example."""
+
     idx: int
     clause: str
-    label: str                     # ground truth: entailment | contradiction | neutral
+    label: str  # ground truth: entailment | contradiction | neutral
     scenario: str
     premise: str
     hypothesis: str
-    popia_passed: bool             # model predicted entailment?
-    popia_score: float             # entailment probability
+    popia_passed: bool  # model predicted entailment?
+    popia_score: float  # entailment probability
     stock_passed: bool
     stock_score: float
-    correct: bool                  # did popia judge agree with ground truth?
-    error_type: str                # ok | false_positive | false_negative | wrong_neutral
-    complexity: str                # simple | multi_hop
-    confidence_bucket: str         # high_correct | high_wrong | low_correct | low_wrong
+    correct: bool  # did popia judge agree with ground truth?
+    error_type: str  # ok | false_positive | false_negative | wrong_neutral
+    complexity: str  # simple | multi_hop
+    confidence_bucket: str  # high_correct | high_wrong | low_correct | low_wrong
 
 
 @dataclass
 class AnalysisReport:
     """Complete analysis output."""
+
     summary: dict[str, Any] = field(default_factory=dict)
     per_example: list[dict[str, Any]] = field(default_factory=list)
     error_analysis: dict[str, Any] = field(default_factory=dict)
@@ -225,11 +242,11 @@ def _classify_error(label: str, popia_passed: bool) -> str:
 
     # Mismatches
     if popia_passed and label == "contradiction":
-        return "false_positive"           # model said entailment, truth is contradiction
+        return "false_positive"  # model said entailment, truth is contradiction
     if popia_passed and label == "neutral":
-        return "false_positive_neutral"   # model said entailment, truth is neutral
+        return "false_positive_neutral"  # model said entailment, truth is neutral
     if not popia_passed and label == "entailment":
-        return "false_negative"           # model said not-entailment, truth is entailment
+        return "false_negative"  # model said not-entailment, truth is entailment
     return "unknown_error"
 
 
@@ -259,6 +276,7 @@ def run_eval(
     if dry_run:
         # Synthetic scores for CI/dev — no model download needed.
         import random
+
         random.seed(42)
         results: list[ExampleResult] = []
         for i, r in enumerate(rows):
@@ -266,18 +284,24 @@ def run_eval(
             passed = score >= 0.5
             truth_entailment = r["label"] == "entailment"
             correct = passed == truth_entailment if r["label"] != "neutral" else not passed
-            results.append(ExampleResult(
-                idx=i, clause=r["clause"], label=r["label"],
-                scenario=r.get("scenario", ""), premise=r["premise"],
-                hypothesis=r["hypothesis"],
-                popia_passed=passed, popia_score=score,
-                stock_passed=random.random() >= 0.5,
-                stock_score=random.random(),
-                correct=correct,
-                error_type=_classify_error(r["label"], passed),
-                complexity=_classify_complexity(r.get("scenario", ""), r["premise"]),
-                confidence_bucket=_confidence_bucket(score, correct),
-            ))
+            results.append(
+                ExampleResult(
+                    idx=i,
+                    clause=r["clause"],
+                    label=r["label"],
+                    scenario=r.get("scenario", ""),
+                    premise=r["premise"],
+                    hypothesis=r["hypothesis"],
+                    popia_passed=passed,
+                    popia_score=score,
+                    stock_passed=random.random() >= 0.5,
+                    stock_score=random.random(),
+                    correct=correct,
+                    error_type=_classify_error(r["label"], passed),
+                    complexity=_classify_complexity(r.get("scenario", ""), r["premise"]),
+                    confidence_bucket=_confidence_bucket(score, correct),
+                )
+            )
         return results
 
     # Real inference
@@ -294,27 +318,26 @@ def run_eval(
 
         truth_entailment = r["label"] == "entailment"
         # For non-entailment labels the model should NOT pass
-        if r["label"] == "entailment":
-            correct = pv.passed
-        else:
-            correct = not pv.passed
+        correct = pv.passed if r["label"] == "entailment" else not pv.passed
 
-        results.append(ExampleResult(
-            idx=i,
-            clause=r["clause"],
-            label=r["label"],
-            scenario=r.get("scenario", ""),
-            premise=r["premise"],
-            hypothesis=r["hypothesis"],
-            popia_passed=pv.passed,
-            popia_score=pv.score or 0.0,
-            stock_passed=sv.passed,
-            stock_score=sv.score or 0.0,
-            correct=correct,
-            error_type=_classify_error(r["label"], pv.passed),
-            complexity=_classify_complexity(r.get("scenario", ""), r["premise"]),
-            confidence_bucket=_confidence_bucket(pv.score or 0.0, correct),
-        ))
+        results.append(
+            ExampleResult(
+                idx=i,
+                clause=r["clause"],
+                label=r["label"],
+                scenario=r.get("scenario", ""),
+                premise=r["premise"],
+                hypothesis=r["hypothesis"],
+                popia_passed=pv.passed,
+                popia_score=pv.score or 0.0,
+                stock_passed=sv.passed,
+                stock_score=sv.score or 0.0,
+                correct=correct,
+                error_type=_classify_error(r["label"], pv.passed),
+                complexity=_classify_complexity(r.get("scenario", ""), r["premise"]),
+                confidence_bucket=_confidence_bucket(pv.score or 0.0, correct),
+            )
+        )
 
     return results
 
@@ -322,6 +345,7 @@ def run_eval(
 # ---------------------------------------------------------------------------
 # 2.  Error analysis
 # ---------------------------------------------------------------------------
+
 
 def error_analysis(results: list[ExampleResult]) -> dict[str, Any]:
     """Categorise failures by clause, error type, complexity, confidence."""
@@ -342,7 +366,9 @@ def error_analysis(results: list[ExampleResult]) -> dict[str, Any]:
         by_clause[clause] = {
             "total": clause_totals[clause],
             "errors": len(errs),
-            "error_rate": round(len(errs) / clause_totals[clause], 4) if clause_totals[clause] else 0,
+            "error_rate": round(len(errs) / clause_totals[clause], 4)
+            if clause_totals[clause]
+            else 0,
             "error_types": dict(Counter(e.error_type for e in errs)),
         }
 
@@ -394,6 +420,7 @@ def error_analysis(results: list[ExampleResult]) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # 3.  Gap analysis
 # ---------------------------------------------------------------------------
+
 
 def _load_training_data(data_dir: Path) -> list[dict]:
     """Load all POPIA training JSONL files (seeds + paraphrases)."""
@@ -450,16 +477,18 @@ def gap_analysis(
             "eval_examples": eval_n,
             "training_scenarios": sorted(train_scenarios.get(clause, set())),
             "coverage_status": (
-                "none" if train_n == 0
-                else "sparse" if train_n < 10
-                else "moderate" if train_n < 25
+                "none"
+                if train_n == 0
+                else "sparse"
+                if train_n < 10
+                else "moderate"
+                if train_n < 25
                 else "good"
             ),
         }
 
     # --- Missing clause × label combinations ---
     all_labels = ["entailment", "contradiction", "neutral"]
-    trained_clauses = set(train_clause_counts.keys())
     missing_combos: list[dict[str, str]] = []
     for clause in POPIA_SECTIONS:
         for lbl in all_labels:
@@ -469,19 +498,19 @@ def gap_analysis(
     # --- Missing scenario types ---
     # Derive desired scenario archetypes
     desired_archetypes = [
-        "first-person",       # data-subject perspective
-        "news",               # third-party press report
-        "memo",               # internal corporate memo
-        "audit",              # audit / investigation finding
-        "complaint",          # formal complaint to Regulator
-        "contract",           # contractual clause / T&C excerpt
-        "multi-party",        # scenarios involving >2 entities
-        "cross-border",       # international transfer dimension
-        "technical",          # IT / cybersecurity angle
-        "healthcare",         # health-sector specific
-        "financial",          # FICA / banking sector
-        "education",          # schools / universities
-        "employment",         # employer-employee relationship
+        "first-person",  # data-subject perspective
+        "news",  # third-party press report
+        "memo",  # internal corporate memo
+        "audit",  # audit / investigation finding
+        "complaint",  # formal complaint to Regulator
+        "contract",  # contractual clause / T&C excerpt
+        "multi-party",  # scenarios involving >2 entities
+        "cross-border",  # international transfer dimension
+        "technical",  # IT / cybersecurity angle
+        "healthcare",  # health-sector specific
+        "financial",  # FICA / banking sector
+        "education",  # schools / universities
+        "employment",  # employer-employee relationship
     ]
     all_train_scenarios = set()
     for s in train_scenarios.values():
@@ -489,9 +518,7 @@ def gap_analysis(
 
     archetype_coverage: dict[str, int] = {}
     for arch in desired_archetypes:
-        archetype_coverage[arch] = sum(
-            1 for s in all_train_scenarios if arch in s.lower()
-        )
+        archetype_coverage[arch] = sum(1 for s in all_train_scenarios if arch in s.lower())
 
     missing_archetypes = [a for a, c in archetype_coverage.items() if c == 0]
 
@@ -513,6 +540,7 @@ def gap_analysis(
 # ---------------------------------------------------------------------------
 # 4.  Priority scoring
 # ---------------------------------------------------------------------------
+
 
 def priority_scoring(
     err: dict[str, Any],
@@ -553,38 +581,37 @@ def priority_scoring(
         freq = meta["real_world_frequency"] / 10.0
 
         # Weakness: 1 - accuracy for this clause
-        if clause_total > 0:
-            weakness = error_rate
-        else:
-            # No eval data → assume moderately weak
-            weakness = 0.5 if train_n == 0 else 0.3
+        # No eval data → assume moderately weak
+        weakness = error_rate if clause_total > 0 else (0.5 if train_n == 0 else 0.3)
 
         # Composite priority
         priority = round(impact * freq * weakness * 1000, 2)  # scale for readability
 
         # Estimate how many examples are needed
         if train_n == 0:
-            suggested_count = 30   # bootstrap a brand-new clause
+            suggested_count = 30  # bootstrap a brand-new clause
         elif train_n < 10:
             suggested_count = max(20, 30 - train_n)
         elif error_rate > 0.3:
-            suggested_count = 15   # targeted patch
+            suggested_count = 15  # targeted patch
         elif error_rate > 0.15:
             suggested_count = 10
         else:
-            suggested_count = 5    # maintenance
+            suggested_count = 5  # maintenance
 
-        scored.append({
-            "clause": clause,
-            "priority_score": priority,
-            "impact": round(impact, 4),
-            "frequency": round(freq, 2),
-            "weakness": round(weakness, 4),
-            "current_training_examples": train_n,
-            "current_eval_accuracy": round(1 - error_rate, 4) if clause_total > 0 else None,
-            "suggested_additional_examples": suggested_count,
-            "popia_sections": meta["sections"],
-        })
+        scored.append(
+            {
+                "clause": clause,
+                "priority_score": priority,
+                "impact": round(impact, 4),
+                "frequency": round(freq, 2),
+                "weakness": round(weakness, 4),
+                "current_training_examples": train_n,
+                "current_eval_accuracy": round(1 - error_rate, 4) if clause_total > 0 else None,
+                "suggested_additional_examples": suggested_count,
+                "popia_sections": meta["sections"],
+            }
+        )
 
     scored.sort(key=lambda x: x["priority_score"], reverse=True)
     return scored
@@ -593,6 +620,7 @@ def priority_scoring(
 # ---------------------------------------------------------------------------
 # 5.  Data-generation brief
 # ---------------------------------------------------------------------------
+
 
 def data_generation_brief(
     priorities: list[dict[str, Any]],
@@ -626,7 +654,9 @@ def data_generation_brief(
         if p["current_training_examples"] < 15:
             suggested_scenarios.extend(missing_archetypes[:3])
         # If false positives dominate, we need more contradiction examples
-        if dominant_errors.get("false_positive", 0) + dominant_errors.get("false_positive_neutral", 0) > dominant_errors.get("false_negative", 0):
+        if dominant_errors.get("false_positive", 0) + dominant_errors.get(
+            "false_positive_neutral", 0
+        ) > dominant_errors.get("false_negative", 0):
             suggested_scenarios.append("hard-negative (contradiction)")
             suggested_scenarios.append("subtle-neutral")
         elif dominant_errors.get("false_negative", 0) > 0:
@@ -655,16 +685,20 @@ def data_generation_brief(
             else:
                 focus_labels = ["entailment", "contradiction", "neutral"]
 
-        brief.append({
-            "target_clauses": [clause],
-            "popia_sections": p["popia_sections"],
-            "suggested_scenario_types": list(dict.fromkeys(suggested_scenarios))[:6],
-            "focus_labels": focus_labels,
-            "desired_difficulty": difficulty,
-            "expected_count": p["suggested_additional_examples"],
-            "priority_score": p["priority_score"],
-            "rationale": _brief_rationale(p, clause_err, gaps["clause_coverage"].get(clause, {})),
-        })
+        brief.append(
+            {
+                "target_clauses": [clause],
+                "popia_sections": p["popia_sections"],
+                "suggested_scenario_types": list(dict.fromkeys(suggested_scenarios))[:6],
+                "focus_labels": focus_labels,
+                "desired_difficulty": difficulty,
+                "expected_count": p["suggested_additional_examples"],
+                "priority_score": p["priority_score"],
+                "rationale": _brief_rationale(
+                    p, clause_err, gaps["clause_coverage"].get(clause, {})
+                ),
+            }
+        )
 
     # Sort by priority
     brief.sort(key=lambda x: x["priority_score"], reverse=True)
@@ -708,6 +742,7 @@ def _brief_rationale(
 # 6.  Main orchestrator
 # ---------------------------------------------------------------------------
 
+
 def build_report(
     eval_path: Path,
     data_dir: Path,
@@ -717,7 +752,7 @@ def build_report(
     print("▸ Running per-example evaluation …")
     results = run_eval(eval_path, dry_run=dry_run)
     n_correct = sum(1 for r in results if r.correct)
-    print(f"  {len(results)} examples, {n_correct} correct ({n_correct/len(results):.1%})")
+    print(f"  {len(results)} examples, {n_correct} correct ({n_correct / len(results):.1%})")
 
     print("▸ Error analysis …")
     err = error_analysis(results)
@@ -740,8 +775,7 @@ def build_report(
         "clauses_with_zero_training": gaps["clauses_with_zero_training"],
         "clauses_with_sparse_training": gaps["clauses_with_sparse_training"],
         "top_3_priorities": [
-            {"clause": p["clause"], "score": p["priority_score"]}
-            for p in priorities[:3]
+            {"clause": p["clause"], "score": p["priority_score"]} for p in priorities[:3]
         ],
         "total_examples_to_generate": sum(b["expected_count"] for b in brief),
     }
@@ -761,16 +795,20 @@ def main() -> int:
         description="Active-learning analysis for POPIA NLI model",
     )
     ap.add_argument(
-        "--use-hf", action="store_true",
+        "--use-hf",
+        action="store_true",
         help="Download eval.jsonl from HuggingFace instead of using local file.",
     )
     ap.add_argument(
-        "-o", "--output", type=Path,
+        "-o",
+        "--output",
+        type=Path,
         default=Path("reports/active_learning_brief.json"),
         help="Path for the JSON output (default: reports/active_learning_brief.json).",
     )
     ap.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="Skip model inference — use synthetic scores for testing the pipeline.",
     )
     args = ap.parse_args()
@@ -779,9 +817,13 @@ def main() -> int:
     local_eval = Path("data/popia_eval.jsonl")
     if args.use_hf:
         from huggingface_hub import hf_hub_download
-        eval_path = Path(hf_hub_download(
-            repo_id="labrat-aiko/nli-popia-v1", filename="eval.jsonl",
-        ))
+
+        eval_path = Path(
+            hf_hub_download(
+                repo_id="labrat-aiko/nli-popia-v1",
+                filename="eval.jsonl",
+            )
+        )
     else:
         if not local_eval.exists():
             print(f"✗ Missing {local_eval} — run from repo root or use --use-hf", file=sys.stderr)

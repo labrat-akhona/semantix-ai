@@ -10,6 +10,7 @@ Eval: top-k recall on a held-out scenario->section retrieval task against the sa
 
 Output: out/sa-compliance-embeddings-v1/  (transformers checkpoint + eval report)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -17,11 +18,15 @@ import json
 import random
 from collections import defaultdict
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 PAIRS = Path("data/sa_compliance_pairs.jsonl")
 CORPUS = Path("data/sa_compliance_corpus.jsonl")
 OUT_DIR = Path("out/sa-compliance-embeddings-v1")
 BASE_MODEL = "BAAI/bge-small-en-v1.5"
+
+if TYPE_CHECKING:
+    import numpy as np
 
 # Held-out clause->section gold (used for retrieval eval, not training).
 CLAUSE_TO_SECTIONS: dict[str, list[int]] = {
@@ -39,11 +44,11 @@ CLAUSE_TO_SECTIONS: dict[str, list[int]] = {
 
 
 def load_pairs() -> list[dict]:
-    return [json.loads(l) for l in PAIRS.read_text().splitlines() if l.strip()]
+    return [json.loads(line) for line in PAIRS.read_text().splitlines() if line.strip()]
 
 
 def load_corpus() -> list[dict]:
-    return [json.loads(l) for l in CORPUS.read_text().splitlines() if l.strip()]
+    return [json.loads(line) for line in CORPUS.read_text().splitlines() if line.strip()]
 
 
 def load_eval_scenarios() -> list[dict]:
@@ -63,7 +68,8 @@ class STModel:
 
     def __init__(self, model_name_or_path: str, device: str | None = None):
         import torch
-        from transformers import AutoTokenizer, AutoModel
+        from transformers import AutoModel, AutoTokenizer
+
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
         self.model = AutoModel.from_pretrained(model_name_or_path)
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
@@ -71,14 +77,15 @@ class STModel:
 
     @staticmethod
     def _mean_pool(last_hidden_state, attention_mask):
-        import torch
+
         mask = attention_mask.unsqueeze(-1).float()
         return (last_hidden_state * mask).sum(dim=1) / mask.sum(dim=1).clamp(min=1e-9)
 
-    def encode(self, texts: list[str], batch_size: int = 32) -> "np.ndarray":
+    def encode(self, texts: list[str], batch_size: int = 32) -> np.ndarray:
         import numpy as np
         import torch
         import torch.nn.functional as F
+
         self.model.eval()
         out = []
         with torch.no_grad():
@@ -141,7 +148,9 @@ def retrieval_eval(model: STModel, eval_scenarios: list[dict], corpus: list[dict
     }
 
 
-def fit_mnr(model: STModel, pairs: list[dict], epochs: int, batch_size: int, lr: float, scale: float = 20.0) -> None:
+def fit_mnr(
+    model: STModel, pairs: list[dict], epochs: int, batch_size: int, lr: float, scale: float = 20.0
+) -> None:
     """MultipleNegativesRankingLoss training loop.
 
     For each batch of (anchor, positive) pairs, compute cosine similarities
@@ -178,8 +187,12 @@ def fit_mnr(model: STModel, pairs: list[dict], epochs: int, batch_size: int, lr:
                 continue
             a_texts = [anchors[j] for j in batch_idx]
             p_texts = [positives[j] for j in batch_idx]
-            a_enc = model.tokenizer(a_texts, padding=True, truncation=True, max_length=256, return_tensors="pt").to(model.device)
-            p_enc = model.tokenizer(p_texts, padding=True, truncation=True, max_length=256, return_tensors="pt").to(model.device)
+            a_enc = model.tokenizer(
+                a_texts, padding=True, truncation=True, max_length=256, return_tensors="pt"
+            ).to(model.device)
+            p_enc = model.tokenizer(
+                p_texts, padding=True, truncation=True, max_length=256, return_tensors="pt"
+            ).to(model.device)
             a_h = model._mean_pool(model.model(**a_enc).last_hidden_state, a_enc["attention_mask"])
             p_h = model._mean_pool(model.model(**p_enc).last_hidden_state, p_enc["attention_mask"])
             a_h = F.normalize(a_h, p=2, dim=1)
@@ -193,8 +206,10 @@ def fit_mnr(model: STModel, pairs: list[dict], epochs: int, batch_size: int, lr:
             scheduler.step()
             step += 1
             if step % 10 == 0:
-                print(f"  epoch {epoch+1}/{epochs} step {step}/{total_steps}  loss={loss.item():.4f}")
-        print(f"epoch {epoch+1} done")
+                print(
+                    f"  epoch {epoch + 1}/{epochs} step {step}/{total_steps}  loss={loss.item():.4f}"
+                )
+        print(f"epoch {epoch + 1} done")
 
 
 def main() -> int:
@@ -235,8 +250,10 @@ def main() -> int:
         trained_report["recall_at_1"] >= base_report["recall_at_1"]
         and trained_report["recall_at_5"] >= base_report["recall_at_5"] + 0.05
     )
-    print(f"\nrelease gate (recall@5 beats stock by ≥5pp AND recall@1 no regression): "
-          f"{'PASS' if gate_pass else 'FAIL'}")
+    print(
+        f"\nrelease gate (recall@5 beats stock by ≥5pp AND recall@1 no regression): "
+        f"{'PASS' if gate_pass else 'FAIL'}"
+    )
 
     report = {
         "base_model": BASE_MODEL,

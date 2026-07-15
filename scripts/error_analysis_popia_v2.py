@@ -10,6 +10,7 @@ Same ONNX artifact and label order as scripts/calibrate_popia_v2.py
 Usage:
     python scripts/error_analysis_popia_v2.py
 """
+
 from __future__ import annotations
 
 import json
@@ -29,7 +30,7 @@ EVAL_PATHS = [
 OUT_JSON = Path("reports/v2_confusion_matrices.json")
 
 LABELS = ["contradiction", "entailment", "neutral"]
-LABEL_TO_ID = {l: i for i, l in enumerate(LABELS)}
+LABEL_TO_ID = {label: i for i, label in enumerate(LABELS)}
 
 
 def load_rows() -> list[dict]:
@@ -51,7 +52,10 @@ def run_inference(model_path: Path, tokenizer, rows: list[dict], batch: int = 16
         enc = tokenizer(
             [r["premise"] for r in chunk],
             [r["hypothesis"] for r in chunk],
-            truncation=True, padding=True, max_length=256, return_tensors="np",
+            truncation=True,
+            padding=True,
+            max_length=256,
+            return_tensors="np",
         )
         feed = {}
         for name, type_str in input_infos.items():
@@ -74,7 +78,7 @@ def softmax(logits: np.ndarray) -> np.ndarray:
 
 def confusion_matrix(true: list[int], pred: list[int], n: int = 3) -> list[list[int]]:
     m = [[0] * n for _ in range(n)]
-    for t, p in zip(true, pred):
+    for t, p in zip(true, pred, strict=False):
         m[t][p] += 1
     return m
 
@@ -92,7 +96,7 @@ def main() -> int:
 
     # Per-clause confusion matrices
     by_clause = defaultdict(lambda: {"true": [], "pred": [], "conf": []})
-    for r, t, p, c in zip(rows, truths.tolist(), preds.tolist(), confs.tolist()):
+    for r, t, p, c in zip(rows, truths.tolist(), preds.tolist(), confs.tolist(), strict=False):
         b = by_clause[r["clause"]]
         b["true"].append(t)
         b["pred"].append(p)
@@ -102,7 +106,7 @@ def main() -> int:
     for clause, d in by_clause.items():
         cm = confusion_matrix(d["true"], d["pred"])
         n = len(d["true"])
-        n_correct = sum(1 for t, p in zip(d["true"], d["pred"]) if t == p)
+        n_correct = sum(1 for t, p in zip(d["true"], d["pred"], strict=False) if t == p)
         per_clause[clause] = {
             "n": n,
             "n_correct": n_correct,
@@ -116,15 +120,17 @@ def main() -> int:
     wrong_idx.sort(key=lambda i: -confs[i])
     top_wrong = []
     for i in wrong_idx[:8]:
-        top_wrong.append({
-            "clause": rows[i]["clause"],
-            "scenario": rows[i].get("scenario", ""),
-            "premise": rows[i]["premise"],
-            "hypothesis": rows[i]["hypothesis"],
-            "true_label": LABELS[truths[i]],
-            "predicted_label": LABELS[preds[i]],
-            "confidence": float(confs[i]),
-        })
+        top_wrong.append(
+            {
+                "clause": rows[i]["clause"],
+                "scenario": rows[i].get("scenario", ""),
+                "premise": rows[i]["premise"],
+                "hypothesis": rows[i]["hypothesis"],
+                "true_label": LABELS[truths[i]],
+                "predicted_label": LABELS[preds[i]],
+                "confidence": float(confs[i]),
+            }
+        )
 
     # Aggregate
     overall_correct = int((truths == preds).sum())
@@ -149,7 +155,9 @@ def main() -> int:
     print()
 
     # --- LaTeX summary table to stdout for paper-section prep ---
-    print("=== Per-clause confusion (rows=true, cols=pred; C=contradiction, E=entailment, N=neutral) ===\n")
+    print(
+        "=== Per-clause confusion (rows=true, cols=pred; C=contradiction, E=entailment, N=neutral) ===\n"
+    )
     print(f"{'Clause':45s} {'n':>4s}  {'acc':>6s}  C->C E->C N->C  C->E E->E N->E  C->N E->N N->N")
     for clause in sorted(per_clause):
         d = per_clause[clause]
@@ -157,11 +165,15 @@ def main() -> int:
         flat = " ".join(f"{cm[t][p]:4d}" for p in range(3) for t in range(3))
         print(f"{clause[:45]:45s} {d['n']:>4d}  {d['accuracy']:>6.3f}  {flat}")
     print()
-    print(f"overall: {summary['n_correct']}/{summary['n_eval']}  argmax-accuracy={summary['argmax_accuracy']:.4f}")
+    print(
+        f"overall: {summary['n_correct']}/{summary['n_eval']}  argmax-accuracy={summary['argmax_accuracy']:.4f}"
+    )
     print()
     print("=== Top 5 confidently-wrong examples (confidence-sorted) ===\n")
     for ex in top_wrong[:5]:
-        print(f"[{ex['clause']}] truth={ex['true_label']}  pred={ex['predicted_label']}  conf={ex['confidence']:.3f}")
+        print(
+            f"[{ex['clause']}] truth={ex['true_label']}  pred={ex['predicted_label']}  conf={ex['confidence']:.3f}"
+        )
         print(f"  P: {ex['premise'][:120]}")
         print(f"  H: {ex['hypothesis'][:120]}\n")
 

@@ -15,6 +15,7 @@ Output: data/popia_instruct.jsonl in chat-template format:
     {"role": "assistant", "content": "..."}
   ]}
 """
+
 from __future__ import annotations
 
 import json
@@ -63,44 +64,63 @@ def main() -> None:
     # ----- 1. Section explainers -----
     # "Explain POPIA §X" -> "POPIA §X is titled '<title>'. <text>"
     for num, doc in sorted(corpus.items()):
-        text = doc["text"].split(". ", 2)
         # use the first ~600 chars of the section as the canonical "explanation"
         snippet = doc["text"]
         # canonical
-        examples.append({
-            "messages": [
-                {"role": "system", "content": SYSTEM},
-                {"role": "user", "content": f"Explain POPIA §{num}."},
-                {"role": "assistant", "content": snippet},
-            ]
-        })
+        examples.append(
+            {
+                "messages": [
+                    {"role": "system", "content": SYSTEM},
+                    {"role": "user", "content": f"Explain POPIA §{num}."},
+                    {"role": "assistant", "content": snippet},
+                ]
+            }
+        )
         # title-only
-        examples.append({
-            "messages": [
-                {"role": "system", "content": SYSTEM},
-                {"role": "user", "content": f"What is the title of POPIA §{num}?"},
-                {"role": "assistant", "content": doc["title"]},
-            ]
-        })
+        examples.append(
+            {
+                "messages": [
+                    {"role": "system", "content": SYSTEM},
+                    {"role": "user", "content": f"What is the title of POPIA §{num}?"},
+                    {"role": "assistant", "content": doc["title"]},
+                ]
+            }
+        )
         # paraphrase question
-        examples.append({
-            "messages": [
-                {"role": "system", "content": SYSTEM},
-                {"role": "user", "content": f"What does Section {num} of the POPIA Act govern?"},
-                {"role": "assistant", "content": f"POPIA §{num} is titled '{doc['title']}'. {snippet[:600]}"},
-            ]
-        })
+        examples.append(
+            {
+                "messages": [
+                    {"role": "system", "content": SYSTEM},
+                    {
+                        "role": "user",
+                        "content": f"What does Section {num} of the POPIA Act govern?",
+                    },
+                    {
+                        "role": "assistant",
+                        "content": f"POPIA §{num} is titled '{doc['title']}'. {snippet[:600]}",
+                    },
+                ]
+            }
+        )
 
     # ----- 2. Clause -> section listing -----
     for clause, sections in CLAUSE_TO_SECTIONS.items():
         sec_list = ", ".join(f"§{s}" for s in sections)
-        examples.append({
-            "messages": [
-                {"role": "system", "content": SYSTEM},
-                {"role": "user", "content": f"Which POPIA sections govern {clause.replace('POPIA ', '')}?"},
-                {"role": "assistant", "content": f"The {clause.replace('POPIA ', '')} concern is anchored in POPIA {sec_list}."},
-            ]
-        })
+        examples.append(
+            {
+                "messages": [
+                    {"role": "system", "content": SYSTEM},
+                    {
+                        "role": "user",
+                        "content": f"Which POPIA sections govern {clause.replace('POPIA ', '')}?",
+                    },
+                    {
+                        "role": "assistant",
+                        "content": f"The {clause.replace('POPIA ', '')} concern is anchored in POPIA {sec_list}.",
+                    },
+                ]
+            }
+        )
 
     # ----- 3. Scenario compliance review -----
     # For each labelled (premise, hypothesis, label), build a Q&A:
@@ -128,13 +148,18 @@ def main() -> None:
                 f"'{s['premise'][:160]}' — touches on data processing, it does not raise the specific "
                 f"{clause_short} question this section was written to address."
             )
-        examples.append({
-            "messages": [
-                {"role": "system", "content": SYSTEM},
-                {"role": "user", "content": f"Review this scenario against {clause}: {s['premise']}"},
-                {"role": "assistant", "content": response},
-            ]
-        })
+        examples.append(
+            {
+                "messages": [
+                    {"role": "system", "content": SYSTEM},
+                    {
+                        "role": "user",
+                        "content": f"Review this scenario against {clause}: {s['premise']}",
+                    },
+                    {"role": "assistant", "content": response},
+                ]
+            }
+        )
 
     # ----- 4. "What rule applies?" routing -----
     # Take each non-neutral scenario, ask the model to identify the relevant clause.
@@ -144,13 +169,21 @@ def main() -> None:
         clause = s["clause"]
         sections = CLAUSE_TO_SECTIONS.get(clause, [])
         sec_ref = " and ".join(f"POPIA §{n}" for n in sections[:2]) if sections else "POPIA"
-        examples.append({
-            "messages": [
-                {"role": "system", "content": SYSTEM},
-                {"role": "user", "content": f"What POPIA rule is implicated by this scenario? {s['premise']}"},
-                {"role": "assistant", "content": f"This scenario implicates {sec_ref} — the {clause.replace('POPIA ', '')} provisions."},
-            ]
-        })
+        examples.append(
+            {
+                "messages": [
+                    {"role": "system", "content": SYSTEM},
+                    {
+                        "role": "user",
+                        "content": f"What POPIA rule is implicated by this scenario? {s['premise']}",
+                    },
+                    {
+                        "role": "assistant",
+                        "content": f"This scenario implicates {sec_ref} — the {clause.replace('POPIA ', '')} provisions.",
+                    },
+                ]
+            }
+        )
 
     # Shuffle deterministically
     random.Random(42).shuffle(examples)

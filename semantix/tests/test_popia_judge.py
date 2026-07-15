@@ -104,6 +104,7 @@ def test_v2_loads_v2_repo(mocked_onnx, monkeypatch):
     def capture_load(variant, repo_id=None):
         captured["session_repo"] = repo_id
         from unittest.mock import MagicMock
+
         s = MagicMock()
         s.get_inputs.return_value = []
         return s
@@ -111,6 +112,7 @@ def test_v2_loads_v2_repo(mocked_onnx, monkeypatch):
     def capture_tok(repo_id=None):
         captured["tokenizer_repo"] = repo_id
         from unittest.mock import MagicMock
+
         return MagicMock()
 
     monkeypatch.setattr("semantix.judges.quantized_nli._load_session", capture_load)

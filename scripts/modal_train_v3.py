@@ -68,13 +68,16 @@ app = modal.App(APP_NAME, image=image)
     timeout=60 * 60,  # 1h hard cap
     secrets=[modal.Secret.from_name("huggingface")],
 )
-def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
+def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True, branch: str = "master") -> dict:
     import os
     import subprocess
     from pathlib import Path
 
-    print(f"[modal] cloning {REPO_URL} @ {GIT_BRANCH}")
-    subprocess.run(["git", "clone", "--depth", "1", "--branch", GIT_BRANCH, REPO_URL, "/work"], check=True)
+    # `branch` is passed as an argument (serialized to the container) rather than
+    # read from the env here — a module-level os.environ read re-evaluates INSIDE
+    # the container, which lacks TRAIN_BRANCH, and silently falls back to master.
+    print(f"[modal] cloning {REPO_URL} @ {branch}")
+    subprocess.run(["git", "clone", "--depth", "1", "--branch", branch, REPO_URL, "/work"], check=True)
     os.chdir("/work")
 
     cmd = [
@@ -122,8 +125,10 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
 
 @app.local_entrypoint()
 def main(epochs: int = 6, seed: int = 42, push: bool = True):
-    print(f"[local] kicking off remote train (epochs={epochs}, seed={seed}, push={push})")
-    report = train.remote(epochs=epochs, seed=seed, push_to_hf=push)
+    # GIT_BRANCH is resolved HERE (locally, where TRAIN_BRANCH exists) and passed
+    # into the remote function as an argument so the container clones the right ref.
+    print(f"[local] kicking off remote train (epochs={epochs}, seed={seed}, push={push}, branch={GIT_BRANCH})")
+    report = train.remote(epochs=epochs, seed=seed, push_to_hf=push, branch=GIT_BRANCH)
 
     print("\n" + "=" * 60)
     print("v3 TRAINING COMPLETE")

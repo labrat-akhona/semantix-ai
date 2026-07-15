@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.2.3 — Artifact gate + v2 tokenizer fix (2026-07-15)
+
+### Fixed
+- **`POPIAJudge(version="v2")` / `QuantizedNLIJudge` 404'd loading the
+  tokenizer.** `_load_tokenizer` looked for `tokenizer.json` only at the
+  repo root, but the HF repos store it in three different places —
+  `nli-popia-v1` at the root, `nli-popia-v2` under `onnx/`, and
+  `nli-popia-v3` under `pytorch/`. The loader now tries all three in turn.
+  Anyone who `pip install`ed 0.2.2 and called `version="v2"` hit this;
+  `v1` (root tokenizer, and the library default) was unaffected, which is
+  why it stayed hidden. Verified live against all three repos.
+
+### Added
+- **Post-export artifact gate for quantized model releases.** The training
+  pipeline now scores the *shipped ONNX file* after export/quantization —
+  distinct-prediction count plus macro-F1 on both holdouts — and blocks the
+  upload if the quantized artifact regressed. This closes a real failure
+  mode: a model can pass a release gate that scored the *PyTorch weights*
+  and still ship a dead *quantized* file. That is exactly how an earlier v3
+  build shipped a constant predictor — it passed its own gate because the
+  gate never scored the file users download. The gate now scores the
+  artifact, and blocked a regressed build on its first outing.
+- **`per_channel=True` INT8 quantization for DeBERTa bases** in the training
+  script. Per-tensor dynamic INT8 collapses DeBERTa's disentangled
+  attention into a constant predictor; RoBERTa/MiniLM bases (v1, v2) were
+  unaffected and are unchanged.
+
+### Notes
+- **v3 (deberta-v3-base) was trained, evaluated, and shelved.** It beats v2
+  at fp32 (0.785 vs 0.7465 macro-F1 on v1 clauses) but is *worse* than v2
+  under the INT8 quantization the CPU-judge line requires (0.576), at ~3×
+  the download. deberta-v3-base is a poor fit for a quantized-CPU judge, so
+  **v2 (MiniLM base) remains the shipped generalist.** No public API change:
+  the default judge is still `v1` and `_VERSION_TO_REPO` lists only v1/v2.
+
 ## v0.2.2 — Calibration (2026-05-18)
 
 ### Added

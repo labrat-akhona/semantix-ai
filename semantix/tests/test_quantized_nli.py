@@ -322,8 +322,9 @@ class TestLoadTokenizerFallback:
             return f"/tmp/{filename}"
 
         sentinel = object()
-        with patch("huggingface_hub.hf_hub_download", side_effect=fake_download), patch(
-            "tokenizers.Tokenizer.from_file", return_value=sentinel
+        with (
+            patch("huggingface_hub.hf_hub_download", side_effect=fake_download),
+            patch("tokenizers.Tokenizer.from_file", return_value=sentinel),
         ):
             result = _load_tokenizer("repo/x")
         assert result is sentinel

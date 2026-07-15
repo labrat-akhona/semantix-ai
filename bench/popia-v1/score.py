@@ -10,6 +10,7 @@ Submission format: one JSON object per line, with fields:
 Output: JSON-formatted scorecard with macro F1 overall + per-clause +
 disclosed runtime baseline cells.
 """
+
 from __future__ import annotations
 
 import json
@@ -27,9 +28,9 @@ def macro_f1(y_true: list[int], y_pred: list[int]) -> float:
         return 0.0
     f1s = []
     for cls in (0, 1, 2):
-        tp = sum(1 for t, p in zip(y_true, y_pred) if t == cls and p == cls)
-        fp = sum(1 for t, p in zip(y_true, y_pred) if t != cls and p == cls)
-        fn = sum(1 for t, p in zip(y_true, y_pred) if t == cls and p != cls)
+        tp = sum(1 for t, p in zip(y_true, y_pred, strict=False) if t == cls and p == cls)
+        fp = sum(1 for t, p in zip(y_true, y_pred, strict=False) if t != cls and p == cls)
+        fn = sum(1 for t, p in zip(y_true, y_pred, strict=False) if t == cls and p != cls)
         if tp + fp == 0 or tp + fn == 0:
             f1s.append(0.0)
             continue
@@ -53,7 +54,9 @@ def main(argv: list[str]) -> int:
             pred_by_id[int(row["id"])] = row["prediction"]
 
     if len(pred_by_id) != len(bench):
-        print(f"WARNING: submission has {len(pred_by_id)} predictions, bench has {len(bench)} examples")
+        print(
+            f"WARNING: submission has {len(pred_by_id)} predictions, bench has {len(bench)} examples"
+        )
 
     y_true, y_pred = [], []
     per_clause_true: dict[str, list[int]] = defaultdict(list)

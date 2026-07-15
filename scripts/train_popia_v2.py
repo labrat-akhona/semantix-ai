@@ -120,6 +120,48 @@ def macro_f1(
     return overall, per_clause
 
 
+def onnx_macro_f1(
+    onnx_path, tokenizer, eval_rows: list[dict], batch_size: int = 16
+) -> tuple[float, int]:
+    """Macro F1 for a quantized ONNX artifact + number of distinct predictions.
+
+    Mirrors ``macro_f1``'s tokenization but runs the SHIPPED file through
+    onnxruntime — the artifact users actually load. Quantization can silently
+    turn a healthy model into a constant predictor (per-tensor INT8 breaks
+    DeBERTa disentangled attention), so the distinct-prediction count is the
+    cheap tell: a constant predictor returns 1.
+    """
+    import numpy as np
+    import onnxruntime as ort
+    from sklearn.metrics import f1_score
+
+    sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
+    innames = {i.name for i in sess.get_inputs()}
+    y_true: list[int] = []
+    y_pred: list[int] = []
+    for i in range(0, len(eval_rows), batch_size):
+        batch = eval_rows[i : i + batch_size]
+        enc = tokenizer(
+            [r["premise"] for r in batch],
+            [r["hypothesis"] for r in batch],
+            truncation=True,
+            padding=True,
+            max_length=256,
+            return_tensors="np",
+        )
+        feeds = {
+            "input_ids": enc["input_ids"].astype(np.int64),
+            "attention_mask": enc["attention_mask"].astype(np.int64),
+        }
+        if "token_type_ids" in innames and "token_type_ids" in enc:
+            feeds["token_type_ids"] = enc["token_type_ids"].astype(np.int64)
+        logits = sess.run(None, feeds)[0]
+        y_pred.extend(int(p) for p in logits.argmax(axis=-1).tolist())
+        y_true.extend(label_to_id(r["label"]) for r in batch)
+    macro = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
+    return macro, len(set(y_pred))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--epochs", type=int, default=3)
@@ -322,15 +364,18 @@ def main() -> int:
     print(f"onnx model saved to {onnx_dir}")
 
     quantizer = ORTQuantizer.from_pretrained(str(onnx_dir))
+    # per_channel=True is REQUIRED for DeBERTa: per-tensor dynamic INT8 collapses
+    # its disentangled-attention weights and produces a constant predictor (v3's
+    # first shipped artifact was dead this way; v1/v2 were RoBERTa and survived
+    # per-tensor). Do not revert to per_channel=False without re-checking the
+    # artifact gate below.
     variants = {
-        "model_quint8_avx2.onnx": AutoQuantizationConfig.avx2(is_static=False, per_channel=False),
-        "model_qint8_avx512.onnx": AutoQuantizationConfig.avx512(
-            is_static=False, per_channel=False
-        ),
+        "model_quint8_avx2.onnx": AutoQuantizationConfig.avx2(is_static=False, per_channel=True),
+        "model_qint8_avx512.onnx": AutoQuantizationConfig.avx512(is_static=False, per_channel=True),
         "model_qint8_avx512_vnni.onnx": AutoQuantizationConfig.avx512_vnni(
-            is_static=False, per_channel=False
+            is_static=False, per_channel=True
         ),
-        "model_qint8_arm64.onnx": AutoQuantizationConfig.arm64(is_static=False, per_channel=False),
+        "model_qint8_arm64.onnx": AutoQuantizationConfig.arm64(is_static=False, per_channel=True),
     }
     for filename, qconfig in variants.items():
         target = onnx_dir / filename
@@ -340,6 +385,32 @@ def main() -> int:
         shutil.move(str(produced), str(target))
         shutil.rmtree(tmp_dir)
         print(f"quantized -> {target}")
+
+    # --- Post-export ARTIFACT gate: validate the SHIPPED quantized files ---
+    # The release gate above scored the PyTorch model. Quantization is downstream
+    # of it and can silently ship a dead artifact that still returns plausible
+    # scores. Score every quantized variant on the real eval and refuse to ship a
+    # constant predictor or a >10pp macro-F1 regression from PyTorch.
+    ARTIFACT_TOL = 0.10
+    for filename in variants:
+        q_v1_f1, q_v1_distinct = onnx_macro_f1(
+            onnx_dir / filename, tokenizer, v1_rows, args.batch_size
+        )
+        q_v2_f1, q_v2_distinct = onnx_macro_f1(
+            onnx_dir / filename, tokenizer, v2_rows, args.batch_size
+        )
+        print(
+            f"[artifact-gate] {filename}: v1 F1={q_v1_f1:.4f} (torch {trained_v1_f1:.4f}), "
+            f"v2 F1={q_v2_f1:.4f} (torch {trained_v2_f1:.4f}), "
+            f"distinct preds v1={q_v1_distinct} v2={q_v2_distinct}"
+        )
+        if q_v1_distinct <= 1 or q_v2_distinct <= 1:
+            sys.exit(f"ARTIFACT GATE FAIL: {filename} is a CONSTANT PREDICTOR — not shipping")
+        if q_v1_f1 < trained_v1_f1 - ARTIFACT_TOL or q_v2_f1 < trained_v2_f1 - ARTIFACT_TOL:
+            sys.exit(
+                f"ARTIFACT GATE FAIL: {filename} macro F1 regressed >{ARTIFACT_TOL} from PyTorch — not shipping"
+            )
+    print("[artifact-gate] PASS — all quantized variants preserve the model")
 
     shutil.copy(str(V1_EVAL), str(out_dir / "eval.jsonl"))
     shutil.copy(str(V2_EVAL), str(out_dir / "eval_v2.jsonl"))

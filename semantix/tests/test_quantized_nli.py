@@ -297,3 +297,53 @@ class TestQuantizedNLIJudgeCalibration:
         with patch("semantix.judges.quantized_nli._load_temperature_constant") as mock_T:
             QuantizedNLIJudge()
             mock_T.assert_not_called()
+
+
+# ---------------------------------------------------------------------------
+# Unit: _load_tokenizer location fallback
+# ---------------------------------------------------------------------------
+
+
+class TestLoadTokenizerFallback:
+    """Published repos put tokenizer.json in different places: v1 at root,
+    v2 under onnx/, v3 under pytorch/. The loader must try each in order."""
+
+    def _run(self, available: str):
+        from huggingface_hub.errors import EntryNotFoundError
+
+        from semantix.judges.quantized_nli import _load_tokenizer
+
+        tried: list[str] = []
+
+        def fake_download(repo_id, filename):
+            tried.append(filename)
+            if filename != available:
+                raise EntryNotFoundError(f"{filename} missing")
+            return f"/tmp/{filename}"
+
+        sentinel = object()
+        with (
+            patch("huggingface_hub.hf_hub_download", side_effect=fake_download),
+            patch("tokenizers.Tokenizer.from_file", return_value=sentinel),
+        ):
+            result = _load_tokenizer("repo/x")
+        assert result is sentinel
+        return tried
+
+    def test_root_layout_v1(self):
+        tried = self._run("tokenizer.json")
+        assert tried == ["tokenizer.json"]
+
+    def test_onnx_layout_v2(self):
+        tried = self._run("onnx/tokenizer.json")
+        assert tried == ["tokenizer.json", "onnx/tokenizer.json"]
+
+    def test_pytorch_layout_v3(self):
+        tried = self._run("pytorch/tokenizer.json")
+        assert tried == ["tokenizer.json", "onnx/tokenizer.json", "pytorch/tokenizer.json"]
+
+    def test_missing_everywhere_raises(self):
+        import pytest
+
+        with pytest.raises(FileNotFoundError, match="no tokenizer.json"):
+            self._run("nonexistent.json")

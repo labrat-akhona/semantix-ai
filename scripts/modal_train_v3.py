@@ -22,19 +22,26 @@ runs the generalized training script with --base-model + --out-dir
 overrides, captures the release_gate.json, and (by default) uploads to
 HF. Local entrypoint prints the metrics when remote finishes.
 
-ONNX export is skipped on the cloud (it's CPU work and pollutes the GPU
-container with extra deps). Run `scripts/calibrate_popia_v2.py` and any
-ONNX export locally after the pytorch weights are pulled from HF.
+ONNX export + INT8 quantization run on the cloud (the image includes
+optimum[onnxruntime]) so the post-export artifact gate scores the SHIPPED
+quantized file and can block a regressed upload before it reaches HF —
+the exact failure that shipped v3's first (constant-predictor) artifact.
+Run `scripts/calibrate_popia_v2.py` locally afterwards to fit calibration.
 """
 
 from __future__ import annotations
 
 import json
+import os
 
 import modal
 
 APP_NAME = "popia-v3-train"
 REPO_URL = "https://github.com/labrat-akhona/semantix-ai.git"
+# Branch the remote container clones + trains from. Defaults to master; override
+# with TRAIN_BRANCH to verify a fix branch before merging (the container only
+# ever sees committed+pushed code, never local edits).
+GIT_BRANCH = os.environ.get("TRAIN_BRANCH", "master")
 HF_REPO = "labrat-aiko/nli-popia-v3"
 BASE_MODEL = "cross-encoder/nli-deberta-v3-base"
 OUT_DIR = "out/nli-popia-v3"
@@ -51,6 +58,8 @@ image = (
         "sentencepiece",  # required by deberta-v3 tokenizer
         "accelerate",
         "protobuf",
+        "optimum[onnxruntime]",  # ONNX export + quantization (drop --skip-quantize)
+        "onnx",
     )
 )
 
@@ -62,13 +71,18 @@ app = modal.App(APP_NAME, image=image)
     timeout=60 * 60,  # 1h hard cap
     secrets=[modal.Secret.from_name("huggingface")],
 )
-def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
+def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True, branch: str = "master") -> dict:
     import os
     import subprocess
     from pathlib import Path
 
-    print(f"[modal] cloning {REPO_URL}")
-    subprocess.run(["git", "clone", "--depth", "1", REPO_URL, "/work"], check=True)
+    # `branch` is passed as an argument (serialized to the container) rather than
+    # read from the env here — a module-level os.environ read re-evaluates INSIDE
+    # the container, which lacks TRAIN_BRANCH, and silently falls back to master.
+    print(f"[modal] cloning {REPO_URL} @ {branch}")
+    subprocess.run(
+        ["git", "clone", "--depth", "1", "--branch", branch, REPO_URL, "/work"], check=True
+    )
     os.chdir("/work")
 
     cmd = [
@@ -82,7 +96,8 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
         str(epochs),
         "--seed",
         str(seed),
-        "--skip-quantize",
+        # ONNX export + quantization runs on the cloud now (image includes optimum);
+        # produces the 4 quantized variants + bundles eval sets for the library to load.
     ]
     print(f"[modal] running: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
@@ -121,8 +136,12 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
 
 @app.local_entrypoint()
 def main(epochs: int = 6, seed: int = 42, push: bool = True):
-    print(f"[local] kicking off remote train (epochs={epochs}, seed={seed}, push={push})")
-    report = train.remote(epochs=epochs, seed=seed, push_to_hf=push)
+    # GIT_BRANCH is resolved HERE (locally, where TRAIN_BRANCH exists) and passed
+    # into the remote function as an argument so the container clones the right ref.
+    print(
+        f"[local] kicking off remote train (epochs={epochs}, seed={seed}, push={push}, branch={GIT_BRANCH})"
+    )
+    report = train.remote(epochs=epochs, seed=seed, push_to_hf=push, branch=GIT_BRANCH)
 
     print("\n" + "=" * 60)
     print("v3 TRAINING COMPLETE")

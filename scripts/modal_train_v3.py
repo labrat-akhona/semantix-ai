@@ -22,10 +22,13 @@ runs the generalized training script with --base-model + --out-dir
 overrides, captures the release_gate.json, and (by default) uploads to
 HF. Local entrypoint prints the metrics when remote finishes.
 
-ONNX export is skipped on the cloud (it's CPU work and pollutes the GPU
-container with extra deps). Run `scripts/calibrate_popia_v2.py` and any
-ONNX export locally after the pytorch weights are pulled from HF.
+ONNX export + INT8 quantization run on the cloud (the image includes
+optimum[onnxruntime]) so the post-export artifact gate scores the SHIPPED
+quantized file and can block a regressed upload before it reaches HF —
+the exact failure that shipped v3's first (constant-predictor) artifact.
+Run `scripts/calibrate_popia_v2.py` locally afterwards to fit calibration.
 """
+
 from __future__ import annotations
 
 import json
@@ -77,16 +80,22 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True, branch: str 
     # read from the env here — a module-level os.environ read re-evaluates INSIDE
     # the container, which lacks TRAIN_BRANCH, and silently falls back to master.
     print(f"[modal] cloning {REPO_URL} @ {branch}")
-    subprocess.run(["git", "clone", "--depth", "1", "--branch", branch, REPO_URL, "/work"], check=True)
+    subprocess.run(
+        ["git", "clone", "--depth", "1", "--branch", branch, REPO_URL, "/work"], check=True
+    )
     os.chdir("/work")
 
     cmd = [
         "python",
         "scripts/train_popia_v2.py",
-        "--base-model", BASE_MODEL,
-        "--out-dir", OUT_DIR,
-        "--epochs", str(epochs),
-        "--seed", str(seed),
+        "--base-model",
+        BASE_MODEL,
+        "--out-dir",
+        OUT_DIR,
+        "--epochs",
+        str(epochs),
+        "--seed",
+        str(seed),
         # ONNX export + quantization runs on the cloud now (image includes optimum);
         # produces the 4 quantized variants + bundles eval sets for the library to load.
     ]
@@ -106,7 +115,9 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True, branch: str 
             from huggingface_hub.errors import HfHubHTTPError
 
             api = HfApi(token=token)
-            api.create_repo(repo_id=HF_REPO, repo_type="model", exist_ok=True, private=False, token=token)
+            api.create_repo(
+                repo_id=HF_REPO, repo_type="model", exist_ok=True, private=False, token=token
+            )
             try:
                 api.upload_folder(
                     folder_path=OUT_DIR,
@@ -127,7 +138,9 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True, branch: str 
 def main(epochs: int = 6, seed: int = 42, push: bool = True):
     # GIT_BRANCH is resolved HERE (locally, where TRAIN_BRANCH exists) and passed
     # into the remote function as an argument so the container clones the right ref.
-    print(f"[local] kicking off remote train (epochs={epochs}, seed={seed}, push={push}, branch={GIT_BRANCH})")
+    print(
+        f"[local] kicking off remote train (epochs={epochs}, seed={seed}, push={push}, branch={GIT_BRANCH})"
+    )
     report = train.remote(epochs=epochs, seed=seed, push_to_hf=push, branch=GIT_BRANCH)
 
     print("\n" + "=" * 60)
@@ -136,9 +149,15 @@ def main(epochs: int = 6, seed: int = 42, push: bool = True):
     print(f"Base:    {report.get('base_model')}")
     print(f"Seed:    {report.get('seed')}")
     print(f"Epochs:  {report.get('epochs')}")
-    print(f"\nv1 holdout macro F1: {report.get('v2_model_v1_f1'):.4f}  (stock {report.get('stock_v1_f1'):.4f})")
-    print(f"v2 holdout macro F1: {report.get('v2_model_v2_f1'):.4f}  (stock {report.get('stock_v2_f1'):.4f})")
+    print(
+        f"\nv1 holdout macro F1: {report.get('v2_model_v1_f1'):.4f}  (stock {report.get('stock_v1_f1'):.4f})"
+    )
+    print(
+        f"v2 holdout macro F1: {report.get('v2_model_v2_f1'):.4f}  (stock {report.get('stock_v2_f1'):.4f})"
+    )
     print(f"Gate:    {'PASS' if report.get('gate_pass') else 'FAIL'}")
     if push:
         print(f"\nUploaded to: https://huggingface.co/{HF_REPO}")
-    print(f"Next: run scripts/calibrate_popia_v2.py against {HF_REPO} to fit a v3 calibration constant.")
+    print(
+        f"Next: run scripts/calibrate_popia_v2.py against {HF_REPO} to fit a v3 calibration constant."
+    )

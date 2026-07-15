@@ -1,0 +1,85 @@
+name: Publish to PyPI
+
+# Tokenless publishing via PyPI Trusted Publishing (OIDC).
+# No API token is stored in this repo or in GitHub secrets. GitHub mints a
+# short-lived identity token at run time; PyPI verifies it against the trusted
+# publisher config and it expires when the job ends.
+#
+# Fires automatically when a GitHub Release is published. workflow_dispatch is
+# included so v0.2.2 — which was already released before this workflow existed —
+# can be published manually without recreating the release.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag to build and publish (e.g. v0.2.2)"
+        required: true
+        default: "v0.2.2"
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist + wheel
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+
+      # Fail loudly here rather than at upload — PyPI rejects bad metadata, and a
+      # version can only ever be uploaded once.
+      - name: Check distributions
+        run: |
+          python -m pip install --upgrade twine
+          twine check dist/*
+
+      - name: Confirm version matches the tag
+        run: |
+          TAG="${{ github.event.inputs.ref || github.ref_name }}"
+          EXPECTED="${TAG#v}"
+          BUILT=$(ls dist/*.tar.gz | sed -E 's/.*semantix_ai-(.+)\.tar\.gz/\1/')
+          echo "tag=$TAG  expected=$EXPECTED  built=$BUILT"
+          if [ "$EXPECTED" != "$BUILT" ]; then
+            echo "::error::Tag $TAG implies version $EXPECTED but the build produced $BUILT"
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+
+    # Gate the release behind an environment so you can require manual approval
+    # in Settings -> Environments -> pypi. Optional but recommended: PyPI uploads
+    # are irreversible.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/semantix-ai/
+
+    permissions:
+      id-token: write # REQUIRED for trusted publishing. Without it, PyPI cannot verify the job.
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      # No username, no password, no token — that is the point.
+      - uses: pypa/gh-action-pypi-publish@release/v1

@@ -73,11 +73,14 @@ def load_rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
-def macro_f1(model, tokenizer, eval_rows: list[dict], batch_size: int = 16) -> tuple[float, dict[str, float]]:
+def macro_f1(
+    model, tokenizer, eval_rows: list[dict], batch_size: int = 16
+) -> tuple[float, dict[str, float]]:
     """Macro F1 over labels, plus per-clause F1."""
+    from collections import defaultdict
+
     import torch
     from sklearn.metrics import f1_score
-    from collections import defaultdict
 
     model.eval()
     device = next(model.parameters()).device
@@ -100,7 +103,7 @@ def macro_f1(model, tokenizer, eval_rows: list[dict], batch_size: int = 16) -> t
             ).to(device)
             logits = model(**inputs).logits
             preds = logits.argmax(dim=-1).cpu().tolist()
-            for r, p in zip(batch, preds):
+            for r, p in zip(batch, preds, strict=False):
                 t = label_to_id(r["label"])
                 y_true.append(t)
                 y_pred.append(p)
@@ -109,13 +112,17 @@ def macro_f1(model, tokenizer, eval_rows: list[dict], batch_size: int = 16) -> t
 
     overall = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
     per_clause = {
-        cls: float(f1_score(per_clause_true[cls], per_clause_pred[cls], average="macro", zero_division=0))
+        cls: float(
+            f1_score(per_clause_true[cls], per_clause_pred[cls], average="macro", zero_division=0)
+        )
         for cls in per_clause_true
     }
     return overall, per_clause
 
 
-def onnx_macro_f1(onnx_path, tokenizer, eval_rows: list[dict], batch_size: int = 16) -> tuple[float, int]:
+def onnx_macro_f1(
+    onnx_path, tokenizer, eval_rows: list[dict], batch_size: int = 16
+) -> tuple[float, int]:
     """Macro F1 for a quantized ONNX artifact + number of distinct predictions.
 
     Mirrors ``macro_f1``'s tokenization but runs the SHIPPED file through
@@ -205,7 +212,12 @@ def main() -> int:
         torch.cuda.manual_seed_all(seed)
     set_seed(seed)
 
-    train_rows = load_rows(V1_SEEDS) + load_rows(V1_PARAPHRASES) + load_rows(V2_SEEDS) + load_rows(V2_PARAPHRASES)
+    train_rows = (
+        load_rows(V1_SEEDS)
+        + load_rows(V1_PARAPHRASES)
+        + load_rows(V2_SEEDS)
+        + load_rows(V2_PARAPHRASES)
+    )
     print(f"loaded {len(train_rows)} training rows (v1 + v2)")
 
     # Stratified dev split: at least 1 item per (clause, label) so checkpoint
@@ -305,8 +317,12 @@ def main() -> int:
     trained_v1_f1, trained_v1_per = macro_f1(model, tokenizer, v1_rows, args.batch_size)
     trained_v2_f1, trained_v2_per = macro_f1(model, tokenizer, v2_rows, args.batch_size)
 
-    print(f"v1 holdout: stock {stock_v1_f1:.4f}  ->  v2-model {trained_v1_f1:.4f}  (delta {trained_v1_f1-stock_v1_f1:+.4f})")
-    print(f"v2 holdout: stock {stock_v2_f1:.4f}  ->  v2-model {trained_v2_f1:.4f}  (delta {trained_v2_f1-stock_v2_f1:+.4f})")
+    print(
+        f"v1 holdout: stock {stock_v1_f1:.4f}  ->  v2-model {trained_v1_f1:.4f}  (delta {trained_v1_f1 - stock_v1_f1:+.4f})"
+    )
+    print(
+        f"v2 holdout: stock {stock_v2_f1:.4f}  ->  v2-model {trained_v2_f1:.4f}  (delta {trained_v2_f1 - stock_v2_f1:+.4f})"
+    )
 
     # Gate: v2 must beat stock on v1 by >=10pp AND beat stock on v2 by >=10pp.
     # (v1 in-domain regression check is implicit in "must beat stock by the same
@@ -356,7 +372,9 @@ def main() -> int:
     variants = {
         "model_quint8_avx2.onnx": AutoQuantizationConfig.avx2(is_static=False, per_channel=True),
         "model_qint8_avx512.onnx": AutoQuantizationConfig.avx512(is_static=False, per_channel=True),
-        "model_qint8_avx512_vnni.onnx": AutoQuantizationConfig.avx512_vnni(is_static=False, per_channel=True),
+        "model_qint8_avx512_vnni.onnx": AutoQuantizationConfig.avx512_vnni(
+            is_static=False, per_channel=True
+        ),
         "model_qint8_arm64.onnx": AutoQuantizationConfig.arm64(is_static=False, per_channel=True),
     }
     for filename, qconfig in variants.items():
@@ -375,8 +393,12 @@ def main() -> int:
     # constant predictor or a >10pp macro-F1 regression from PyTorch.
     ARTIFACT_TOL = 0.10
     for filename in variants:
-        q_v1_f1, q_v1_distinct = onnx_macro_f1(onnx_dir / filename, tokenizer, v1_rows, args.batch_size)
-        q_v2_f1, q_v2_distinct = onnx_macro_f1(onnx_dir / filename, tokenizer, v2_rows, args.batch_size)
+        q_v1_f1, q_v1_distinct = onnx_macro_f1(
+            onnx_dir / filename, tokenizer, v1_rows, args.batch_size
+        )
+        q_v2_f1, q_v2_distinct = onnx_macro_f1(
+            onnx_dir / filename, tokenizer, v2_rows, args.batch_size
+        )
         print(
             f"[artifact-gate] {filename}: v1 F1={q_v1_f1:.4f} (torch {trained_v1_f1:.4f}), "
             f"v2 F1={q_v2_f1:.4f} (torch {trained_v2_f1:.4f}), "
@@ -385,7 +407,9 @@ def main() -> int:
         if q_v1_distinct <= 1 or q_v2_distinct <= 1:
             sys.exit(f"ARTIFACT GATE FAIL: {filename} is a CONSTANT PREDICTOR — not shipping")
         if q_v1_f1 < trained_v1_f1 - ARTIFACT_TOL or q_v2_f1 < trained_v2_f1 - ARTIFACT_TOL:
-            sys.exit(f"ARTIFACT GATE FAIL: {filename} macro F1 regressed >{ARTIFACT_TOL} from PyTorch — not shipping")
+            sys.exit(
+                f"ARTIFACT GATE FAIL: {filename} macro F1 regressed >{ARTIFACT_TOL} from PyTorch — not shipping"
+            )
     print("[artifact-gate] PASS — all quantized variants preserve the model")
 
     shutil.copy(str(V1_EVAL), str(out_dir / "eval.jsonl"))

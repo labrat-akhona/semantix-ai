@@ -130,6 +130,10 @@ exclude = ["examples", "tools", "articles", "examples.py", "work_demo.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+# ruff format owns line length; E501 only fires on what it cannot split
+# (long strings, URLs, comments). Keeping both means the formatter and the
+# linter disagree with each other.
+ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "semantix/__init__.py" = ["F401"]

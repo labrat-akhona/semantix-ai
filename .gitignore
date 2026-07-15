@@ -37,6 +37,20 @@ htmlcov/
 !.env.example
 !benchmarks/.env.example
 
+# Secrets / credentials — the repo must never be the leak path.
+# (A live HF write token exists in a Modal secret; rotation is deferred, so
+# belt-and-braces here in case one is ever written to the working tree.)
+.pypirc
+*token*
+*secret*
+*.key
+*.pem
+# ...but NEVER shadow the model tokenizer artifacts (tokenizer.json /
+# tokenizer_config.json) — those are shipped files, not credentials. The
+# `*token*` rule above would otherwise silently ignore them.
+!*tokenizer*
+!*.key.example
+
 # Benchmark cache (opt-in, resumable runs)
 benchmarks/.cache.sqlite
 benchmarks/**/results/*.pkl

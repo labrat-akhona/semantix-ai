@@ -25,6 +25,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")  # headless
 
 import matplotlib.pyplot as plt
@@ -125,13 +126,17 @@ def compute_ece(probs: np.ndarray, labels: np.ndarray, n_bins: int) -> tuple[flo
             mask = (confidence > lo) & (confidence <= hi)
         cnt = int(mask.sum())
         if cnt == 0:
-            bins.append({"lo": lo, "hi": hi, "count": 0, "accuracy": 0.0, "confidence": 0.0, "gap": 0.0})
+            bins.append(
+                {"lo": lo, "hi": hi, "count": 0, "accuracy": 0.0, "confidence": 0.0, "gap": 0.0}
+            )
             continue
         acc = float(correct[mask].mean())
         conf = float(confidence[mask].mean())
         gap = abs(acc - conf)
         ece += (cnt / n) * gap
-        bins.append({"lo": lo, "hi": hi, "count": cnt, "accuracy": acc, "confidence": conf, "gap": gap})
+        bins.append(
+            {"lo": lo, "hi": hi, "count": cnt, "accuracy": acc, "confidence": conf, "gap": gap}
+        )
     return float(ece), bins
 
 
@@ -154,7 +159,15 @@ def reliability_plot(bins: list[dict], ece: float, title: str, path: Path) -> No
     bin_width = bins[0]["hi"] - bins[0]["lo"]
 
     fig, ax = plt.subplots(figsize=(5.2, 4.5))
-    ax.bar(centers, accs, width=bin_width * 0.9, edgecolor="black", color="steelblue", alpha=0.75, label="Empirical accuracy")
+    ax.bar(
+        centers,
+        accs,
+        width=bin_width * 0.9,
+        edgecolor="black",
+        color="steelblue",
+        alpha=0.75,
+        label="Empirical accuracy",
+    )
     ax.plot([0, 1], [0, 1], "k--", lw=1, label="Perfect calibration")
     ax.set_xlabel("Predicted confidence")
     ax.set_ylabel("Empirical accuracy")
@@ -202,9 +215,13 @@ def main() -> int:
     # Post-calibration
     post_probs = softmax(test_logits, T=T_star)
     post_ece, post_bins = compute_ece(post_probs, test_labels, N_BINS)
-    reliability_plot(post_bins, post_ece, f"Post-calibration (T={T_star:.3f})", FIG_DIR / "reliability_post.png")
+    reliability_plot(
+        post_bins, post_ece, f"Post-calibration (T={T_star:.3f})", FIG_DIR / "reliability_post.png"
+    )
     print(f"post-calibration ECE: {post_ece:.4f}")
-    print(f"ECE reduction: {pre_ece - post_ece:+.4f}  ({(pre_ece - post_ece) / max(pre_ece, 1e-12) * 100:+.1f}%)")
+    print(
+        f"ECE reduction: {pre_ece - post_ece:+.4f}  ({(pre_ece - post_ece) / max(pre_ece, 1e-12) * 100:+.1f}%)"
+    )
 
     # Save calibration constant + metadata
     out = {

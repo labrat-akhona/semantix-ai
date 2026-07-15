@@ -27,8 +27,8 @@ import logging
 import random
 import sys
 import uuid
-from collections import Counter, defaultdict
-from dataclasses import asdict, dataclass, field
+from collections import Counter
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -52,7 +52,14 @@ POPIA_CLAUSES: dict[str, dict[str, Any]] = {
     "POPIA minimality / purpose limitation": {
         "sections": ["§10", "§13", "§14"],
         "short": "minimality",
-        "keywords": ["minimality", "purpose limitation", "adequate", "relevant", "excessive", "retention"],
+        "keywords": [
+            "minimality",
+            "purpose limitation",
+            "adequate",
+            "relevant",
+            "excessive",
+            "retention",
+        ],
     },
     "POPIA security safeguards": {
         "sections": ["§19", "§20", "§21"],
@@ -208,8 +215,16 @@ EDGE_CASE_TEMPLATES = [
 ]
 
 FOREIGN_COUNTRIES = [
-    "the United Kingdom", "India", "the United States", "Nigeria",
-    "Mauritius", "the UAE", "Germany", "Kenya", "China", "Australia",
+    "the United Kingdom",
+    "India",
+    "the United States",
+    "Nigeria",
+    "Mauritius",
+    "the UAE",
+    "Germany",
+    "Kenya",
+    "China",
+    "Australia",
 ]
 
 # ── Hard-negative templates ──────────────────────────────────────────────────
@@ -217,31 +232,39 @@ FOREIGN_COUNTRIES = [
 NEAR_MISS_MUTATIONS: list[dict[str, Any]] = [
     {
         "desc": "flip_timeframe",
-        "transform": lambda p: p.replace("the same day", "six months later")
-                                .replace("within 21 days", "after eight months")
-                                .replace("the next working day", "three quarters later")
-                                .replace("within four hours", "four months later"),
+        "transform": lambda p: (
+            p.replace("the same day", "six months later")
+            .replace("within 21 days", "after eight months")
+            .replace("the next working day", "three quarters later")
+            .replace("within four hours", "four months later")
+        ),
         "label_flip": {"entailment": "contradiction"},
     },
     {
         "desc": "remove_safeguard",
-        "transform": lambda p: p.replace("encrypted at rest with AES-256, ", "")
-                                .replace("MFA-enforced and ", "")
-                                .replace("role-based, ", "")
-                                .replace("documented ", ""),
+        "transform": lambda p: (
+            p.replace("encrypted at rest with AES-256, ", "")
+            .replace("MFA-enforced and ", "")
+            .replace("role-based, ", "")
+            .replace("documented ", "")
+        ),
         "label_flip": {"entailment": "neutral"},
     },
     {
         "desc": "add_violation",
-        "transform": lambda p: p + " However, we also use this data for undisclosed marketing purposes.",
+        "transform": lambda p: (
+            p + " However, we also use this data for undisclosed marketing purposes."
+        ),
         "label_flip": {"entailment": "contradiction"},
     },
     {
         "desc": "weaken_consent",
-        "transform": lambda p: p.replace("signed", "verbally mentioned")
-                                .replace("explicit", "implied")
-                                .replace("written form", "casual conversation")
-                                .replace("documented consent", "informal agreement"),
+        "transform": lambda p: (
+            p.replace("signed", "verbally mentioned")
+            .replace("explicit", "implied")
+            .replace("written form", "casual conversation")
+            .replace("documented consent", "informal agreement")
+        ),
         "label_flip": {"entailment": "neutral"},
     },
 ]
@@ -285,9 +308,11 @@ PARTIAL_COMPLIANCE_SUFFIXES = [
 
 # ── Dataclass for generated examples ────────────────────────────────────────
 
+
 @dataclass
 class SyntheticExample:
     """A single generated training example with full provenance metadata."""
+
     id: str = field(default_factory=lambda: uuid.uuid4().hex[:12])
     # NLI fields
     clause: str = ""
@@ -341,6 +366,7 @@ class SyntheticExample:
 
 # ── Seed loader ──────────────────────────────────────────────────────────────
 
+
 def load_seeds(seed_dir: Path) -> tuple[list[dict], list[dict]]:
     """Load NLI seeds and instruct seeds from the data directory."""
     nli_seeds: list[dict] = []
@@ -359,7 +385,7 @@ def load_seeds(seed_dir: Path) -> tuple[list[dict], list[dict]]:
     for fname in nli_files:
         fpath = seed_dir / fname
         if fpath.exists():
-            with open(fpath, "r", encoding="utf-8") as f:
+            with open(fpath, encoding="utf-8") as f:
                 for i, line in enumerate(f):
                     line = line.strip()
                     if not line:
@@ -377,7 +403,7 @@ def load_seeds(seed_dir: Path) -> tuple[list[dict], list[dict]]:
     for fname in instruct_files:
         fpath = seed_dir / fname
         if fpath.exists():
-            with open(fpath, "r", encoding="utf-8") as f:
+            with open(fpath, encoding="utf-8") as f:
                 for i, line in enumerate(f):
                     line = line.strip()
                     if not line:
@@ -433,7 +459,7 @@ def evolve_with_constraints(
                 data_type_desc=data_type_desc,
             )
             base_scenario = seed["premise"]
-            full_question = f"Given this scenario: \"{base_scenario}\"\n\n{user_q}"
+            full_question = f'Given this scenario: "{base_scenario}"\n\n{user_q}'
             sections = clause_info.get("sections", [])
             difficulty = 2
 
@@ -448,7 +474,7 @@ def evolve_with_constraints(
         elif strategy == "reasoning":
             reasoning_q = rng.choice(REASONING_TEMPLATES)
             base_scenario = seed["premise"]
-            full_question = f"Scenario: \"{base_scenario}\"\n\n{reasoning_q}"
+            full_question = f'Scenario: "{base_scenario}"\n\n{reasoning_q}'
             sections = clause_info.get("sections", [])
             difficulty = 3
 
@@ -473,9 +499,7 @@ def evolve_with_constraints(
                 foreign_country=foreign_country,
             )
             # Multi-hop engages multiple clause areas
-            other_clause = rng.choice(
-                [c for c in POPIA_CLAUSES if c != clause]
-            )
+            other_clause = rng.choice([c for c in POPIA_CLAUSES if c != clause])
             other_info = POPIA_CLAUSES[other_clause]
             all_sections = clause_info.get("sections", []) + other_info.get("sections", [])
             sections = all_sections
@@ -527,13 +551,13 @@ def evolve_with_constraints(
 
 # ── 2. Hard-negative generation (SyNeg-style) ───────────────────────────────
 
+
 def generate_hard_negatives(
     nli_seeds: list[dict], rng: random.Random, count: int = 100
 ) -> list[SyntheticExample]:
     """Generate near-miss, section-confusion, and partial-compliance negatives."""
     results: list[SyntheticExample] = []
     entailment_seeds = [s for s in nli_seeds if s.get("label") == "entailment"]
-    all_clauses = list(POPIA_CLAUSES.keys())
 
     # ── Near-miss negatives ──────────────────────────────────────────────────
     near_miss_budget = count // 3
@@ -673,23 +697,47 @@ SCENARIO_PREMISE_TEMPLATES: dict[str, list[str]] = {
 
 HYPOTHESIS_TEMPLATES_BY_CLAUSE: dict[str, list[tuple[str, str]]] = {
     "POPIA consent": [
-        ("The responsible party has obtained valid, freely-given consent for the processing.", "entailment"),
-        ("The responsible party has obtained valid, freely-given consent for the processing.", "contradiction"),
+        (
+            "The responsible party has obtained valid, freely-given consent for the processing.",
+            "entailment",
+        ),
+        (
+            "The responsible party has obtained valid, freely-given consent for the processing.",
+            "contradiction",
+        ),
         ("The data subject has given informed consent.", "neutral"),
     ],
     "POPIA minimality / purpose limitation": [
-        ("The data collected is adequate, relevant and not excessive for the stated purpose.", "entailment"),
-        ("The data collected is adequate, relevant and not excessive for the stated purpose.", "contradiction"),
+        (
+            "The data collected is adequate, relevant and not excessive for the stated purpose.",
+            "entailment",
+        ),
+        (
+            "The data collected is adequate, relevant and not excessive for the stated purpose.",
+            "contradiction",
+        ),
         ("The retention period is proportionate to the purpose.", "neutral"),
     ],
     "POPIA security safeguards": [
-        ("The responsible party has appropriate technical and organisational safeguards.", "entailment"),
-        ("The responsible party has appropriate technical and organisational safeguards.", "contradiction"),
+        (
+            "The responsible party has appropriate technical and organisational safeguards.",
+            "entailment",
+        ),
+        (
+            "The responsible party has appropriate technical and organisational safeguards.",
+            "contradiction",
+        ),
         ("Security measures are in line with industry best practice.", "neutral"),
     ],
     "POPIA breach notification": [
-        ("The responsible party notified the Regulator and data subjects as soon as reasonably possible.", "entailment"),
-        ("The responsible party notified the Regulator and data subjects as soon as reasonably possible.", "contradiction"),
+        (
+            "The responsible party notified the Regulator and data subjects as soon as reasonably possible.",
+            "entailment",
+        ),
+        (
+            "The responsible party notified the Regulator and data subjects as soon as reasonably possible.",
+            "contradiction",
+        ),
         ("A breach has occurred that triggers §22 obligations.", "neutral"),
     ],
     "POPIA cross-border transfers": [
@@ -703,18 +751,36 @@ HYPOTHESIS_TEMPLATES_BY_CLAUSE: dict[str, list[tuple[str, str]]] = {
         ("The responsible party has taken accountability steps.", "neutral"),
     ],
     "POPIA data subject rights": [
-        ("The responsible party is honouring the data subject's rights under §23–§25.", "entailment"),
-        ("The responsible party is honouring the data subject's rights under §23–§25.", "contradiction"),
+        (
+            "The responsible party is honouring the data subject's rights under §23–§25.",
+            "entailment",
+        ),
+        (
+            "The responsible party is honouring the data subject's rights under §23–§25.",
+            "contradiction",
+        ),
         ("Data subjects can exercise their rights under POPIA.", "neutral"),
     ],
     "POPIA special personal information": [
-        ("The responsible party has a lawful basis under §27 to process special personal information.", "entailment"),
-        ("The responsible party has a lawful basis under §27 to process special personal information.", "contradiction"),
+        (
+            "The responsible party has a lawful basis under §27 to process special personal information.",
+            "entailment",
+        ),
+        (
+            "The responsible party has a lawful basis under §27 to process special personal information.",
+            "contradiction",
+        ),
         ("Special personal information is involved in this processing.", "neutral"),
     ],
     "POPIA children's information": [
-        ("The responsible party has obtained parental consent before processing the child's data.", "entailment"),
-        ("The responsible party has obtained parental consent before processing the child's data.", "contradiction"),
+        (
+            "The responsible party has obtained parental consent before processing the child's data.",
+            "entailment",
+        ),
+        (
+            "The responsible party has obtained parental consent before processing the child's data.",
+            "contradiction",
+        ),
         ("Personal information of minors may be involved.", "neutral"),
     ],
     "POPIA automated decision-making": [
@@ -733,8 +799,12 @@ def diversify_scenarios(rng: random.Random, count: int = 200) -> list[SyntheticE
     rng.shuffle(combos)
 
     for combo in combos[:count]:
-        (industry_name, industry_desc), (size_name, size_desc), \
-            (dtype_name, dtype_desc), (action_name, action_verb) = combo
+        (
+            (industry_name, industry_desc),
+            (size_name, size_desc),
+            (dtype_name, dtype_desc),
+            (action_name, action_verb),
+        ) = combo
 
         clause = rng.choice(list(POPIA_CLAUSES.keys()))
         clause_info = POPIA_CLAUSES[clause]
@@ -815,9 +885,7 @@ CURRICULUM_TEMPLATES: dict[int, list[dict[str, str]]] = {
             "tag": "multi-clause-identification",
         },
         {
-            "user": (
-                "Review this scenario against {clause}: {premise}"
-            ),
+            "user": ("Review this scenario against {clause}: {premise}"),
             "assistant": (
                 "This scenario {compliance_word} {sections_str}. The processing described "
                 "— '{premise_short}' — {compliance_reason}."
@@ -907,10 +975,26 @@ SECTION_TITLES: dict[str, str] = {
 }
 
 EXEMPTION_CLAIMS = [
-    ("the data is publicly available", "not succeed", "Public availability does not negate POPIA obligations — §6 still requires lawful processing of publicly available personal information."),
-    ("they have a legitimate interest", "require careful balancing", "Legitimate interest under §11(1)(f) requires a proportionality assessment between the responsible party's interest and the data subject's right to privacy."),
-    ("the processing is for journalistic purposes", "only succeed if genuine journalism is involved", "The §7 exemption is narrow and applies only to processing solely for journalistic, literary or artistic expression."),
-    ("consent was obtained before POPIA commenced", "need to be reassessed", "Pre-POPIA consent may not meet the standard of 'specific, voluntary and informed' consent required under §11."),
+    (
+        "the data is publicly available",
+        "not succeed",
+        "Public availability does not negate POPIA obligations — §6 still requires lawful processing of publicly available personal information.",
+    ),
+    (
+        "they have a legitimate interest",
+        "require careful balancing",
+        "Legitimate interest under §11(1)(f) requires a proportionality assessment between the responsible party's interest and the data subject's right to privacy.",
+    ),
+    (
+        "the processing is for journalistic purposes",
+        "only succeed if genuine journalism is involved",
+        "The §7 exemption is narrow and applies only to processing solely for journalistic, literary or artistic expression.",
+    ),
+    (
+        "consent was obtained before POPIA commenced",
+        "need to be reassessed",
+        "Pre-POPIA consent may not meet the standard of 'specific, voluntary and informed' consent required under §11.",
+    ),
 ]
 
 EDGE_CASE_SCENARIOS = [
@@ -963,8 +1047,10 @@ def generate_curriculum_instruct(
             label = seed.get("label", "neutral")
 
             compliance_word = (
-                "aligns with" if label == "entailment"
-                else "does NOT comply with" if label == "contradiction"
+                "aligns with"
+                if label == "entailment"
+                else "does NOT comply with"
+                if label == "contradiction"
                 else "is not directly governed by"
             )
             compliance_reason = (
@@ -1090,10 +1176,11 @@ def quality_filter(examples: list[SyntheticExample]) -> list[SyntheticExample]:
                 if "role" not in msg or "content" not in msg:
                     stats["malformed_message"] += 1
                     break
-                if msg["role"] in ("user", "assistant"):
-                    if not (MIN_MSG_LEN <= len(msg["content"]) <= MAX_MSG_LEN):
-                        stats["message_length"] += 1
-                        break
+                if msg["role"] in ("user", "assistant") and not (
+                    MIN_MSG_LEN <= len(msg["content"]) <= MAX_MSG_LEN
+                ):
+                    stats["message_length"] += 1
+                    break
             else:
                 passed.append(ex)
                 continue
@@ -1109,6 +1196,7 @@ def quality_filter(examples: list[SyntheticExample]) -> list[SyntheticExample]:
 
 # ── Stats reporting ──────────────────────────────────────────────────────────
 
+
 def print_stats(examples: list[SyntheticExample]) -> None:
     """Print generation statistics."""
     total = len(examples)
@@ -1120,45 +1208,45 @@ def print_stats(examples: list[SyntheticExample]) -> None:
     by_format = Counter("instruct" if ex.messages else "nli" for ex in examples)
 
     print("\n" + "=" * 72)
-    print(f"  SYNTHETIC DATA GENERATION REPORT")
+    print("  SYNTHETIC DATA GENERATION REPORT")
     print(f"  Total examples: {total}")
     print("=" * 72)
 
-    print(f"\n{'─'*36}")
+    print(f"\n{'─' * 36}")
     print("  BY FORMAT")
-    print(f"{'─'*36}")
+    print(f"{'─' * 36}")
     for fmt, cnt in by_format.most_common():
-        print(f"    {fmt:<20s}  {cnt:>5d}  ({cnt/total*100:5.1f}%)")
+        print(f"    {fmt:<20s}  {cnt:>5d}  ({cnt / total * 100:5.1f}%)")
 
-    print(f"\n{'─'*36}")
+    print(f"\n{'─' * 36}")
     print("  BY GENERATION METHOD")
-    print(f"{'─'*36}")
+    print(f"{'─' * 36}")
     for method, cnt in by_method.most_common():
-        print(f"    {method:<40s}  {cnt:>5d}  ({cnt/total*100:5.1f}%)")
+        print(f"    {method:<40s}  {cnt:>5d}  ({cnt / total * 100:5.1f}%)")
 
-    print(f"\n{'─'*36}")
+    print(f"\n{'─' * 36}")
     print("  BY DIFFICULTY LEVEL")
-    print(f"{'─'*36}")
+    print(f"{'─' * 36}")
     for level in sorted(by_difficulty):
         cnt = by_difficulty[level]
         bar = "█" * int(cnt / total * 40)
-        print(f"    Level {level}  {cnt:>5d}  ({cnt/total*100:5.1f}%)  {bar}")
+        print(f"    Level {level}  {cnt:>5d}  ({cnt / total * 100:5.1f}%)  {bar}")
 
-    print(f"\n{'─'*36}")
+    print(f"\n{'─' * 36}")
     print("  BY POPIA SECTION")
-    print(f"{'─'*36}")
+    print(f"{'─' * 36}")
     for clause, cnt in by_clause.most_common():
         print(f"    {clause:<8s}  {cnt:>5d}")
 
-    print(f"\n{'─'*36}")
+    print(f"\n{'─' * 36}")
     print("  BY NLI LABEL (NLI examples only)")
-    print(f"{'─'*36}")
+    print(f"{'─' * 36}")
     for label, cnt in by_label.most_common():
         print(f"    {label:<15s}  {cnt:>5d}")
 
-    print(f"\n{'─'*36}")
+    print(f"\n{'─' * 36}")
     print("  BY SCENARIO TYPE")
-    print(f"{'─'*36}")
+    print(f"{'─' * 36}")
     for stype, cnt in by_scenario_type.most_common():
         print(f"    {stype:<20s}  {cnt:>5d}")
 
@@ -1166,6 +1254,7 @@ def print_stats(examples: list[SyntheticExample]) -> None:
 
 
 # ── Main pipeline ────────────────────────────────────────────────────────────
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate synthetic POPIA training data.")

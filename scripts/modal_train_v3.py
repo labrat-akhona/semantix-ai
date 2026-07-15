@@ -26,6 +26,7 @@ ONNX export is skipped on the cloud (it's CPU work and pollutes the GPU
 container with extra deps). Run `scripts/calibrate_popia_v2.py` and any
 ONNX export locally after the pytorch weights are pulled from HF.
 """
+
 from __future__ import annotations
 
 import json
@@ -73,10 +74,14 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
     cmd = [
         "python",
         "scripts/train_popia_v2.py",
-        "--base-model", BASE_MODEL,
-        "--out-dir", OUT_DIR,
-        "--epochs", str(epochs),
-        "--seed", str(seed),
+        "--base-model",
+        BASE_MODEL,
+        "--out-dir",
+        OUT_DIR,
+        "--epochs",
+        str(epochs),
+        "--seed",
+        str(seed),
         "--skip-quantize",
     ]
     print(f"[modal] running: {' '.join(cmd)}")
@@ -95,7 +100,9 @@ def train(epochs: int = 6, seed: int = 42, push_to_hf: bool = True) -> dict:
             from huggingface_hub.errors import HfHubHTTPError
 
             api = HfApi(token=token)
-            api.create_repo(repo_id=HF_REPO, repo_type="model", exist_ok=True, private=False, token=token)
+            api.create_repo(
+                repo_id=HF_REPO, repo_type="model", exist_ok=True, private=False, token=token
+            )
             try:
                 api.upload_folder(
                     folder_path=OUT_DIR,
@@ -123,9 +130,15 @@ def main(epochs: int = 6, seed: int = 42, push: bool = True):
     print(f"Base:    {report.get('base_model')}")
     print(f"Seed:    {report.get('seed')}")
     print(f"Epochs:  {report.get('epochs')}")
-    print(f"\nv1 holdout macro F1: {report.get('v2_model_v1_f1'):.4f}  (stock {report.get('stock_v1_f1'):.4f})")
-    print(f"v2 holdout macro F1: {report.get('v2_model_v2_f1'):.4f}  (stock {report.get('stock_v2_f1'):.4f})")
+    print(
+        f"\nv1 holdout macro F1: {report.get('v2_model_v1_f1'):.4f}  (stock {report.get('stock_v1_f1'):.4f})"
+    )
+    print(
+        f"v2 holdout macro F1: {report.get('v2_model_v2_f1'):.4f}  (stock {report.get('stock_v2_f1'):.4f})"
+    )
     print(f"Gate:    {'PASS' if report.get('gate_pass') else 'FAIL'}")
     if push:
         print(f"\nUploaded to: https://huggingface.co/{HF_REPO}")
-    print(f"Next: run scripts/calibrate_popia_v2.py against {HF_REPO} to fit a v3 calibration constant.")
+    print(
+        f"Next: run scripts/calibrate_popia_v2.py against {HF_REPO} to fit a v3 calibration constant."
+    )

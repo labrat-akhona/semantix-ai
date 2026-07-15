@@ -10,6 +10,7 @@ Future v2 expansion: FSCA Nov 2025 AI report, SARB circulars, IR media statement
 Output: data/sa_compliance_pairs.jsonl  — JSONL of {"anchor": ..., "positive": ..., "source": ...}
         data/sa_compliance_corpus.jsonl — JSONL of {"section_id": ..., "title": ..., "text": ...}
 """
+
 from __future__ import annotations
 
 import json
@@ -18,7 +19,9 @@ from pathlib import Path
 
 import pypdf
 
-POPIA_PDF = Path("/home/aiko/.claude/projects/-mnt-c-Users-akhon-semantix/1dccf3a3-ab41-4bf3-a68e-5f46065d0f23/tool-results/webfetch-1778852283601-yy0cv2.pdf")
+POPIA_PDF = Path(
+    "/home/aiko/.claude/projects/-mnt-c-Users-akhon-semantix/1dccf3a3-ab41-4bf3-a68e-5f46065d0f23/tool-results/webfetch-1778852283601-yy0cv2.pdf"
+)
 DATA_DIR = Path("data")
 PAIRS_OUT = DATA_DIR / "sa_compliance_pairs.jsonl"
 CORPUS_OUT = DATA_DIR / "sa_compliance_corpus.jsonl"
@@ -105,11 +108,13 @@ def main() -> None:
             if n not in sections:
                 continue
             sec = sections[n]
-            pairs.append({
-                "anchor": clause,
-                "positive": f"POPIA §{n}. {sec['title']}. {sec['text']}",
-                "source": "clause-to-section",
-            })
+            pairs.append(
+                {
+                    "anchor": clause,
+                    "positive": f"POPIA §{n}. {sec['title']}. {sec['text']}",
+                    "source": "clause-to-section",
+                }
+            )
 
     # Pair type 2: (scenario premise) -> (any central section for that scenario's clause).
     #              Only entailment + contradiction scenarios — they reliably target the clause.
@@ -123,11 +128,13 @@ def main() -> None:
             if n not in sections:
                 continue
             sec = sections[n]
-            pairs.append({
-                "anchor": s["premise"],
-                "positive": f"POPIA §{n}. {sec['title']}. {sec['text']}",
-                "source": f"scenario-{s['scenario']}",
-            })
+            pairs.append(
+                {
+                    "anchor": s["premise"],
+                    "positive": f"POPIA §{n}. {sec['title']}. {sec['text']}",
+                    "source": f"scenario-{s['scenario']}",
+                }
+            )
 
     # Pair type 3: (hypothesis text) -> (central section).
     # The hypothesis is the legal claim; the section is its statutory anchor.
@@ -143,11 +150,13 @@ def main() -> None:
             if n not in sections:
                 continue
             sec = sections[n]
-            pairs.append({
-                "anchor": h,
-                "positive": f"POPIA §{n}. {sec['title']}. {sec['text']}",
-                "source": "hypothesis-to-section",
-            })
+            pairs.append(
+                {
+                    "anchor": h,
+                    "positive": f"POPIA §{n}. {sec['title']}. {sec['text']}",
+                    "source": "hypothesis-to-section",
+                }
+            )
 
     with PAIRS_OUT.open("w") as f:
         for p in pairs:
@@ -156,6 +165,7 @@ def main() -> None:
 
     # Stats
     from collections import Counter
+
     src = Counter(p["source"].split("-")[0] if "-" in p["source"] else p["source"] for p in pairs)
     print("pairs by source bucket:", dict(src))
 

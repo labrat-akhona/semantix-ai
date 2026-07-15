@@ -9,6 +9,7 @@ weights — leaves headroom for LoRA adapters + activations.
 
 Output: out/popia-instruct-v0/  (LoRA adapter weights + tokenizer + merged model)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -174,9 +175,9 @@ def main() -> int:
                 do_sample=False,
                 pad_token_id=tokenizer.pad_token_id,
             )
-        decoded = tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        decoded = tokenizer.decode(out[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
         gold = ex["messages"][-1]["content"]
-        print(f"\n--- sample {i+1} ---")
+        print(f"\n--- sample {i + 1} ---")
         print(f"USER: {ex['messages'][1]['content'][:150]}")
         print(f"GOLD: {gold[:200]}")
         print(f"PRED: {decoded[:200]}")

@@ -222,9 +222,7 @@ class QuantizedNLIJudge(Judge):
         premise_text = premise if premise is not None else output
         hypothesis_src = hypothesis if hypothesis is not None else intent_description
         if premise_text is None:
-            raise TypeError(
-                "evaluate() requires the premise (positional `output`, or `premise=`)"
-            )
+            raise TypeError("evaluate() requires the premise (positional `output`, or `premise=`)")
         if hypothesis_src is None:
             raise TypeError(
                 "evaluate() requires the hypothesis "

@@ -224,7 +224,10 @@ class TestFirstClassFields:
     def test_records_subject(self):
         engine = AuditEngine()
         cert = engine.record(
-            intent="x", output="o", score=0.5, passed=True,
+            intent="x",
+            output="o",
+            score=0.5,
+            passed=True,
             subject="user:5b4c9d12",
         )
         assert cert["subject"] == "user:5b4c9d12"
@@ -273,7 +276,10 @@ class TestClaimHash:
     def test_output_hash_is_still_premise_only(self):
         engine = AuditEngine()
         cert = engine.record(
-            intent="x", output="hello world", score=0.5, passed=True,
+            intent="x",
+            output="hello world",
+            score=0.5,
+            passed=True,
             hypothesis="something entirely different",
         )
         assert cert["output_hash"] == hashlib.sha256(b"hello world").hexdigest()
@@ -293,27 +299,53 @@ class TestClaimHash:
 
     def test_same_premise_different_hypothesis_distinct_claim_hash(self):
         engine = AuditEngine()
-        a = engine.record(intent="x", output="same premise", score=0.5, passed=True,
-                          hypothesis="clause A", judge_id="j")
-        b = engine.record(intent="x", output="same premise", score=0.5, passed=True,
-                          hypothesis="clause B", judge_id="j")
+        a = engine.record(
+            intent="x",
+            output="same premise",
+            score=0.5,
+            passed=True,
+            hypothesis="clause A",
+            judge_id="j",
+        )
+        b = engine.record(
+            intent="x",
+            output="same premise",
+            score=0.5,
+            passed=True,
+            hypothesis="clause B",
+            judge_id="j",
+        )
         assert a["claim_hash"] != b["claim_hash"]
 
     def test_same_premise_different_hypothesis_same_output_hash(self):
         # The constancy diagnostic (F4 tension) must be preserved.
         engine = AuditEngine()
-        a = engine.record(intent="x", output="same premise", score=0.5, passed=True,
-                          hypothesis="clause A", judge_id="j")
-        b = engine.record(intent="x", output="same premise", score=0.5, passed=True,
-                          hypothesis="clause B", judge_id="j")
+        a = engine.record(
+            intent="x",
+            output="same premise",
+            score=0.5,
+            passed=True,
+            hypothesis="clause A",
+            judge_id="j",
+        )
+        b = engine.record(
+            intent="x",
+            output="same premise",
+            score=0.5,
+            passed=True,
+            hypothesis="clause B",
+            judge_id="j",
+        )
         assert a["output_hash"] == b["output_hash"]
 
     def test_claim_hash_depends_on_judge_id(self):
         engine = AuditEngine()
-        a = engine.record(intent="x", output="p", score=0.5, passed=True,
-                          hypothesis="h", judge_id="v1")
-        b = engine.record(intent="x", output="p", score=0.5, passed=True,
-                          hypothesis="h", judge_id="v2")
+        a = engine.record(
+            intent="x", output="p", score=0.5, passed=True, hypothesis="h", judge_id="v1"
+        )
+        b = engine.record(
+            intent="x", output="p", score=0.5, passed=True, hypothesis="h", judge_id="v2"
+        )
         assert a["claim_hash"] != b["claim_hash"]
 
 
@@ -354,10 +386,22 @@ class TestBackwardCompatV1Chain:
         engine = AuditEngine()
         engine.load(_FIXTURES / "v1_chain_frozen.jsonl")
         frozen_first = dict(engine.entries[0])
-        engine.record(intent="POPIA §72", output="new premise", score=0.5, passed=False,
-                     hypothesis="Data leaves SA", judge_id="POPIAJudge/v1")
-        engine.record(intent="POPIA §72", output="another", score=0.6, passed=True,
-                     hypothesis="Consent given", judge_id="POPIAJudge/v1")
+        engine.record(
+            intent="POPIA §72",
+            output="new premise",
+            score=0.5,
+            passed=False,
+            hypothesis="Data leaves SA",
+            judge_id="POPIAJudge/v1",
+        )
+        engine.record(
+            intent="POPIA §72",
+            output="another",
+            score=0.6,
+            passed=True,
+            hypothesis="Consent given",
+            judge_id="POPIAJudge/v1",
+        )
         assert engine.verify_chain() is True
         assert engine.entries[5]["@context"] == "https://schema.semantix.ai/v2"
         # appending v2 must not have mutated the frozen v1 entries
@@ -422,10 +466,12 @@ class TestChainReport:
     def test_distinct_premises_counts_output_hash(self):
         engine = AuditEngine()
         # same premise judged against two clauses -> 1 premise, 2 claims
-        engine.record(intent="x", output="same", score=0.5, passed=True,
-                     hypothesis="A", judge_id="j")
-        engine.record(intent="x", output="same", score=0.5, passed=True,
-                     hypothesis="B", judge_id="j")
+        engine.record(
+            intent="x", output="same", score=0.5, passed=True, hypothesis="A", judge_id="j"
+        )
+        engine.record(
+            intent="x", output="same", score=0.5, passed=True, hypothesis="B", judge_id="j"
+        )
         r = engine.chain_report()
         assert r.distinct_premises == 1
         assert r.distinct_claims == 2

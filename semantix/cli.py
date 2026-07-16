@@ -502,6 +502,10 @@ def _run_verify(args) -> int:
     else:
         print(f"  Entries: {len(entries):,}")
 
+    from semantix.audit.engine import AuditEngine
+
+    report = AuditEngine.summarize(entries)
+
     passed_count = sum(1 for e in entries if e.get("passed") is True)
     failed_count = sum(1 for e in entries if e.get("passed") is False)
     total_verdicts = passed_count + failed_count
@@ -514,6 +518,15 @@ def _run_verify(args) -> int:
             f"- {_RED}{failed_count:,} FAIL{_RESET} ({fail_pct:.1f}%)"
         )
 
+    # Integrity is not variety: a chain can verify perfectly while every
+    # certificate certifies the same result. Surface that so a constant chain
+    # is visible without a human having to notice.
+    print(
+        f"Distinct: {report.distinct_verdicts:,} verdict(s), "
+        f"{report.distinct_claims:,} claim(s), "
+        f"{report.distinct_premises:,} premise(s)"
+    )
+
     intent_counts: dict[str, int] = {}
     for e in entries:
         intent = e.get("intent")
@@ -525,6 +538,17 @@ def _run_verify(args) -> int:
         print(f"Intents (top {len(top)}):")
         for name, count in top:
             print(f"  {count:>6,}  {name}")
+
+    if report.is_constant:
+        print()
+        print(
+            f"{_BOLD}{_YELLOW}!! CONSTANT CHAIN{_RESET}  all {report.n_certs:,} "
+            f"certificates carry the same verdict."
+        )
+        print(
+            f"  {_DIM}The chain is intact but certifies one repeated result -- "
+            f"verifying it proves integrity, not variety.{_RESET}"
+        )
 
     print()
     ok, broken_at = _verify_chain(entries)

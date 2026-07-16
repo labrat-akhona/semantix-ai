@@ -171,12 +171,68 @@ class QuantizedNLIJudge(Judge):
 
     def evaluate(
         self,
-        output: str,
-        intent_description: str,
+        output: str | None = None,
+        intent_description: str | None = None,
         threshold: float = 0.5,
+        *,
+        premise: str | None = None,
+        hypothesis: str | None = None,
     ) -> Verdict:
-        hypothesis = _to_hypothesis(intent_description)
-        encoded = self._tokenizer.encode(output, hypothesis)
+        """Score whether *premise* entails *hypothesis* (NLI).
+
+        NLI mapping — read this before wiring a compliance audit
+        --------------------------------------------------------
+        This is a cross-encoder NLI judge, so the two texts are a **premise**
+        (the evidence/text under scrutiny) and a **hypothesis** (the claim
+        being tested). The historical parameter names come from the library's
+        LLM-output-validation origin and map as::
+
+            output              == premise     (the evidence: a policy, a reply)
+            intent_description  == hypothesis   (the claim: "data leaves the country")
+
+        Passing them backwards produces a plausible-looking but meaningless
+        score and raises nothing, so for NLI/compliance work prefer the
+        explicit aliases::
+
+            judge.evaluate(premise=policy_text, hypothesis=requirement_text)
+
+        Both spellings work; supplying a legacy name **and** its alias for the
+        same slot is a wiring error and raises ``TypeError`` rather than
+        silently picking one.
+
+        Parameters
+        ----------
+        output / premise:
+            The premise — the text being judged. ``premise`` is the alias.
+        intent_description / hypothesis:
+            The hypothesis — the claim tested against the premise.
+            ``hypothesis`` is the alias.
+        threshold:
+            Minimum entailment probability for ``passed``.
+        """
+        if output is not None and premise is not None:
+            raise TypeError(
+                "evaluate() got both `output` and its alias `premise` -- pass one, not both"
+            )
+        if intent_description is not None and hypothesis is not None:
+            raise TypeError(
+                "evaluate() got both `intent_description` and its alias `hypothesis` "
+                "-- pass one, not both"
+            )
+        premise_text = premise if premise is not None else output
+        hypothesis_src = hypothesis if hypothesis is not None else intent_description
+        if premise_text is None:
+            raise TypeError(
+                "evaluate() requires the premise (positional `output`, or `premise=`)"
+            )
+        if hypothesis_src is None:
+            raise TypeError(
+                "evaluate() requires the hypothesis "
+                "(positional `intent_description`, or `hypothesis=`)"
+            )
+
+        hypothesis_text = _to_hypothesis(hypothesis_src)
+        encoded = self._tokenizer.encode(premise_text, hypothesis_text)
 
         feeds = {
             "input_ids": np.array([encoded.ids], dtype=np.int64),

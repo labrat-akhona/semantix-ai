@@ -97,11 +97,28 @@ SafeAndPolite = Polite & ~MedicalAdvice & ~LegalAdvice
 from semantix.audit.engine import AuditEngine
 engine = AuditEngine()
 
-# Every @validate_intent call with audit=True writes a hash-chained certificate.
-engine.verify_chain()  # True if no tampering
+# Bind each certificate to WHAT was judged, BY WHICH judge, ABOUT WHOM.
+engine.record(
+    intent="POPIA cross-border transfers",
+    output=policy_text,                                  # the premise (hashed, never stored raw)
+    hypothesis="Personal information is transferred outside South Africa",
+    judge_id="POPIAJudge/v1@0.75",
+    subject="user:5b4c9d12",
+    metadata={"destination": "Ashby", "country": "US"},
+    score=0.53, passed=False, reason="No consent basis on record.",
+)
+
+engine.verify_chain()   # True if no tampering
+engine.chain_report()   # integrity AND variety — flags a chain that verifies
+                        # perfectly while certifying one repeated result
 ```
 
-Each certificate records the hash of the validated text, the intent, the judge identity and configuration, the verdict, the timestamp, and the hash of the previous certificate. Compatible with JSON-LD tooling and standard audit pipelines.
+Each certificate records the hash of the validated text (`output_hash`) and of the
+judged claim (`claim_hash`), the intent and hypothesis, the judge identity and
+configuration (`judge_id`, `metadata`), the subject, the verdict, the timestamp, and
+the hash of the previous certificate. New certificates use the `…/v2` schema; existing
+`…/v1` certificates still verify unchanged, so a chain that upgrades mid-life stays one
+intact chain. Compatible with JSON-LD tooling and standard audit pipelines.
 
 ### 3. Self-healing retries
 

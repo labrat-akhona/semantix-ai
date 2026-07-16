@@ -15,7 +15,7 @@ Quick start
 ...     return call_my_llm(event)  # returns a plain string
 """
 
-from semantix.audit.engine import AuditEngine
+from semantix.audit.engine import AuditEngine, ChainReport
 from semantix.composite import AllOf, AnyOf, Not
 from semantix.decorator import get_last_failure, validate_intent
 from semantix.exceptions import SemanticIntentError
@@ -46,6 +46,7 @@ __all__ = [
     "ForensicJudge",
     # Audit
     "AuditEngine",
+    "ChainReport",
     # Composite
     "AllOf",
     "AnyOf",
@@ -80,5 +81,5 @@ try:
 except ImportError:
     pass
 
-__version__ = "0.2.3"
+__version__ = "0.3.0"
 __author__ = "Akhona Eland"

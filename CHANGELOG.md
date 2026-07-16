@@ -1,5 +1,58 @@
 # Changelog
 
+## v0.3.0 — First-class audit certificates + constancy detection (2026-07-16)
+
+Found by dogfooding #2: the first production deployment of the audit certificate
+(a POPIA §72 cross-border-transfer audit — 833 real transfers, 28 users, 3,332
+hash-chained certificates). The chain verified, but the certificate could not say
+*what* it certified. These changes make the differentiator do its job.
+
+### Added
+- **First-class certificate fields (`AuditEngine.record`).** New keyword-only
+  parameters `hypothesis` (what was judged), `judge_id` (by which judge/version/
+  config), `subject` (about whom), and `metadata` (any structured context). Before
+  this, a caller had to JSON-encode all of it into the free-text `intent` string, so
+  the "structured" audit trail was only as structured as each caller's ad-hoc JSON.
+  All new params default to `None`, so code written against the 0.2.3 signature is
+  unchanged.
+- **`claim_hash`** — `sha256(premise, hypothesis, judge_id)`, added *alongside* the
+  existing `output_hash`. Two certificates that judged *different clauses* against the
+  *same premise* now have distinct `claim_hash` values (you can tell what was judged)
+  while sharing an `output_hash` (premise-level constancy stays visible at a glance —
+  that collapse is a real diagnostic: in the production audit 3,332 certs shared just
+  4 `output_hash` values, making "the consent basis is identical for every user"
+  cryptographically obvious). `output_hash` was **not** redefined.
+- **`AuditEngine.chain_report()` / `summarize()` → `ChainReport`.** Integrity is not
+  variety: a chain can verify perfectly while every certificate carries the same
+  verdict. The report surfaces distinct verdict / claim / premise counts and an
+  `is_constant` flag, so a constant chain is visible without a human having to notice.
+  `semantix verify <trail.jsonl>` now prints these counts and a `!! CONSTANT CHAIN`
+  warning. (Same one-line cure — count the distinct outputs — that the release
+  artifact gate already applies to shipped models.)
+- **`AuditEngine.verify_entries(entries)`** (static) and **`AuditEngine.load(path)`**
+  — verify or resume a chain loaded from disk, including mixed v1/v2 chains.
+
+### Changed
+- **New certificates emit the `https://schema.semantix.ai/v2` `@context`.** The v2
+  field set adds the items above. This is additive: the chain is verified by
+  re-hashing each entry's whole JSON dict, so **existing `…/v1` certificates verify
+  unchanged**, and a chain that upgrades mid-life (v1 rows then v2 rows) verifies as
+  one intact chain. Pinned by a frozen v1 fixture regression test
+  (`tests/fixtures/v1_chain_frozen.jsonl`, generated from 0.2.3 and never
+  regenerated) so a future change that breaks v1 semantics fails loudly.
+- **`QuantizedNLIJudge.evaluate` accepts `premise=` / `hypothesis=` aliases.** For an
+  NLI/compliance use you call `evaluate(<premise>, <hypothesis>)`, but the published
+  params are named `output` / `intent_description` (from the LLM-output-validation
+  origin) and passing them backwards silently produced meaningless scores. The old
+  names still work; supplying a legacy name *and* its alias for the same slot raises
+  `TypeError` rather than silently picking one. The NLI mapping is now documented in
+  the method docstring.
+
+### Fixed
+- **README oversell corrected (was: "records the judge identity and configuration").**
+  Before v0.3.0 the certificate dict had neither field; now `judge_id` and `metadata`
+  are first-class, so the docs are true rather than aspirational.
+
 ## v0.2.3 — Artifact gate + v2 tokenizer fix (2026-07-15)
 
 ### Fixed

@@ -478,6 +478,79 @@ class TestRunVerify:
         assert args.no_color is True
 
 
+def _write_constant_audit(path, n=200):
+    """Write a valid chain of *n* certs that all carry the SAME verdict.
+
+    Models the JobAlertsZA failure shape: a chain that verifies perfectly while
+    certifying one repeated result.
+    """
+    import hashlib
+    import json
+
+    entries = []
+    prev = "GENESIS"
+    for i in range(n):
+        cert = {
+            "@context": "https://schema.semantix.ai/v2",
+            "@type": "SemanticCertificate",
+            "id": f"urn:semantix:cert:const-{i}",
+            "timestamp": "2026-07-16T00:00:00+00:00",
+            "intent": "POPIA cross-border transfers",
+            "score": 0.531,
+            "passed": False,
+            "reason": None,
+            "output_hash": hashlib.sha256(f"premise{i}".encode()).hexdigest(),
+            "previous_hash": prev,
+        }
+        entries.append(cert)
+        prev = hashlib.sha256(json.dumps(cert, sort_keys=True).encode()).hexdigest()
+    with open(path, "w") as f:
+        for e in entries:
+            f.write(json.dumps(e, sort_keys=True) + "\n")
+    return entries
+
+
+class TestRunVerifyConstancy:
+    def _make_args(self, path, **overrides):
+        defaults = {"path": str(path), "top": 5, "no_color": True}
+        defaults.update(overrides)
+        return MagicMock(**defaults)
+
+    def test_shows_distinct_counts(self, tmp_path, capsys):
+        p = tmp_path / "trail.jsonl"
+        _write_audit(p)  # varied 4-entry chain
+        _run_verify(self._make_args(p))
+        out = capsys.readouterr().out.lower()
+        # "premise(s)" cannot leak from the tmp path, unlike "distinct".
+        assert "premise(s)" in out
+        assert "verdict(s)" in out
+
+    def test_constant_chain_warns(self, tmp_path, capsys):
+        p = tmp_path / "constant.jsonl"
+        _write_constant_audit(p, n=200)
+        code = _run_verify(self._make_args(p))
+        assert code == 0  # the chain IS intact — a warning, not a failure
+        out = capsys.readouterr().out
+        assert "CHAIN VERIFIED" in out
+        assert "CONSTANT" in out
+
+    def test_varied_chain_no_constant_warning(self, tmp_path, capsys):
+        p = tmp_path / "varied.jsonl"
+        _write_audit(p)  # 4 distinct verdicts
+        _run_verify(self._make_args(p))
+        out = capsys.readouterr().out
+        assert "CONSTANT" not in out
+
+    def test_constant_output_is_ascii_safe(self, tmp_path, capsys):
+        # `semantix verify` must not crash on a cp1252 (Windows) console. capsys
+        # captures UTF-8, so assert the printed bytes are ASCII-encodable.
+        p = tmp_path / "const.jsonl"
+        _write_constant_audit(p, n=10)
+        _run_verify(self._make_args(p))
+        out = capsys.readouterr().out
+        out.encode("ascii")  # must not raise
+
+
 # ---------------------------------------------------------------------------
 # demo subcommand
 # ---------------------------------------------------------------------------

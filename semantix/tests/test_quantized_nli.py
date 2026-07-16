@@ -347,3 +347,94 @@ class TestLoadTokenizerFallback:
 
         with pytest.raises(FileNotFoundError, match="no tokenizer.json"):
             self._run("nonexistent.json")
+
+
+# ---------------------------------------------------------------------------
+# F1 — premise/hypothesis aliases for evaluate()
+#
+# For an NLI/compliance use you call evaluate(<premise>, <hypothesis>), but the
+# published params are named `output`/`intent_description` (from the
+# LLM-output-validation origin). Passing them backwards silently produces
+# meaningless scores — nothing errors. These tests pin the aliases (new names
+# work), backward compatibility (old names still work), and the deterministic
+# guard against the swap (supplying both an old name and its alias errors).
+# ---------------------------------------------------------------------------
+
+
+class TestEvaluateAliases:
+    def _judge(self, mock_load_session, mock_load_tokenizer, logits):
+        mock_load_session.return_value = _mock_session(logits)
+        tok = _mock_tokenizer()
+        mock_load_tokenizer.return_value = tok
+        return QuantizedNLIJudge(), tok
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_premise_hypothesis_kwargs_match_positional(self, mls, mlt):
+        judge, tok = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        judge.evaluate(premise="the policy text", hypothesis="Data is transferred abroad")
+        by_alias = tok.encode.call_args
+        tok.encode.reset_mock()
+        judge.evaluate("the policy text", "Data is transferred abroad")
+        by_positional = tok.encode.call_args
+        assert by_alias == by_positional
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_premise_is_encoded_first(self, mls, mlt):
+        judge, tok = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        judge.evaluate(premise="PREMISE-TEXT", hypothesis="HYP-TEXT")
+        # tokenizer.encode(premise, hypothesis) — premise is the first arg
+        assert tok.encode.call_args[0][0] == "PREMISE-TEXT"
+        assert "HYP-TEXT" in tok.encode.call_args[0][1]
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_old_names_still_work(self, mls, mlt):
+        judge, tok = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        v = judge.evaluate(output="p", intent_description="h")
+        assert isinstance(v, Verdict)
+        assert tok.encode.call_args[0][0] == "p"
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_positional_still_works_with_threshold(self, mls, mlt):
+        judge, tok = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        v = judge.evaluate("p", "h", 0.9)
+        assert isinstance(v, Verdict)
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_conflicting_premise_and_output_raises(self, mls, mlt):
+        import pytest
+
+        judge, _ = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        with pytest.raises(TypeError, match="not both"):
+            judge.evaluate(output="a", premise="b", intent_description="h")
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_conflicting_hypothesis_and_intent_raises(self, mls, mlt):
+        import pytest
+
+        judge, _ = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        with pytest.raises(TypeError, match="not both"):
+            judge.evaluate(premise="p", intent_description="h", hypothesis="h2")
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_missing_premise_raises(self, mls, mlt):
+        import pytest
+
+        judge, _ = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        with pytest.raises(TypeError, match="requires the premise"):
+            judge.evaluate(hypothesis="h")
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_missing_hypothesis_raises(self, mls, mlt):
+        import pytest
+
+        judge, _ = self._judge(mls, mlt, [0.1, 5.0, 0.5])
+        with pytest.raises(TypeError, match="requires the hypothesis"):
+            judge.evaluate(premise="p")

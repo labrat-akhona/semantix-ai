@@ -47,6 +47,9 @@ _VERSION_TO_REPO: dict[str, str] = {
 class POPIAJudge(QuantizedNLIJudge):
     """Semantic judge fine-tuned on POPIA (Protection of Personal Information Act).
 
+    Requires the optional ``[popia]`` extra: ``pip install semantix-ai[popia]``.
+    The model (~79 MB INT8 ONNX) downloads from HuggingFace Hub on first use.
+
     Parameters
     ----------
     version:
@@ -61,10 +64,10 @@ class POPIAJudge(QuantizedNLIJudge):
         ``calibration.json`` on HF and apply it at softmax so
         ``verdict.score`` is a well-calibrated probability. Only ``v2``
         ships a calibration constant (``T*=2.5492``, ECE 0.171 → 0.075
-        on a stratified 60% test split); ``v1`` silently falls back to
-        ``T=1.0``. Defaults to ``False`` for backwards compatibility —
-        flipping the default is slated for v0.3.0 when the recommended
-        threshold can be re-tuned to the calibrated operating point.
+        on a stratified 60% test split); ``v1`` has none, so it stays at
+        ``T=1.0`` and a ``UserWarning`` is raised — query ``judge.calibrated``
+        for the resulting state. Defaults to ``False`` for backwards
+        compatibility.
     """
 
     _REPO_ID: ClassVar[str] = "labrat-aiko/nli-popia-v1"  # back-compat default
@@ -88,7 +91,7 @@ class POPIAJudge(QuantizedNLIJudge):
         self._session = _qnli._load_session(variant, repo_id=repo_id)
         self._tokenizer = _qnli._load_tokenizer(repo_id=repo_id)
         self._input_names = {inp.name for inp in self._session.get_inputs()}
-        self._temperature = _qnli._load_temperature_constant(repo_id) if calibrated else 1.0
+        self._temperature = _qnli._resolve_temperature(repo_id, calibrated)
 
     @property
     def version(self) -> str:

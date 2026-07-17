@@ -66,7 +66,7 @@ LLM applications quietly skip the step where you prove the output was fit for pu
 2. **It ships personal information out of your network.** Every judge call sends the output to a third-party API. Under POPIA §72 (or GDPR Art. 44, or the EU AI Act's high-risk-system obligations) that's a problem to document, not a default.
 3. **It produces no receipt.** The validation happened, a score came back, nothing was recorded in a form that survives an audit.
 
-semantix replaces that reflex with a local, deterministic validator and a tamper-evident log. Every validation produces a signed JSON-LD certificate hash-chained to the previous one. Modify any entry and every subsequent hash breaks. The regulator doesn't need to trust your database — the math proves the chain is intact.
+semantix replaces that reflex with a local, deterministic validator and a tamper-evident log. Every validation produces a JSON-LD certificate hash-chained to the previous one. Modify any entry mid-chain and every subsequent hash breaks. The regulator doesn't need to trust your database — the math proves the chain is internally consistent.
 
 ---
 

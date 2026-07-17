@@ -8,8 +8,10 @@ Requires: pip install onnxruntime tokenizers huggingface-hub
 
 from __future__ import annotations
 
+import importlib
 import json
 import platform
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +21,47 @@ from semantix.judges.nli import _to_hypothesis
 
 _REPO_ID = "cross-encoder/nli-MiniLM2-L6-H768"
 _CALIBRATION_FILENAME = "calibration.json"
+
+
+def _require_turbo_dep(module: str):
+    """Import an optional inference dependency, or raise an actionable error.
+
+    ``pip install semantix-ai`` alone does not pull ``onnxruntime`` /
+    ``tokenizers`` / ``huggingface-hub`` — they ship in the ``[popia]`` extra
+    (identical deps under ``[turbo]`` / ``[gdpr]``). A bare ``ImportError`` here
+    is cryptic; point the caller at the fix instead.
+    """
+    try:
+        return importlib.import_module(module)
+    except ImportError as err:
+        raise ModuleNotFoundError(
+            f"QuantizedNLIJudge/POPIAJudge needs the optional dependency {module!r}, "
+            f"which ships in an extra. Install it with:\n"
+            f"    pip install 'semantix-ai[popia]'\n"
+            f"(the same inference deps are also under [turbo] and [gdpr])."
+        ) from err
+
+
+def _resolve_temperature(repo_id: str, calibrated: bool) -> float:
+    """Softmax temperature for the judge; warn if calibration was asked for but is absent.
+
+    Returns ``1.0`` (no scaling) unless ``calibrated`` is requested *and* a real
+    ``calibration.json`` (``T != 1.0``) was found. Requesting calibration on a
+    model that has none is a silent trap otherwise — the caller thinks scores are
+    calibrated when they are raw — so it emits a ``UserWarning`` and leaves
+    ``judge.calibrated`` reporting ``False``.
+    """
+    if not calibrated:
+        return 1.0
+    temperature = _load_temperature_constant(repo_id)
+    if temperature == 1.0:
+        warnings.warn(
+            f"calibrated=True but no usable calibration.json was found for {repo_id!r}; "
+            f"temperature stays 1.0, so verdict.score is the raw (uncalibrated) entailment "
+            f"probability. Check judge.calibrated before quoting score magnitudes.",
+            stacklevel=3,
+        )
+    return temperature
 
 
 def _softmax(logits: np.ndarray, temperature: float = 1.0) -> np.ndarray:
@@ -94,6 +137,8 @@ def _detect_onnx_variant() -> str:
 
 def _load_session(variant: str, repo_id: str = _REPO_ID):
     """Download the ONNX model and create an InferenceSession."""
+    _require_turbo_dep("onnxruntime")
+    _require_turbo_dep("huggingface_hub")
     import onnxruntime as ort
     from huggingface_hub import hf_hub_download
 
@@ -113,6 +158,8 @@ def _load_tokenizer(repo_id: str = _REPO_ID):
     self-contained Rust tokenizer in every case, so try each known location so
     every published model loads regardless of which layout its pipeline used.
     """
+    _require_turbo_dep("huggingface_hub")
+    _require_turbo_dep("tokenizers")
     from huggingface_hub import hf_hub_download
     from tokenizers import Tokenizer
 
@@ -136,8 +183,11 @@ def _load_tokenizer(repo_id: str = _REPO_ID):
 class QuantizedNLIJudge(Judge):
     """INT8 quantized NLI judge — fast CPU inference, no PyTorch.
 
-    Downloads the pre-quantized ONNX model from HuggingFace Hub on first
-    use and auto-selects the best variant for the host CPU architecture.
+    Requires the optional ``[popia]`` extra: ``pip install semantix-ai[popia]``
+    (pulls ``onnxruntime`` + ``tokenizers`` + ``huggingface-hub``; the same deps
+    are under ``[turbo]`` / ``[gdpr]``). Downloads the pre-quantized ONNX model
+    from HuggingFace Hub on first use and auto-selects the best variant for the
+    host CPU architecture.
 
     Default threshold is 0.5 (not 0.8) because NLI entailment probabilities
     are calibrated differently than cosine similarity scores.
@@ -153,9 +203,10 @@ class QuantizedNLIJudge(Judge):
         apply temperature scaling at softmax so ``verdict.score`` is a
         well-calibrated probability rather than the raw (often
         over-confident) entailment likelihood. Opt-in for backwards
-        compatibility; defaults to ``False``. Models without a
-        ``calibration.json`` (base models, un-calibrated fine-tunes)
-        silently fall back to ``T=1.0`` even with ``calibrated=True``.
+        compatibility; defaults to ``False``. If a model has no
+        ``calibration.json`` (base models, un-calibrated fine-tunes such as the
+        default v1) the temperature stays ``1.0`` and a ``UserWarning`` is
+        raised; query :attr:`calibrated` to see the resulting state.
     """
 
     recommended_threshold = 0.3
@@ -167,7 +218,18 @@ class QuantizedNLIJudge(Judge):
         self._tokenizer = _load_tokenizer(repo_id=self._REPO_ID)
         # Discover which inputs the ONNX graph actually accepts.
         self._input_names = {inp.name for inp in self._session.get_inputs()}
-        self._temperature = _load_temperature_constant(self._REPO_ID) if calibrated else 1.0
+        self._temperature = _resolve_temperature(self._REPO_ID, calibrated)
+
+    @property
+    def calibrated(self) -> bool:
+        """Whether a real temperature-scaling constant (``T != 1.0``) is in effect.
+
+        ``False`` means ``verdict.score`` is the raw entailment probability. For an
+        uncalibrated model (e.g. the default v1) that number is systematically
+        over-confident, so lean on the ``threshold`` decision rather than reading
+        the magnitude as a probability.
+        """
+        return self._temperature != 1.0
 
     def evaluate(
         self,

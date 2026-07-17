@@ -1,5 +1,38 @@
 # Changelog
 
+## v0.3.1 — Accurate audit-trail wording + adopter ergonomics (2026-07-17)
+
+### Fixed
+- **Removed an inaccurate "signed" claim from the README / PyPI description.** The
+  audit certificate is **hash-chained**, not cryptographically *signed* — there is
+  no keypair and no signature. Hash-chaining proves a chain is internally
+  consistent (no entry was edited without redoing the rest); it does **not** prove
+  authenticity or non-repudiation, since anyone who can rewrite the whole file can
+  produce a chain that verifies. "signed" is a term of art with legal weight for a
+  compliance reader, so the copy now says "a JSON-LD certificate hash-chained to the
+  previous one … the math proves the chain is internally consistent." Actual
+  cryptographic signing is a feature, not a docs change — it is not implied here.
+
+### Added
+- **`AuditEngine.reset()`** (finding #5) — a public classmethod to start a fresh
+  chain, instead of poking the private singleton attributes. A second audit in the
+  same process otherwise appends to the first one's chain.
+- **Caller-supplied `id=` / `timestamp=` on `record()`** (finding #6) — both default
+  to a fresh `uuid4` / wall-clock, but supplying them yields a reproducible,
+  content-addressable certificate: identical inputs → byte-identical cert, so two
+  runs of an audit can be diffed.
+- **`QuantizedNLIJudge.calibrated` property + a warning** (finding #7) — reports
+  whether a real temperature-scaling constant (`T != 1.0`) is actually in effect.
+  The default v1 judge is uncalibrated, so its scores are systematically
+  over-confident; `calibrated` makes that queryable, and requesting `calibrated=True`
+  on a model with no `calibration.json` now raises a `UserWarning` instead of
+  silently staying raw.
+- **Actionable error when the optional inference deps are missing** (finding #9) —
+  calling `QuantizedNLIJudge` / `POPIAJudge` without `onnxruntime` / `tokenizers`
+  now raises a `ModuleNotFoundError` that names the fix (`pip install
+  semantix-ai[popia]`) instead of a cryptic import error. The extra is also named in
+  both judges' docstrings.
+
 ## v0.3.0 — First-class audit certificates + constancy detection (2026-07-16)
 
 Found by dogfooding #2: the first production deployment of the audit certificate

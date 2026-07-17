@@ -509,3 +509,86 @@ class TestVerifyEntriesStatic:
         for i in range(3):
             engine.record(intent=f"i{i}", output=f"o{i}", score=0.5, passed=True)
         assert AuditEngine.verify_entries(engine.entries) == engine.verify_chain()
+
+
+# ---------------------------------------------------------------------------
+# #5 — public reset() (was: no way to start a clean chain but poking privates)
+# ---------------------------------------------------------------------------
+
+
+class TestReset:
+    def test_reset_clears_entries(self):
+        engine = AuditEngine()
+        engine.record(intent="x", output="o", score=0.5, passed=True)
+        assert len(engine.entries) == 1
+        AuditEngine.reset()
+        assert len(AuditEngine().entries) == 0
+
+    def test_reset_starts_fresh_genesis(self):
+        engine = AuditEngine()
+        engine.record(intent="x", output="a", score=0.5, passed=True)
+        engine.record(intent="y", output="b", score=0.5, passed=True)
+        AuditEngine.reset()
+        cert = AuditEngine().record(intent="z", output="c", score=0.5, passed=True)
+        assert cert["previous_hash"] == "GENESIS"
+
+    def test_reset_is_classmethod_no_instance_needed(self):
+        AuditEngine().record(intent="x", output="o", score=0.5, passed=True)
+        AuditEngine.reset()  # no instance
+        assert AuditEngine().verify_chain() is True
+
+
+# ---------------------------------------------------------------------------
+# #6 — caller-supplied id / timestamp for reproducible, content-addressable certs
+# ---------------------------------------------------------------------------
+
+
+class TestDeterministicCert:
+    def test_caller_supplied_id_used(self):
+        engine = AuditEngine()
+        cert = engine.record(intent="x", output="o", score=0.5, passed=True, id="urn:custom:1")
+        assert cert["id"] == "urn:custom:1"
+
+    def test_caller_supplied_timestamp_used(self):
+        engine = AuditEngine()
+        cert = engine.record(
+            intent="x",
+            output="o",
+            score=0.5,
+            passed=True,
+            timestamp="2026-01-01T00:00:00+00:00",
+        )
+        assert cert["timestamp"] == "2026-01-01T00:00:00+00:00"
+
+    def test_defaults_still_uuid_and_wallclock(self):
+        engine = AuditEngine()
+        cert = engine.record(intent="x", output="o", score=0.5, passed=True)
+        assert cert["id"].startswith("urn:semantix:cert:")
+        assert "timestamp" in cert and cert["timestamp"]
+
+    def test_identical_inputs_produce_identical_cert(self):
+        # Reproducible audits: same content + id + timestamp -> byte-identical cert.
+        def make():
+            AuditEngine.reset()
+            return AuditEngine().record(
+                intent="POPIA §72",
+                output="premise",
+                score=0.53,
+                passed=False,
+                hypothesis="consent",
+                judge_id="POPIAJudge/v1@0.75",
+                id="urn:fixed:1",
+                timestamp="2026-01-01T00:00:00+00:00",
+            )
+
+        a = make()
+        b = make()
+        assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
+
+    def test_id_timestamp_are_keyword_only(self):
+        import inspect
+
+        params = inspect.signature(AuditEngine.record).parameters
+        for name in ("id", "timestamp"):
+            assert params[name].kind is inspect.Parameter.KEYWORD_ONLY
+            assert params[name].default is None

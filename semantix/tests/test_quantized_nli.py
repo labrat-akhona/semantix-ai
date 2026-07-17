@@ -276,12 +276,16 @@ class TestQuantizedNLIJudgeCalibration:
         self, mock_T, mock_load_session, mock_load_tokenizer
     ):
         # When the model has no calibration constant, T=1.0 is returned and
-        # behaviour matches calibrated=False.
+        # behaviour matches calibrated=False (and a UserWarning is raised, since
+        # calibration was requested but is unavailable).
+        import pytest
+
         mock_load_session.return_value = _mock_session([0.1, 2.0, 0.5])
         mock_load_tokenizer.return_value = _mock_tokenizer()
 
         un_cal = QuantizedNLIJudge()
-        cal = QuantizedNLIJudge(calibrated=True)
+        with pytest.warns(UserWarning, match="calibrat"):
+            cal = QuantizedNLIJudge(calibrated=True)
 
         v_un = un_cal.evaluate("output", "Intent must hold", 0.5)
         v_cal = cal.evaluate("output", "Intent must hold", 0.5)
@@ -438,3 +442,69 @@ class TestEvaluateAliases:
         judge, _ = self._judge(mls, mlt, [0.1, 5.0, 0.5])
         with pytest.raises(TypeError, match="requires the hypothesis"):
             judge.evaluate(premise="p")
+
+
+# ---------------------------------------------------------------------------
+# #7 — surface the calibration state (v1 is uncalibrated; magnitudes over-read)
+# ---------------------------------------------------------------------------
+
+
+class TestCalibratedState:
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    @patch("semantix.judges.quantized_nli._load_temperature_constant")
+    def test_calibrated_true_with_real_constant(self, mtemp, mls, mlt):
+        mtemp.return_value = 2.5  # a real calibration constant was found
+        mls.return_value = _mock_session([0.1, 5.0, 0.5])
+        mlt.return_value = _mock_tokenizer()
+        judge = QuantizedNLIJudge(calibrated=True)
+        assert judge.calibrated is True
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    @patch("semantix.judges.quantized_nli._load_temperature_constant")
+    def test_calibrated_requested_but_unavailable_warns(self, mtemp, mls, mlt):
+        import pytest
+
+        mtemp.return_value = 1.0  # no usable calibration.json -> stays raw
+        mls.return_value = _mock_session([0.1, 5.0, 0.5])
+        mlt.return_value = _mock_tokenizer()
+        with pytest.warns(UserWarning, match="calibrat"):
+            judge = QuantizedNLIJudge(calibrated=True)
+        assert judge.calibrated is False  # honest: scores are raw
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_default_is_uncalibrated_and_silent(self, mls, mlt):
+        import warnings
+
+        mls.return_value = _mock_session([0.1, 5.0, 0.5])
+        mlt.return_value = _mock_tokenizer()
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")  # any warning would fail the test
+            judge = QuantizedNLIJudge()  # calibrated=False
+        assert judge.calibrated is False
+
+
+# ---------------------------------------------------------------------------
+# #9 — actionable error when the optional [popia]/[turbo] deps are missing
+# ---------------------------------------------------------------------------
+
+
+class TestTurboDepHint:
+    def test_missing_dep_names_the_extra(self):
+        import pytest
+
+        from semantix.judges.quantized_nli import _require_turbo_dep
+
+        with pytest.raises(ModuleNotFoundError, match=r"semantix-ai\[popia\]"):
+            _require_turbo_dep("nonexistent_module_xyz123")
+
+    def test_present_dep_returns_module(self):
+        from semantix.judges.quantized_nli import _require_turbo_dep
+
+        assert _require_turbo_dep("json").__name__ == "json"
+
+    def test_popia_extra_named_in_docstring(self):
+        # #9: the extra should be discoverable from the judge's own docs.
+        assert "[popia]" in QuantizedNLIJudge.__doc__

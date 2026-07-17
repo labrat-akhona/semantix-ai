@@ -126,6 +126,18 @@ class AuditEngine:
             cls._lock = threading.Lock()
         return cls._instance
 
+    @classmethod
+    def reset(cls) -> None:
+        """Clear the singleton and its chain — start a fresh audit trail.
+
+        The engine is a process-wide singleton, so a second audit in the same
+        process otherwise appends to the first one's chain. Call this between
+        independent audits instead of poking the private attributes.
+        """
+        cls._instance = None
+        cls._entries = []
+        cls._lock = None
+
     @property
     def entries(self) -> list[dict]:
         return self._entries
@@ -142,6 +154,8 @@ class AuditEngine:
         judge_id: str | None = None,
         subject: str | None = None,
         metadata: dict | None = None,
+        id: str | None = None,
+        timestamp: str | None = None,
     ) -> dict:
         """Append a new Semantic Certificate to the audit trail. Returns the certificate dict.
 
@@ -167,6 +181,11 @@ class AuditEngine:
         metadata:
             Any additional structured context (destination, country, corpus
             version, …). Must be JSON-serializable.
+        id, timestamp:
+            Caller-supplied certificate ``id`` and ISO-8601 ``timestamp``. Both
+            default to a fresh ``uuid4`` / wall-clock. Supply them to produce a
+            reproducible, content-addressable chain — the same inputs then yield
+            a byte-identical certificate, so two runs of an audit can be diffed.
 
         The new fields are keyword-only with ``None`` defaults, so code written
         against the 0.2.3 signature keeps working. New certificates emit the v2
@@ -185,8 +204,10 @@ class AuditEngine:
             cert = {
                 "@context": _CONTEXT_V2,
                 "@type": "SemanticCertificate",
-                "id": f"urn:semantix:cert:{uuid.uuid4()}",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "id": id if id is not None else f"urn:semantix:cert:{uuid.uuid4()}",
+                "timestamp": (
+                    timestamp if timestamp is not None else datetime.now(timezone.utc).isoformat()
+                ),
                 "intent": intent,
                 "hypothesis": hypothesis,
                 "subject": subject,

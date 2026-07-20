@@ -1,7 +1,8 @@
 """Quantized NLI judge — INT8 ONNX inference without PyTorch.
 
 Uses onnxruntime + tokenizers for ~50% faster CPU inference than the
-PyTorch-based NLIJudge while producing identical scores.
+PyTorch-based NLIJudge while producing near-identical scores (within INT8
+quantization tolerance — not bit-identical).
 
 Requires: pip install onnxruntime tokenizers huggingface-hub
 """

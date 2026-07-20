@@ -35,25 +35,37 @@ The library below makes the judge usable in a Python program. The stack above ma
 
 ## Quick start
 
-Validate every LLM output against an explicit intent. Get back a score, a verdict, and a tamper-evident receipt. Locally. In ~15-50 milliseconds. Without an API key.
+Validate every LLM output against an explicit intent — a score and a verdict, locally, in ~15–70 ms (varies by CPU), without an API key. Pair it with the audit engine for a hash-chained, tamper-evident receipt.
 
 ```bash
-pip install semantix-ai
+pip install semantix-ai[turbo]     # local quantized NLI judge; no API key
 ```
 
 ```python
-from semantix import Intent, validate_intent
+from semantix import Intent, QuantizedNLIJudge, validate_intent
+from semantix.audit.engine import AuditEngine
 
 class ResolutionPolite(Intent):
     """The response must acknowledge the customer's issue and propose a concrete next step, in a polite tone."""
 
-@validate_intent(ResolutionPolite, audit=True)
-def handle_complaint(message: str) -> str:
+judge = QuantizedNLIJudge()
+
+# Validation: the Intent is the function's return-type annotation.
+@validate_intent(judge=judge)
+def handle_complaint(message: str) -> ResolutionPolite:
     return call_my_llm(message)
 
-reply = handle_complaint(incoming)
-# Returns the validated reply — or raises SemanticIntentError.
-# The audit engine has already written a hash-chained receipt to disk.
+reply = handle_complaint(incoming)   # validated reply, or raises SemanticIntentError
+
+# Audit trail: score, record a certificate, verify the chain, persist it.
+# The decorator validates; it does NOT auto-write a certificate — you record it.
+engine = AuditEngine()
+verdict = judge.evaluate(premise=str(reply),
+                         hypothesis="the reply is polite and proposes a next step")
+engine.record(intent="ResolutionPolite", output=str(reply),
+              score=verdict.score, passed=verdict.passed, judge_id="QuantizedNLIJudge")
+assert engine.verify_chain()         # True while the chain is intact
+engine.flush("audit.jsonl")          # hash-chained receipts on disk
 ```
 
 ---
@@ -300,8 +312,8 @@ See [Where semantix fits](https://labrat-akhona.github.io/semantix-ai/competitiv
 ## Key properties
 
 - **Local inference** — NLI model runs on CPU, no data leaves your machine.
-- **Deterministic** — same input, same score, every time, on every machine. Seedable.
-- **Fast** — ~15-50 ms per check with the quantized judge.
+- **Deterministic per CPU architecture** — same input, same score, every time on a given machine (single-threaded ONNX inference). A different pre-quantized INT8 variant loads per architecture (AVX2 / AVX-512 / ARM64), so scores and latency vary across hardware.
+- **Fast** — ~15–70 ms per check with the quantized judge, depending on CPU.
 - **Zero API cost** — no tokens burned for validation.
 - **Auditable** — hash-chained JSON-LD certificates per check.
 - **Well-tested** — 274 tests, MIT licensed (model weights and datasets ship under Apache-2.0 / CC-BY-4.0).

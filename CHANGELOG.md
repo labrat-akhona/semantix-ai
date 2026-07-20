@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.3.2 — Docs accuracy: claims the code doesn't honour (2026-07-20)
+
+Same family as the v0.3.1 "signed" fix — public copy that overstates what the
+code does. No behaviour change; docs and one docstring only.
+
+### Fixed
+- **README quick-start was broken and overstated auto-auditing.** It showed
+  `@validate_intent(ResolutionPolite, audit=True)` — there is no `audit`
+  parameter (it raises `TypeError`), the Intent was passed positionally instead
+  of as the return-type annotation (so it would no-op), and it claimed the
+  decorator "has already written a hash-chained receipt to disk" (the decorator
+  never touches `AuditEngine`). Replaced with a runnable example: validate via
+  `@validate_intent(judge=QuantizedNLIJudge())` with the Intent as the return
+  type, then record/verify/flush the certificate through `AuditEngine`
+  explicitly. Verified end-to-end.
+- **"producing identical scores"** in the `QuantizedNLIJudge` docstring →
+  "near-identical scores (within INT8 quantization tolerance — not
+  bit-identical)". INT8 quantization is not lossless vs the fp32 PyTorch judge.
+- **"same score … on every machine"** (README) → **"deterministic per CPU
+  architecture."** `_detect_onnx_variant()` loads a *different* pre-quantized
+  INT8 file per architecture (AVX2 / AVX-512 / ARM64), so scores can differ
+  across hardware. Inference is single-threaded (`inter/intra_op_num_threads=1`),
+  so it is deterministic *on a given machine*.
+- **Latency reconciled** — README said "~15–50 ms" while the HF v1 card said
+  "~70 ms". Measured (n=50, DSPy benchmark): mean 50.7 ms, p50 44.3, max 98.8.
+  README now says **"~15–70 ms per check, depending on CPU"**; the same wording
+  should propagate to the HF card / Space / Glama listing (distribution).
+
 ## v0.3.1 — Accurate audit-trail wording + adopter ergonomics (2026-07-17)
 
 ### Fixed

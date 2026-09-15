@@ -4,18 +4,19 @@
 
 ---
 
-semantix is a semantic type system for AI outputs. It uses local NLI (Natural Language Inference) to check whether text *means* what you require -- no API keys, no network calls, ~15ms per check.
+semantix is a semantic type system for AI outputs. It uses local NLI (Natural Language Inference) to check whether text supports a stated requirement. The quantized judge needs no API key and typically takes around 15–70 ms per check, depending on CPU and text length. Model files download on first use; see [offline setup](getting-started.md#offline-use).
 
 ```bash
-pip install semantix-ai
+pip install "semantix-ai[turbo]"
+semantix demo
 ```
 
 ```python
 from semantix.testing import assert_semantic
 
-def test_chatbot_is_polite():
-    response = my_chatbot("handle angry customer")
-    assert_semantic(response, "polite and professional")
+def test_response_expresses_gratitude():
+    response = "Thank you for your help."
+    assert_semantic(response, "The text expresses gratitude.")
 ```
 
 On failure you get a clear diagnostic:
@@ -30,12 +31,12 @@ AssertionError: Semantic check failed (score=0.12)
 ## Key properties
 
 - **Local inference** -- NLI model runs on CPU, no data leaves your machine
-- **~15ms per check** -- negligible overhead on any LLM call
+- **Local CPU inference** -- typically around 15–70 ms per quantized check
 - **Zero API cost** -- no tokens burned for validation
 - **Pluggable judges** -- NLI, embedding, LLM, quantized ONNX, forensic, caching
 - **Framework integrations** -- Guardrails AI, Instructor, Pydantic AI, LangChain, DSPy
 - **Self-healing retries** -- structured feedback so the LLM corrects itself
-- **Training flywheel** -- every retry produces labeled fine-tuning data
+- **Training collection** -- an optional collector records successful retry pairs
 
 ## How it works
 
@@ -74,7 +75,8 @@ result = decline_invite("the company retreat")
 ## Installation options
 
 ```bash
-pip install semantix-ai                    # Core (default NLI judge)
+pip install semantix-ai                    # Core only; supply your own Judge
+pip install "semantix-ai[nli]"            # PyTorch NLI backend
 pip install "semantix-ai[turbo]"           # Quantized ONNX (smallest footprint)
 pip install "semantix-ai[openai]"          # LLM judge (GPT-4o-mini)
 pip install "semantix-ai[instructor]"      # Instructor integration
@@ -83,7 +85,7 @@ pip install "semantix-ai[langchain]"       # LangChain integration
 pip install "semantix-ai[guardrails]"      # Guardrails AI integration
 pip install "semantix-ai[dspy]"            # DSPy integration
 pip install "semantix-ai[mcp,nli]"         # MCP server
-pip install "semantix-ai[all]"             # Everything
+pip install "semantix-ai[all]"             # Broad bundle; Guardrails installed separately
 ```
 
 !!! note

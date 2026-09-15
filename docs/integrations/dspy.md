@@ -1,6 +1,6 @@
 # DSPy
 
-semantix integrates with [DSPy](https://dspy.ai/) (v2.6+) by providing reward and metric functions that are compatible with `dspy.Refine`, `dspy.BestOfN`, `dspy.Evaluate`, and optimizers like `dspy.MIPROv2` — running locally on a quantized NLI model, with no API calls and ~15 ms per evaluation.
+semantix integrates with [DSPy](https://dspy.ai/) (v2.6+) by providing reward and metric functions that are compatible with `dspy.Refine`, `dspy.BestOfN`, `dspy.Evaluate`, and optimizers like `dspy.MIPROv2` — running locally on a quantized NLI model, with no inference API calls and typically ~15–70 ms per evaluation depending on CPU and text length. Model files download on first use.
 
 ## Install
 
@@ -121,7 +121,7 @@ Full methodology, raw CSVs, run metadata, and notebooks (which render on GitHub)
 ### When to prefer semantix over an LLM-judge reward
 
 - You're iterating on a DSPy program and want reward evaluation to not gate your feedback loop.
-- You need deterministic, seedable rewards (NLI scores are stable; LLM judges are not).
+- You need repeatable rewards on the same CPU architecture and model configuration; cross-architecture quantization variants can produce different scores.
 - You want to run optimization on CI without API costs or rate limits.
 
 ### When to prefer an LLM-judge

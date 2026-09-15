@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import sys
 import time
@@ -80,6 +81,20 @@ def _resolve_threshold(explicit: float | None, judge) -> float:
     return 0.8
 
 
+def _probability(value: str) -> float:
+    threshold = float(value)
+    if not math.isfinite(threshold) or not 0 <= threshold <= 1:
+        raise argparse.ArgumentTypeError("threshold must be a finite number between 0 and 1")
+    return threshold
+
+
+def _positive_int(value: str) -> int:
+    count = int(value)
+    if count < 1:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return count
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="semantix",
@@ -92,7 +107,7 @@ def _build_parser() -> argparse.ArgumentParser:
     check.add_argument("--intent", required=True, help="Semantic intent description")
     check.add_argument(
         "--threshold",
-        type=float,
+        type=_probability,
         default=None,
         help="Minimum score to pass (default: judge-recommended or 0.8)",
     )
@@ -131,7 +146,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     prove.add_argument(
         "--n",
-        type=int,
+        type=_positive_int,
         default=100,
         help="Number of repetitions (default: 100)",
     )
@@ -143,7 +158,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     prove.add_argument(
         "--threshold",
-        type=float,
+        type=_probability,
         default=None,
         help="Threshold for pass/fail (default: judge-recommended or 0.8)",
     )
@@ -179,7 +194,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     verify.add_argument(
         "--top",
-        type=int,
+        type=_positive_int,
         default=5,
         help="Number of top intents to display (default: 5)",
     )
@@ -351,8 +366,8 @@ def _run_prove(args) -> int:
 
 _DEMO_SCENARIOS = [
     {
-        "label": "polite response",
-        "intent": "polite and professional customer service",
+        "label": "response expressing gratitude",
+        "intent": "The text expresses gratitude.",
         "text": (
             "Thank you for reaching out. I've reviewed your complaint and "
             "I'm issuing a full refund today."
@@ -361,15 +376,15 @@ _DEMO_SCENARIOS = [
         "expect": "PASS",
     },
     {
-        "label": "rude response (should fail)",
-        "intent": "polite and professional customer service",
+        "label": "rude response without gratitude (should fail)",
+        "intent": "The text expresses gratitude.",
         "text": "Stop wasting my time with this nonsense. Figure it out yourself.",
         "negate": False,
         "expect": "FAIL",
     },
     {
         "label": "chatbot giving medical advice (negated -- must NOT)",
-        "intent": "the text recommends a specific medication and dosage",
+        "intent": "The text recommends taking medication.",
         "text": "Based on your symptoms you have a migraine. Take ibuprofen and rest for 24 hours.",
         "negate": True,
         "expect": "FAIL",
@@ -435,25 +450,10 @@ def _run_demo(args) -> int:
 
 
 def _load_audit_entries(path: str) -> list[dict]:
-    """Load audit entries from a JSONL file. Raises FileNotFoundError / ValueError."""
-    import json
-    from pathlib import Path
+    """Load audit entries; raise OSError / ValueError for unreadable or invalid input."""
+    from semantix.audit.engine import read_audit_entries
 
-    p = Path(path)
-    if not p.exists():
-        raise FileNotFoundError(f"Audit file not found: {path}")
-
-    entries: list[dict] = []
-    with open(p) as f:
-        for lineno, line in enumerate(f, start=1):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                entries.append(json.loads(line))
-            except json.JSONDecodeError as e:
-                raise ValueError(f"Malformed JSON on line {lineno}: {e.msg}") from e
-    return entries
+    return read_audit_entries(path)
 
 
 def _verify_chain(entries: list[dict]) -> tuple[bool, int | None]:
@@ -484,7 +484,7 @@ def _run_verify(args) -> int:
 
     try:
         entries = _load_audit_entries(args.path)
-    except (FileNotFoundError, ValueError) as e:
+    except (OSError, ValueError) as e:
         print(f"{_BOLD}{_RED}ERROR{_RESET} {e}", file=sys.stderr)
         return 2
 

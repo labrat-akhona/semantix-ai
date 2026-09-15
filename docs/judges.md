@@ -6,8 +6,8 @@ A **Judge** evaluates whether text satisfies a semantic intent. semantix ships w
 
 | Judge | Speed | Model size | API key | Recommended threshold |
 |---|---|---|---|---|
-| `QuantizedNLIJudge` | ~10ms | ~25 MB | No | 0.3 |
-| `NLIJudge` | ~15ms | ~85 MB | No | 0.3 |
+| `QuantizedNLIJudge` | ~15–70 ms, varies by CPU | ~79 MB INT8 | No | 0.3 |
+| `NLIJudge` | Varies by CPU and text length | ~330 MB FP32 | No | 0.3 |
 | `EmbeddingJudge` | ~5ms | ~80 MB | No | 0.8 |
 | `LLMJudge` | ~500ms | Remote | Yes | 0.7 |
 | `ForensicJudge` | Varies | Wraps any judge | Depends | Same as wrapped judge |
@@ -15,7 +15,7 @@ A **Judge** evaluates whether text satisfies a semantic intent. semantix ships w
 
 ## NLIJudge
 
-The default judge. Uses a cross-encoder NLI (Natural Language Inference) model to check whether the output *entails* the intent description.
+The PyTorch backend, used as the default fallback when the quantized backend is unavailable. It uses a cross-encoder NLI model to check whether the output *entails* the intent description. Default resolution prefers `QuantizedNLIJudge` when its dependencies are installed.
 
 ```python
 from semantix import NLIJudge
@@ -27,11 +27,13 @@ judge = NLIJudge(model_name="cross-encoder/nli-MiniLM2-L6-H768")
 
 **How it works:** Converts the intent description into an NLI hypothesis (e.g., "The text must politely decline..." becomes "Someone is politely declining..."), then scores the entailment probability using softmax over the cross-encoder logits. The progressive framing scores higher on NLI models because they treat the premise as evidence of an ongoing action.
 
-**Requires:** `pip install semantix-ai` (installs `sentence-transformers`)
+**Requires:** `pip install "semantix-ai[nli]"` (installs `sentence-transformers`)
 
 ## QuantizedNLIJudge
 
-INT8 quantized version of NLIJudge using ONNX Runtime. Same accuracy, ~50% faster, and no PyTorch dependency.
+INT8 quantized version of NLIJudge using ONNX Runtime, with no PyTorch dependency.
+Quantization can change scores and threshold decisions. Speed depends on the CPU,
+selected model variant, and text length; measure on your deployment hardware.
 
 ```python
 from semantix import QuantizedNLIJudge
@@ -65,7 +67,7 @@ judge = EmbeddingJudge(model_name="all-MiniLM-L6-v2")
 
 **How it works:** Encodes both the output and intent description using a sentence transformer, then computes cosine similarity. Good for simple semantic similarity checks, less reliable for nuanced requirements like negation or multi-part intents.
 
-**Requires:** `pip install semantix-ai` (installs `sentence-transformers`)
+**Requires:** `pip install "semantix-ai[embeddings]"` (installs `sentence-transformers`)
 
 ## LLMJudge
 
@@ -83,7 +85,7 @@ judge = LLMJudge(
 )
 ```
 
-**How it works:** Sends a structured prompt asking the LLM to score the output 0.0-1.0 with a one-sentence reason. Uses `temperature=0` and `max_tokens=100` for deterministic, fast responses.
+**How it works:** Sends a structured prompt asking the LLM to score the output 0.0-1.0 with a one-sentence reason. Uses `temperature=0` and `max_tokens=100`; these settings do not guarantee identical responses across calls.
 
 **Compatible endpoints:** Any OpenAI-compatible API -- Azure OpenAI, local vLLM, Ollama, etc. Just set `base_url`.
 
@@ -147,6 +149,27 @@ judge.clear()
 |---|---|
 | `judge` | The underlying judge to delegate to on cache misses |
 | `maxsize` | Maximum number of cached verdicts (default 256, LRU eviction) |
+
+## POPIA model versions
+
+Install `"semantix-ai[popia]"`, then use `from semantix import POPIAJudge`.
+`POPIAJudge()` currently defaults to **v1**, covering seven clauses.
+`POPIAJudge(version="v2")` adds children's information, special personal information,
+and automated decision-making for ten-clause coverage. Broader coverage is a tradeoff:
+the published v2 card reports lower F1 on the original seven-clause holdout. Choose
+the version against your own evaluation cases. See the [model card and measured
+tradeoff](https://huggingface.co/labrat-aiko/nli-popia-v2).
+
+The September 2026 local review reproduced the v1 holdout improvement, but all three
+existing preset integration examples failed their expected outcomes. These presets
+combine several requirements and can receive low scores on short or incomplete
+evidence. Validate them with representative, independently labelled scenarios before
+using their verdicts to make decisions; the holdout result does not establish preset
+reliability.
+
+Inference is local after loading. For cached operation without Hub update requests,
+set `HF_HUB_OFFLINE=1` before starting Python. Scores are statistical entailment
+estimates; neither a high score nor a negated low score establishes legal compliance.
 
 ## The Judge interface
 

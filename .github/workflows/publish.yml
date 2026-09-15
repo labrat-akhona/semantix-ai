@@ -5,9 +5,8 @@ name: Publish to PyPI
 # short-lived identity token at run time; PyPI verifies it against the trusted
 # publisher config and it expires when the job ends.
 #
-# Fires automatically when a GitHub Release is published. workflow_dispatch is
-# included so v0.2.2 — which was already released before this workflow existed —
-# can be published manually without recreating the release.
+# Fires automatically when a GitHub Release is published. workflow_dispatch
+# supports publishing an explicitly selected tag without recreating a release.
 
 on:
   release:
@@ -15,9 +14,8 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: "Tag to build and publish (e.g. v0.2.2)"
+        description: "Existing version tag to build and publish (e.g. v0.3.2)"
         required: true
-        default: "v0.2.2"
 
 jobs:
   build:

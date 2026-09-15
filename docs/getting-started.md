@@ -5,28 +5,47 @@ Get a semantic test running in under 2 minutes.
 ## Install
 
 ```bash
-pip install semantix-ai
-```
-
-This installs the core library with the default NLI judge. The first time you run a check, it downloads a small (~85 MB) cross-encoder model from HuggingFace Hub.
-
-For a smaller footprint (~25 MB, no PyTorch dependency):
-
-```bash
 pip install "semantix-ai[turbo]"
 ```
+
+This installs the library and the quantized ONNX judge without PyTorch. On first use,
+the judge downloads model and tokenizer files from Hugging Face Hub (about 79 MB for
+the INT8 model). Inference runs locally, typically around 15–70 ms per check depending
+on CPU and input length; startup and download time are additional.
+
+Try it immediately:
+
+```bash
+semantix demo --no-color
+semantix check "Thank you for your help." --intent "The text expresses gratitude."
+semantix prove --n 20 --no-color
+```
+
+For the PyTorch backend, install `"semantix-ai[nli]"`. A bare `pip install semantix-ai`
+installs only the core interfaces and needs a user-supplied Judge or an inference extra.
+
+### Offline use
+
+Run a check once while connected to populate the model cache. For subsequent offline
+runs, set `HF_HUB_OFFLINE=1` before starting Python (PowerShell:
+`$env:HF_HUB_OFFLINE="1"`). This prevents Hub version checks as well as downloads;
+missing cached files cause an error. See the [Hugging Face environment variable
+reference](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables#hfhuboffline).
 
 ## Your first semantic assertion
 
 ```python
 from semantix.testing import assert_semantic
 
-def test_chatbot_is_polite():
-    response = my_chatbot("handle angry customer")
-    assert_semantic(response, "polite and professional")
+def test_response_expresses_gratitude():
+    response = "Thank you for your help."
+    assert_semantic(response, "The text expresses gratitude.")
 ```
 
-That's it. `assert_semantic` runs a local NLI model to check whether the response *entails* "polite and professional". No API key, no network calls, ~15ms.
+`assert_semantic` checks whether the response entails the stated claim. Replace the
+canned response with your application's output. Test representative positives and
+negatives: abstract qualities such as politeness and compound requirements are
+harder for a small NLI model than concrete single claims.
 
 On failure:
 
@@ -91,6 +110,10 @@ Safe = ~MedicalAdvice  # or Not(MedicalAdvice)
 def chatbot(msg: str) -> Safe:
     return call_my_llm(msg)
 ```
+
+You can also use `@validate_intent(Safe)` on a function returning `str`. It returns
+an Intent instance after validation. Negation flips the threshold verdict; absence
+of entailment can reflect uncertainty and should not be treated as proof of safety.
 
 ## What's next
 

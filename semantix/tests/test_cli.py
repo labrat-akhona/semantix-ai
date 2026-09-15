@@ -44,6 +44,19 @@ class TestResolveThreshold:
 
 
 class TestParser:
+    @pytest.mark.parametrize("value", ["nan", "inf", "-0.1", "1.1"])
+    @pytest.mark.parametrize("command", [["check", "text", "--intent", "polite"], ["prove"]])
+    def test_rejects_invalid_threshold(self, value, command):
+        with pytest.raises(SystemExit) as exc:
+            _build_parser().parse_args([*command, f"--threshold={value}"])
+        assert exc.value.code == 2
+
+    @pytest.mark.parametrize("command", [["prove", "--n", "0"], ["verify", "x", "--top", "-1"]])
+    def test_rejects_invalid_counts(self, command):
+        with pytest.raises(SystemExit) as exc:
+            _build_parser().parse_args(command)
+        assert exc.value.code == 2
+
     def test_check_basic(self):
         parser = _build_parser()
         args = parser.parse_args(["check", "hello", "--intent", "polite"])
@@ -421,6 +434,31 @@ class TestVerifyChain:
 
 
 class TestRunVerify:
+    @pytest.mark.parametrize(
+        "row",
+        [
+            "null",
+            "[]",
+            "42",
+            '"text"',
+            '{"score": []}',
+            '{"intent": []}',
+            '{"timestamp": 1}',
+            '{"passed": "yes"}',
+            '{"output_hash": []}',
+            '{"score": NaN}',
+        ],
+    )
+    def test_malformed_entry_returns_two(self, tmp_path, capsys, row):
+        p = tmp_path / "bad.jsonl"
+        p.write_text(row + "\n", encoding="utf-8")
+        assert _run_verify(self._make_args(p)) == 2
+        assert "line 1" in capsys.readouterr().err
+
+    def test_directory_returns_two(self, tmp_path, capsys):
+        assert _run_verify(self._make_args(tmp_path)) == 2
+        assert "ERROR" in capsys.readouterr().err
+
     def _make_args(self, path, **overrides):
         defaults = {"path": str(path), "top": 5, "no_color": True}
         defaults.update(overrides)

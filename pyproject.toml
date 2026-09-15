@@ -47,7 +47,8 @@ classifiers = [
 openai = ["openai>=1.0"]
 embeddings = ["sentence-transformers>=2.2"]
 nli = ["sentence-transformers>=2.2"]
-mcp = ["mcp[cli]>=1.0"]
+# FastMCP is the v1 SDK API; v2 renamed it and changes server behavior.
+mcp = ["mcp[cli]>=1.0,<2"]
 turbo = ["onnxruntime>=1.16", "tokenizers>=0.15", "huggingface-hub>=0.20"]
 popia = ["semantix-ai[turbo]"]
 gdpr = ["semantix-ai[turbo]"]
@@ -66,7 +67,7 @@ dspy = ["dspy>=2.6"]
 all = [
     "openai>=1.0",
     "sentence-transformers>=2.2",
-    "mcp[cli]>=1.0",
+    "mcp[cli]>=1.0,<2",
     "onnxruntime>=1.16",
     "tokenizers>=0.15",
     "huggingface-hub>=0.20",
@@ -82,7 +83,7 @@ all = [
 dev = [
     "openai>=1.0",
     "sentence-transformers>=2.2",
-    "mcp[cli]>=1.0",
+    "mcp[cli]>=1.0,<2",
     "onnxruntime>=1.16",
     "tokenizers>=0.15",
     "huggingface-hub>=0.20",
@@ -108,7 +109,7 @@ semantix = "semantix.cli:main"
 Homepage = "https://github.com/labrat-akhona/semantix-ai"
 Repository = "https://github.com/labrat-akhona/semantix-ai"
 "Bug Tracker" = "https://github.com/labrat-akhona/semantix-ai/issues"
-Documentation = "https://github.com/labrat-akhona/semantix-ai#readme"
+Documentation = "https://labrat-akhona.github.io/semantix-ai/"
 Changelog = "https://github.com/labrat-akhona/semantix-ai/releases"
 
 [tool.hatch.build.targets.wheel]
@@ -126,7 +127,11 @@ include = [
 [tool.ruff]
 target-version = "py310"
 line-length = 100
+# Keep Python checks stable when newer Ruff versions add Markdown discovery.
+# Public documentation is validated separately with a strict MkDocs build.
+include = ["*.py", "*.pyi", "*.ipynb", "**/pyproject.toml"]
 exclude = ["examples", "tools", "articles", "examples.py", "work_demo.py"]
+extend-exclude = [".claude", ".worktrees", ".venv"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -139,6 +144,7 @@ ignore = ["E501"]
 "semantix/__init__.py" = ["F401"]
 
 [tool.pytest.ini_options]
+testpaths = ["semantix/tests", "tests/integration"]
 asyncio_mode = "auto"
 markers = [
     "integration: tests that require network access and real HF downloads (deselect with '-m \"not integration\"')",

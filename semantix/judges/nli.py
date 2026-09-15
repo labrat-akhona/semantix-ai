@@ -81,7 +81,7 @@ class NLIJudge(Judge):
     ----------
     model_name:
         Any NLI cross-encoder model from sentence-transformers.
-        Defaults to ``"cross-encoder/nli-MiniLM2-L6-H768"`` (~85 MB, fast).
+        Defaults to ``"cross-encoder/nli-MiniLM2-L6-H768"`` (~330 MB FP32).
     """
 
     recommended_threshold = 0.3

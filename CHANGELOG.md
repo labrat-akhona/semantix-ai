@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased — usability and verification fixes (2026-09-14)
+
+### Fixed
+- Documented `@validate_intent(MyIntent)` syntax now validates plain-string
+  functions, including negated/composite contracts and async retries. Explicit
+  contracts take precedence over annotations; successful calls return an Intent
+  instance. Invalid retry counts fail at decoration time.
+- `AuditEngine.reset()` keeps existing engine references usable. Loading rejects
+  malformed rows and broken chains before replacing in-memory entries; JSONL uses
+  UTF-8. CLI verification reports bad input with a line number and exit code 2.
+- CLI thresholds reject NaN, infinity, and out-of-range values. Repetition and
+  summary counts must be positive.
+- The real-model demo now uses concrete gratitude and medication hypotheses.
+  Its earlier politeness and medication-plus-dosage hypotheses produced two
+  incorrect advertised outcomes on the tested CPU.
+- Setup, judge sizes/defaults, offline behavior, audit schema and integrity limits,
+  test instructions, and package documentation link now match the implementation.
+  Internal plans and working notes are excluded from the published docs site.
+
+### Tests
+- Regression coverage for explicit intents, async retries, reset references,
+  malformed audit input, and CLI argument validation.
+- Opt-in real-model CLI smoke test; default test discovery excludes nested worktrees.
+- CI builds documentation strictly and checks the demo against the real model.
+- Constrain the MCP SDK to the supported v1 API; unbounded installs selected v2,
+  where `FastMCP` was removed and test/server imports failed. CPU-only test runners
+  install CPU PyTorch wheels instead of downloading CUDA dependencies.
+- The manual publish workflow requires an explicit tag rather than defaulting to
+  an old release. This change does not publish a new package version.
+
 ## v0.3.2 — Docs accuracy: claims the code doesn't honour (2026-07-20)
 
 Same family as the v0.3.1 "signed" fix — public copy that overstates what the

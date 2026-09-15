@@ -14,6 +14,82 @@ class ProfessionalDecline(Intent):
     """The text must politely decline an invitation."""
 
 
+def test_explicit_intent_validates_string_return():
+    judge = MockJudge(passed=False, score=0.1)
+
+    @validate_intent(ProfessionalDecline, judge=judge)
+    def decline() -> str:
+        return "Go away"
+
+    with pytest.raises(SemanticIntentError, match="ProfessionalDecline"):
+        decline()
+    assert judge.call_count == 1
+
+
+def test_explicit_negated_intent_blocks_matching_output():
+    @validate_intent(~ProfessionalDecline, judge=MockJudge(passed=True))
+    def reply() -> str:
+        return "Sorry, I cannot attend."
+
+    with pytest.raises(SemanticIntentError):
+        reply()
+
+
+def test_explicit_composite_validates_each_leaf():
+    class Polite(Intent):
+        """The response is polite."""
+
+    judge = MockJudge(passed=True)
+
+    @validate_intent(ProfessionalDecline & Polite, judge=judge)
+    def reply():
+        return "Thank you, but I cannot attend."
+
+    assert reply().text == "Thank you, but I cannot attend."
+    assert judge.call_count == 2
+
+
+def test_explicit_intent_works_with_unresolved_annotations():
+    @validate_intent(ProfessionalDecline, judge=MockJudge())
+    def reply(message: "UnavailableType") -> str:  # noqa: F821
+        return message
+
+    assert isinstance(reply("Sorry, I cannot attend."), ProfessionalDecline)
+
+
+def test_explicit_intent_overrides_return_annotation():
+    class DifferentIntent(Intent):
+        """The text accepts an invitation."""
+
+    judge = MockJudge()
+
+    @validate_intent(ProfessionalDecline, judge=judge)
+    def reply() -> DifferentIntent:
+        return "Sorry, I cannot attend."
+
+    assert isinstance(reply(), ProfessionalDecline)
+    assert judge.last_description == "The text must politely decline an invitation."
+
+
+def test_explicit_intent_async_retries():
+    feedback = []
+
+    @validate_intent(ProfessionalDecline, judge=FlipFlopJudge(), retries=1)
+    async def reply(semantix_feedback=None) -> str:
+        feedback.append(semantix_feedback)
+        return "Sorry, I cannot attend."
+
+    assert isinstance(asyncio.run(reply()), ProfessionalDecline)
+    assert feedback[0] is None
+    assert "failed validation" in feedback[1]
+
+
+@pytest.mark.parametrize("retries", [-1, 1.5, True])
+def test_invalid_retry_count_rejected_at_decoration(retries):
+    with pytest.raises(ValueError, match="retries"):
+        validate_intent(judge=MockJudge(), retries=retries)
+
+
 # ── basic validation ────────────────────────────────────────────────────
 
 

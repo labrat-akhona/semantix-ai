@@ -4,6 +4,15 @@ site_url: https://labrat-akhona.github.io/semantix-ai/
 repo_url: https://github.com/labrat-akhona/semantix-ai
 repo_name: labrat-akhona/semantix-ai
 
+# Keep working notes and historical plans in git, outside the public site.
+exclude_docs: |
+  backlog/
+  digests/
+  experiments/
+  outreach/
+  positioning/
+  superpowers/
+
 theme:
   name: material
   palette:

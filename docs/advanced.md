@@ -53,7 +53,9 @@ result = sc.result()
 
 ## Audit trail
 
-`AuditEngine` produces hash-chained JSON-LD certificates for every validation event. This creates a tamper-evident audit trail.
+Each explicit `AuditEngine.record()` call produces a hash-chained JSON-LD certificate.
+The decorator does not write certificates automatically. Record the actual verdict
+and the claim and judge that produced it, then call `flush()` to persist the chain.
 
 ```python
 from semantix.audit.engine import AuditEngine
@@ -79,28 +81,50 @@ engine.flush(Path("audit.jsonl"))
 
 ### How the chain works
 
-Each certificate contains a `previous_hash` field -- the SHA-256 hash of the previous certificate's JSON. The first entry uses `"GENESIS"` as its previous hash. Modifying any entry breaks the chain from that point forward.
+Each certificate contains a `previous_hash` field -- the SHA-256 hash of the previous
+certificate's JSON (`json.dumps(entry, sort_keys=True)`, UTF-8). The first entry uses
+`"GENESIS"`. Modifying an entry breaks its successor's link.
+
+Verification establishes internal link consistency only. It cannot detect an edited
+final entry, removal of trailing entries, or an attacker rewriting the entire chain.
+Keep a trusted external checkpoint of the final certificate hash and entry count when
+you need to detect those changes. Certificates are not cryptographically signed.
 
 ### Certificate structure
 
 ```json
 {
-  "@context": "https://schema.semantix.ai/v1",
+  "@context": "https://schema.semantix.ai/v2",
   "@type": "SemanticCertificate",
   "id": "urn:semantix:cert:...",
   "timestamp": "2025-01-15T10:30:00+00:00",
   "intent": "ProfessionalDecline",
+  "hypothesis": "The text politely declines an invitation.",
+  "judge_id": "QuantizedNLIJudge",
+  "subject": null,
+  "metadata": null,
   "score": 0.12,
   "passed": false,
   "reason": "Aggressive language detected",
-  "output_hash": "sha256:...",
-  "previous_hash": "sha256:..."
+  "output_hash": "<64-character SHA-256 hex digest>",
+  "claim_hash": "<64-character SHA-256 hex digest>",
+  "previous_hash": "GENESIS"
 }
 ```
 
-Note that the output itself is not stored -- only its SHA-256 hash. This preserves privacy while maintaining verifiability.
+The raw output is not stored in `output_hash`. Other fields, including `reason`,
+`hypothesis`, `subject`, and `metadata`, are stored as supplied and can contain personal
+information. Hashing alone does not anonymize guessable input. v1 and mixed v1/v2
+chains remain supported without rewriting their certificates.
 
 `AuditEngine` is a thread-safe singleton. All calls to `AuditEngine()` return the same instance.
+
+Call `AuditEngine.reset()` between independent audits; existing references then see
+the fresh chain. `engine.load(path)` resumes an existing UTF-8 JSONL file and rejects
+malformed rows or broken links before replacing in-memory entries. To inspect a
+suspect file without loading it for appending, run `semantix verify audit.jsonl`.
+The verifier returns 0 for consistent links (including an empty file), 1 for a broken
+chain, and 2 for unreadable or malformed input. It also reports repeated verdicts.
 
 ## MCP server
 

@@ -16,7 +16,7 @@
 
 ## The SA AI Compliance Stack
 
-`semantix-ai` is the Python entry point to a coherent, Apache-licensed compliance stack built around South Africa's Protection of Personal Information Act (POPIA), the first publicly-distributed regulator-clause-fine-tuned NLI judge for any jurisdiction.
+`semantix-ai` is the MIT-licensed Python entry point to a compliance stack built around South Africa's Protection of Personal Information Act (POPIA). Model weights have their own licenses, listed on their model cards.
 
 | Artifact | What it is | Where |
 |---|---|---|
@@ -27,9 +27,9 @@
 | **`POPIA-Bench v1`** | 197-pair public benchmark for clause-level POPIA NLI, with pinned eval hashes and a community leaderboard | [`bench/popia-v1/`](bench/popia-v1/) |
 | **`POPIAJudge` preprint** | arXiv cs.CL paper documenting the recipe, results, and limitations | [`papers/popiajudge-arxiv/`](papers/popiajudge-arxiv/) |
 
-> No competitor publicly distributes a regulator-clause-fine-tuned NLI judge. Llama Guard is trained on hazard taxonomies, Patronus Lynx on RAG faithfulness, Guardrails Hub on PII patterns + classifiers. The clause-pinned compliance niche is empty.
+The project's focus is clause-level entailment: testing whether supplied evidence supports a named requirement. A score is a model estimate, not a determination of legal compliance.
 
-The library below makes the judge usable in a Python program. The stack above makes it *defensible* in a regulatory review.
+The library makes the judge usable in a Python program and lets you record evidence for a compliance review.
 
 ---
 
@@ -38,31 +38,36 @@ The library below makes the judge usable in a Python program. The stack above ma
 Validate every LLM output against an explicit intent — a score and a verdict, locally, in ~15–70 ms (varies by CPU), without an API key. Pair it with the audit engine for a hash-chained, tamper-evident receipt.
 
 ```bash
-pip install semantix-ai[turbo]     # local quantized NLI judge; no API key
+pip install "semantix-ai[turbo]"   # local quantized NLI judge; no API key
+semantix demo                     # download once, then try three real checks
 ```
 
 ```python
 from semantix import Intent, QuantizedNLIJudge, validate_intent
 from semantix.audit.engine import AuditEngine
 
-class ResolutionPolite(Intent):
-    """The response must acknowledge the customer's issue and propose a concrete next step, in a polite tone."""
+class GratefulReply(Intent):
+    """The text expresses gratitude."""
 
 judge = QuantizedNLIJudge()
 
 # Validation: the Intent is the function's return-type annotation.
 @validate_intent(judge=judge)
-def handle_complaint(message: str) -> ResolutionPolite:
-    return call_my_llm(message)
+def handle_complaint(message: str) -> GratefulReply:
+    # Replace this canned response with your LLM call.
+    return "Thank you for reaching out. I'm issuing a full refund today."
 
-reply = handle_complaint(incoming)   # validated reply, or raises SemanticIntentError
+reply = handle_complaint("My delivery is late.")
+print(reply)                       # validated reply, or raises SemanticIntentError
 
 # Audit trail: score, record a certificate, verify the chain, persist it.
 # The decorator validates; it does NOT auto-write a certificate — you record it.
 engine = AuditEngine()
 verdict = judge.evaluate(premise=str(reply),
-                         hypothesis="the reply is polite and proposes a next step")
-engine.record(intent="ResolutionPolite", output=str(reply),
+                         hypothesis=GratefulReply.description(),
+                         threshold=judge.recommended_threshold)
+engine.record(intent="GratefulReply", output=str(reply),
+              hypothesis=GratefulReply.description(),
               score=verdict.score, passed=verdict.passed, judge_id="QuantizedNLIJudge")
 assert engine.verify_chain()         # True while the chain is intact
 engine.flush("audit.jsonl")          # hash-chained receipts on disk
@@ -78,7 +83,7 @@ LLM applications quietly skip the step where you prove the output was fit for pu
 2. **It ships personal information out of your network.** Every judge call sends the output to a third-party API. Under POPIA §72 (or GDPR Art. 44, or the EU AI Act's high-risk-system obligations) that's a problem to document, not a default.
 3. **It produces no receipt.** The validation happened, a score came back, nothing was recorded in a form that survives an audit.
 
-semantix replaces that reflex with a local, deterministic validator and a tamper-evident log. Every validation produces a JSON-LD certificate hash-chained to the previous one. Modify any entry mid-chain and every subsequent hash breaks. The regulator doesn't need to trust your database — the math proves the chain is internally consistent.
+semantix provides local validation and an explicit audit API. Each `AuditEngine.record()` call produces a JSON-LD certificate linked to the previous one. Changing a record breaks its successor's hash link. Link verification checks internal consistency; detecting an edited final entry, truncation, or a rewritten chain requires a trusted external checkpoint. The decorator does not automatically record certificates.
 
 ---
 
@@ -102,6 +107,15 @@ Compose with `&` (all must pass) and `|` (any must pass):
 ```python
 SafeAndPolite = Polite & ~MedicalAdvice & ~LegalAdvice
 ```
+
+An explicit Intent argument takes precedence over the return annotation. On success,
+the decorator returns an Intent instance; use `str(result)` or `result.text` for the
+text. Without an explicit Intent, annotate the function's return type with an Intent
+subclass. A plain `str` annotation alone does not enable validation.
+
+NLI is sensitive to wording. Prefer concrete, single-claim descriptions and test
+positive and negative examples from your application. A low entailment score can
+mean insufficient evidence; negating it does not prove a statement is false.
 
 ### 2. Tamper-evident audit trail
 
@@ -139,7 +153,7 @@ On failure, semantix injects structured feedback so the LLM knows what went wron
 ```python
 from typing import Optional
 
-@validate_intent(ResolutionPolite, retries=2)
+@validate_intent(GratefulReply, retries=2)
 def reply(msg: str, semantix_feedback: Optional[str] = None) -> str:
     prompt = f"Reply to: {msg}"
     if semantix_feedback:
@@ -315,21 +329,26 @@ See [Where semantix fits](https://labrat-akhona.github.io/semantix-ai/competitiv
 - **Deterministic per CPU architecture** — same input, same score, every time on a given machine (single-threaded ONNX inference). A different pre-quantized INT8 variant loads per architecture (AVX2 / AVX-512 / ARM64), so scores and latency vary across hardware.
 - **Fast** — ~15–70 ms per check with the quantized judge, depending on CPU.
 - **Zero API cost** — no tokens burned for validation.
-- **Auditable** — hash-chained JSON-LD certificates per check.
-- **Well-tested** — 274 tests, MIT licensed (model weights and datasets ship under Apache-2.0 / CC-BY-4.0).
+- **Auditable** — explicit hash-chained JSON-LD records via `AuditEngine.record()`.
+- **Tested** — offline unit tests plus opt-in real-model integration checks. MIT licensed (model and dataset licenses are listed on their cards).
 
 ---
 
 ## Installation
 
 ```bash
-pip install semantix-ai                    # Core (default NLI judge)
+pip install semantix-ai                    # Core only; supply your own Judge
+pip install "semantix-ai[nli]"            # PyTorch NLI backend
 pip install "semantix-ai[turbo]"           # Quantized ONNX (smallest footprint)
 pip install "semantix-ai[openai]"          # LLM judge (GPT-4o-mini)
-pip install "semantix-ai[all]"             # Everything
+pip install "semantix-ai[all]"             # Broad bundle; Guardrails installed separately
 ```
 
 > Package name on PyPI is `semantix-ai`. Import is `from semantix import ...`.
+
+Local judges fetch model files on first use. Once cached, set `HF_HUB_OFFLINE=1`
+before starting Python to prevent Hugging Face update checks. Inference stays local.
+See [Getting Started](docs/getting-started.md) for installation and offline use.
 
 ---
 

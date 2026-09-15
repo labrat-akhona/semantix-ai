@@ -7,6 +7,27 @@ on:
     branches: [master]
 
 jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[docs]"
+      - run: mkdocs build --strict
+
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[turbo]" pytest pytest-asyncio
+      - name: Check the advertised demo with the real model
+        run: pytest tests/integration/test_cli_demo.py -m integration -v
+
   lint:
     runs-on: ubuntu-latest
     steps:

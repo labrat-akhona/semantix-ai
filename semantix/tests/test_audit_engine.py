@@ -517,6 +517,15 @@ class TestVerifyEntriesStatic:
 
 
 class TestReset:
+    def test_existing_reference_remains_usable_after_reset(self):
+        engine = AuditEngine()
+        engine.record(intent="old", output="old", score=0.5, passed=True)
+        AuditEngine.reset()
+        cert = engine.record(intent="new", output="new", score=0.9, passed=True)
+        assert cert["previous_hash"] == "GENESIS"
+        assert AuditEngine().entries == [cert]
+        assert engine.verify_chain()
+
     def test_reset_clears_entries(self):
         engine = AuditEngine()
         engine.record(intent="x", output="o", score=0.5, passed=True)
@@ -536,6 +545,27 @@ class TestReset:
         AuditEngine().record(intent="x", output="o", score=0.5, passed=True)
         AuditEngine.reset()  # no instance
         assert AuditEngine().verify_chain() is True
+
+
+@pytest.mark.parametrize("row", ["null", "[]", "42", '"text"', '{"score": []}'])
+def test_load_rejects_malformed_entries_without_replacing_chain(tmp_path, row):
+    engine = AuditEngine()
+    original = engine.record(intent="keep", output="text", score=0.9, passed=True)
+    path = tmp_path / "bad.jsonl"
+    path.write_text(row + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="line 1"):
+        engine.load(path)
+    assert engine.entries == [original]
+
+
+def test_load_rejects_broken_chain_without_replacing_entries(tmp_path):
+    engine = AuditEngine()
+    original = engine.record(intent="keep", output="text", score=0.9, passed=True)
+    path = tmp_path / "broken.jsonl"
+    path.write_text('{"previous_hash": "BROKEN"}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="chain"):
+        engine.load(path)
+    assert engine.entries == [original]
 
 
 # ---------------------------------------------------------------------------

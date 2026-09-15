@@ -67,7 +67,7 @@ Two lines, no new dependency, "good enough" on most intents. semantix's real job
 ### Where semantix beats LLM-as-judge
 
 - **Determinism** — same input, same score, every time. LLM-judges drift run-to-run.
-- **Latency** — ~15-50 ms per call vs 300-1500 ms for an LLM-judge.
+- **Latency** — typically ~15–70 ms per quantized call, depending on CPU and text length. Remote LLM-judge latency depends on provider, model, and network; benchmark your own configuration.
 - **Cost at scale** — $0 vs ~$0.10+ per 1000 evaluations. Matters for DSPy optimization loops that call the judge thousands of times.
 - **Offline / air-gapped** — runs locally, no API key, no network.
 - **Audit trail** — hash-chained semantic certificates you can cite in a compliance review. No competitor in the semantic-validation category ships this.

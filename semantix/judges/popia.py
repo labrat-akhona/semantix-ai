@@ -6,7 +6,7 @@ Inherits inference, CPU variant detection, and caching logic from
 
 Versions:
 
-* ``v1`` (default until 0.2.x): 7-clause coverage, macro F1 0.813 on the
+* ``v1`` (current default): 7-clause coverage, macro F1 0.813 on the
   v1 holdout. Strongest narrow-scope model.
 * ``v2``: 10-clause coverage adding children's information (§34-35),
   special personal information (§26-33), and automated decision-making

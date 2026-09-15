@@ -27,6 +27,10 @@ htmlcov/
 
 # Worktrees
 .worktrees/
+.claude/worktrees/
+
+# Generated documentation
+site/
 
 # HuggingFace cache
 .cache/

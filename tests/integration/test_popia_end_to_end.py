@@ -6,7 +6,8 @@ This test:
   - verifies verdicts match the expected POPIA semantics
 
 Runs only when pytest is invoked with `-m integration`. Excluded from the
-default suite because it requires network access and ~25MB of downloads.
+default suite because it requires cached models or network access and about
+79 MB of INT8 model downloads, plus tokenizer files.
 """
 
 from __future__ import annotations

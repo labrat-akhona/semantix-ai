@@ -213,20 +213,30 @@ def _run_judge(
 
 
 @overload
+def validate_intent(
+    func: type[Intent],
+    *,
+    judge: Judge | None = ...,
+    retries: int = ...,
+    collector: TrainingCollector | None = ...,
+) -> Callable[[F], F]: ...
+
+
+@overload
 def validate_intent(func: F) -> F: ...
 
 
 @overload
 def validate_intent(
     *,
-    judge: Judge,
+    judge: Judge | None = ...,
     retries: int = ...,
     collector: TrainingCollector | None = ...,
 ) -> Callable[[F], F]: ...
 
 
 def validate_intent(
-    func: F | None = None,
+    func: F | type[Intent] | None = None,
     *,
     judge: Judge | None = None,
     retries: int = 0,
@@ -235,13 +245,16 @@ def validate_intent(
     """Decorator that validates an LLM call's return value against its Intent.
 
     Can be used bare (``@validate_intent``) or with parameters
-    (``@validate_intent(judge=NLIJudge(), retries=2)``).
+    (``@validate_intent(judge=NLIJudge(), retries=2)``), or with an explicit
+    intent (``@validate_intent(Polite, judge=my_judge)``). An explicit intent
+    takes precedence over the return annotation and supports composites and
+    negation. Successful calls return an instance of the selected Intent.
 
     Parameters
     ----------
     judge:
-        The ``Judge`` backend to use.  Defaults to ``NLIJudge()``
-        (local, no API key required).
+        The ``Judge`` backend to use. Prefers ``QuantizedNLIJudge()`` when
+        its dependencies are installed, falling back to ``NLIJudge()``.
     retries:
         Number of **additional** attempts if the first call fails validation.
         The decorated function is re-invoked on each retry so the LLM has a
@@ -258,7 +271,8 @@ def validate_intent(
     5. Otherwise wrap the string in an instance of the Intent subclass and
        return it.
 
-    If the return type is **not** an Intent subclass the decorator is a no-op.
+    Without an explicit intent, a return type that is **not** an Intent
+    subclass makes the decorator a no-op.
 
     Self-Healing Retries
     --------------------
@@ -289,8 +303,13 @@ def validate_intent(
     manual control or custom feedback formatting.
     """
 
+    if type(retries) is not int or retries < 0:
+        raise ValueError("retries must be a non-negative integer")
+
+    explicit_intent = func if isinstance(func, type) and issubclass(func, Intent) else None
+
     def decorator(fn: F) -> F:
-        intent_cls = _resolve_intent_class(fn)
+        intent_cls = explicit_intent or _resolve_intent_class(fn)
 
         # Fast path — nothing to validate.
         if intent_cls is None:
@@ -426,7 +445,7 @@ def validate_intent(
 
         return sync_wrapper  # type: ignore[return-value]
 
-    # Support both @validate_intent and @validate_intent(judge=...)
-    if func is not None:
+    # An Intent is callable too, but is a contract, not the decorated function.
+    if func is not None and explicit_intent is None:
         return decorator(func)
     return decorator

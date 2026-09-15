@@ -1,8 +1,9 @@
-"""AuditEngine — immutable, hash-chained audit trail for semantic validation.
+"""AuditEngine — hash-chained audit trail for semantic validation.
 
-Every validation event is captured as a JSON-LD Semantic Certificate.
-Entries are SHA-256 hash-linked so tampering with any record invalidates
-the chain from that point forward.
+Explicit record() calls capture JSON-LD Semantic Certificates. Entries are
+SHA-256 hash-linked: changing a record breaks its successor's link. A trusted
+external checkpoint is needed to detect changes to the final entry, truncation,
+or replacement of the whole chain.
 
 Schema versions
 ---------------
@@ -22,6 +23,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import threading
 import uuid
 from dataclasses import dataclass
@@ -29,6 +31,37 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 _CONTEXT_V2 = "https://schema.semantix.ai/v2"
+
+
+def read_audit_entries(path: str | Path) -> list[dict]:
+    """Read UTF-8 JSONL, reporting invalid rows with their physical line number.
+
+    Validate fields consumed by verification and summaries without requiring a
+    particular schema version. Hash integrity is checked separately.
+    """
+    entries = []
+    with open(path, encoding="utf-8") as stream:
+        for lineno, line in enumerate(stream, start=1):
+            if not line.strip():
+                continue
+            try:
+                entry = json.loads(line)
+                if not isinstance(entry, dict):
+                    raise ValueError("expected a JSON object")
+                for field in ("intent", "timestamp", "output_hash", "claim_hash", "previous_hash"):
+                    if entry.get(field) is not None and not isinstance(entry[field], str):
+                        raise ValueError(f"{field} must be a string or null")
+                if entry.get("passed") is not None and type(entry["passed"]) is not bool:
+                    raise ValueError("passed must be a boolean or null")
+                score = entry.get("score")
+                if score is not None and (
+                    type(score) not in (int, float) or not math.isfinite(score)
+                ):
+                    raise ValueError("score must be a finite number or null")
+            except (ValueError, OverflowError) as exc:
+                raise ValueError(f"Invalid audit entry on line {lineno}: {exc}") from exc
+            entries.append(entry)
+    return entries
 
 
 def _claim_hash(premise: str, hypothesis: str | None, judge_id: str | None) -> str | None:
@@ -128,15 +161,17 @@ class AuditEngine:
 
     @classmethod
     def reset(cls) -> None:
-        """Clear the singleton and its chain — start a fresh audit trail.
+        """Clear the shared chain — start a fresh audit trail.
 
         The engine is a process-wide singleton, so a second audit in the same
         process otherwise appends to the first one's chain. Call this between
         independent audits instead of poking the private attributes.
+
+        Existing references remain usable and see the same fresh chain.
         """
-        cls._instance = None
-        cls._entries = []
-        cls._lock = None
+        engine = cls()
+        with engine._lock:
+            cls._entries.clear()
 
     @property
     def entries(self) -> list[dict]:
@@ -275,21 +310,19 @@ class AuditEngine:
         """Load an existing JSONL chain into this engine, replacing current entries.
 
         Models resuming an on-disk chain (to append more certificates) or
-        verifying one produced by an earlier run. Returns ``self`` for chaining.
+        verifying one produced by an earlier run. Rejects malformed or broken
+        chains before replacing current entries. Returns ``self`` for chaining.
         """
         with self._lock:
-            loaded: list[dict] = []
-            with open(path) as f:
-                for line in f:
-                    line = line.strip()
-                    if line:
-                        loaded.append(json.loads(line))
+            loaded = read_audit_entries(path)
+            if not self.verify_entries(loaded):
+                raise ValueError("Cannot load audit trail: broken hash chain")
             self._entries.clear()
             self._entries.extend(loaded)
         return self
 
     def flush(self, path: Path) -> None:
         """Write all entries to a JSONL file."""
-        with self._lock, open(path, "w") as f:
+        with self._lock, open(path, "w", encoding="utf-8") as f:
             for entry in self._entries:
                 f.write(json.dumps(entry, sort_keys=True) + "\n")

@@ -108,7 +108,7 @@ semantix = "semantix.cli:main"
 Homepage = "https://github.com/labrat-akhona/semantix-ai"
 Repository = "https://github.com/labrat-akhona/semantix-ai"
 "Bug Tracker" = "https://github.com/labrat-akhona/semantix-ai/issues"
-Documentation = "https://github.com/labrat-akhona/semantix-ai#readme"
+Documentation = "https://labrat-akhona.github.io/semantix-ai/"
 Changelog = "https://github.com/labrat-akhona/semantix-ai/releases"
 
 [tool.hatch.build.targets.wheel]
@@ -127,6 +127,7 @@ include = [
 target-version = "py310"
 line-length = 100
 exclude = ["examples", "tools", "articles", "examples.py", "work_demo.py"]
+extend-exclude = [".claude", ".worktrees", ".venv"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -139,6 +140,7 @@ ignore = ["E501"]
 "semantix/__init__.py" = ["F401"]
 
 [tool.pytest.ini_options]
+testpaths = ["semantix/tests", "tests/integration"]
 asyncio_mode = "auto"
 markers = [
     "integration: tests that require network access and real HF downloads (deselect with '-m \"not integration\"')",

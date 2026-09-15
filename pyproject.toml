@@ -47,7 +47,8 @@ classifiers = [
 openai = ["openai>=1.0"]
 embeddings = ["sentence-transformers>=2.2"]
 nli = ["sentence-transformers>=2.2"]
-mcp = ["mcp[cli]>=1.0"]
+# FastMCP is the v1 SDK API; v2 renamed it and changes server behavior.
+mcp = ["mcp[cli]>=1.0,<2"]
 turbo = ["onnxruntime>=1.16", "tokenizers>=0.15", "huggingface-hub>=0.20"]
 popia = ["semantix-ai[turbo]"]
 gdpr = ["semantix-ai[turbo]"]
@@ -66,7 +67,7 @@ dspy = ["dspy>=2.6"]
 all = [
     "openai>=1.0",
     "sentence-transformers>=2.2",
-    "mcp[cli]>=1.0",
+    "mcp[cli]>=1.0,<2",
     "onnxruntime>=1.16",
     "tokenizers>=0.15",
     "huggingface-hub>=0.20",
@@ -82,7 +83,7 @@ all = [
 dev = [
     "openai>=1.0",
     "sentence-transformers>=2.2",
-    "mcp[cli]>=1.0",
+    "mcp[cli]>=1.0,<2",
     "onnxruntime>=1.16",
     "tokenizers>=0.15",
     "huggingface-hub>=0.20",
@@ -126,6 +127,9 @@ include = [
 [tool.ruff]
 target-version = "py310"
 line-length = 100
+# Keep Python checks stable when newer Ruff versions add Markdown discovery.
+# Public documentation is validated separately with a strict MkDocs build.
+include = ["*.py", "*.pyi", "*.ipynb", "**/pyproject.toml"]
 exclude = ["examples", "tools", "articles", "examples.py", "work_demo.py"]
 extend-exclude = [".claude", ".worktrees", ".venv"]
 

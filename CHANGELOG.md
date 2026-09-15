@@ -24,6 +24,9 @@
   malformed audit input, and CLI argument validation.
 - Opt-in real-model CLI smoke test; default test discovery excludes nested worktrees.
 - CI builds documentation strictly and checks the demo against the real model.
+- Constrain the MCP SDK to the supported v1 API; unbounded installs selected v2,
+  where `FastMCP` was removed and test/server imports failed. CPU-only test runners
+  install CPU PyTorch wheels instead of downloading CUDA dependencies.
 - The manual publish workflow requires an explicit tag rather than defaulting to
   an old release. This change does not publish a new package version.
 

@@ -130,6 +130,10 @@ chain, and 2 for unreadable or malformed input. It also reports repeated verdict
 
 semantix exposes a Model Context Protocol (MCP) server so any AI agent can validate intents as a tool call.
 
+This integration uses the v1 SDK's `FastMCP` API. The `mcp` extra constrains the SDK
+to `>=1.0,<2`; upgrading to the v2 `MCPServer` API requires a separate integration
+migration. See the [official migration guide](https://py.sdk.modelcontextprotocol.io/v2/migration/#fastmcp-renamed-to-mcpserver).
+
 ### Install and run
 
 ```bash

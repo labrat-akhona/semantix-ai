@@ -46,6 +46,15 @@ neither their assertions nor their model thresholds were weakened to pass.
 - Independent code review ran 146 affected unit tests successfully and found an
   overload-ordering issue. The specific Intent overload was moved ahead of the
   generic callable overload.
+- Hosted CI exposed newer Ruff discovery of Markdown code snippets, including
+  historical plans. Python lint/format input types are now explicitly configured;
+  current docs have their own strict build check.
+- Fresh hosted installs also selected MCP 2.2.0, which removed the imported
+  `mcp.server.fastmcp.FastMCP` API. The MCP, all, and dev extras now constrain the
+  SDK to the supported v1 major version. This is based on the actual CI import
+  failure and the [official migration guide](https://py.sdk.modelcontextprotocol.io/v2/migration/#fastmcp-renamed-to-mcpserver).
+  CPU test runners now preinstall PyTorch from its CPU wheel index to avoid
+  unnecessary CUDA downloads. [PyTorch installation](https://pytorch.org/get-started/locally/).
 
 Commands for reproduction (install `.[dev,docs]` for test/doc dependencies):
 

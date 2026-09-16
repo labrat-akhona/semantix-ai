@@ -208,6 +208,11 @@ def _build_parser() -> argparse.ArgumentParser:
     eval_sub = eval_parser.add_subparsers(dest="eval_target", required=True)
     popia_eval = eval_sub.add_parser("popia", help="Evaluate POPIAJudge vs stock NLI.")
     popia_eval.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
+    popia_eval.add_argument(
+        "--all-files",
+        action="store_true",
+        help="Gate every shipped ONNX file, not only the one this machine auto-selects.",
+    )
 
     return parser
 
@@ -237,21 +242,43 @@ def evaluate_popia(*args, **kwargs):
     return _impl(*args, **kwargs)
 
 
-def _run_eval_popia(args) -> int:
-    from dataclasses import asdict
+def _load_popia_judges_for(variant: str):
+    """Instantiate POPIAJudge and stock QuantizedNLIJudge from one ONNX file."""
+    from semantix.judges.popia import POPIAJudge
+    from semantix.judges.quantized_nli import QuantizedNLIJudge
 
+    return POPIAJudge(model_variant=variant), QuantizedNLIJudge(model_variant=variant)
+
+
+def evaluate_popia_matrix(*args, **kwargs):
+    """Indirection so tests can monkeypatch semantix.cli.evaluate_popia_matrix."""
+    from semantix.eval.popia import evaluate_popia_matrix as _impl
+
+    return _impl(*args, **kwargs)
+
+
+def _runtime_info() -> dict:
+    from semantix.judges.quantized_nli import runtime_info
+
+    return runtime_info()
+
+
+def _run_eval_popia(args) -> int:
     try:
         eval_path = _download_popia_eval()
     except Exception as e:
         print(f"failed to download eval set: {e}", file=sys.stderr)
         return 2
 
+    if args.all_files:
+        return _run_eval_popia_all_files(args, eval_path)
+
     popia, stock = _load_popia_judges()
     report = evaluate_popia(eval_path, popia, stock)
 
     if args.json:
-        out = asdict(report)
-        out["per_clause"] = {k: list(v) for k, v in out["per_clause"].items()}
+        out = report.as_dict()
+        out["runtime"] = _runtime_info()
         print(json.dumps(out, indent=2))
     else:
         print("\n                    stock    POPIA    Delta")
@@ -268,8 +295,34 @@ def _run_eval_popia(args) -> int:
             print(f"  {clause:<30} {stock_f:.2f}     {popia_f:.2f}     {popia_f - stock_f:+.2f}")
         verdict = "PASS" if report.release_gate_passed else "FAIL"
         print(f"\nRelease gate (>= 0.10 F1 delta, no per-clause regression): {verdict}")
+        print("Gated the one model file this machine loads; --all-files gates every shipped file.")
 
     return 0 if report.release_gate_passed else 1
+
+
+def _run_eval_popia_all_files(args, eval_path) -> int:
+    """Gate every shipped ONNX file; pass only if all of them pass."""
+    matrix = evaluate_popia_matrix(eval_path, _load_popia_judges_for)
+    if args.json:
+        print(json.dumps(matrix.as_dict(), indent=2))
+        return 0 if matrix.all_passed else 1
+
+    rt = matrix.runtime
+    print(
+        f"onnxruntime {rt.get('onnxruntime')} | {rt.get('os')} {rt.get('machine')} | "
+        f"CPU flags: {rt.get('cpu_flags')} | threshold {matrix.threshold}"
+    )
+    for variant, r in matrix.results.items():
+        tag = "PASS" if r.release_gate_passed else "FAIL"
+        print(
+            f"  {variant:<36} stock {r.stock_f1_macro:.4f}  POPIA {r.popia_f1_macro:.4f}  "
+            f"delta {r.delta_f1:+.4f}  {tag}"
+        )
+        if r.regressed_clauses:
+            print(f"      regressed vs stock: {', '.join(r.regressed_clauses)}")
+    verdict = "PASS" if matrix.all_passed else f"FAIL ({', '.join(matrix.failing)})"
+    print(f"\nRelease gate across all files: {verdict}")
+    return 0 if matrix.all_passed else 1
 
 
 def _run_check(args) -> int:

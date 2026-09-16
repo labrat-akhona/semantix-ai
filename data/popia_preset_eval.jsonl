@@ -1,0 +1,70 @@
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CONSENT", "clause": "POPIA consent", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_MINIMALITY", "clause": "POPIA minimality / purpose limitation", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_SECURITY", "clause": "POPIA security safeguards", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_BREACH", "clause": "POPIA breach notification", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_CROSS_BORDER", "clause": "POPIA cross-border transfers", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_PROCESSING", "clause": "POPIA general processing", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "complies", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "complies", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "complies", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "violates", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "violates", "style": "memo", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "violates", "style": "news", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "insufficient", "style": "first-person", "scenario": "TODO", "premise": "TODO"}
+{"preset": "POPIA_DATA_SUBJECT_RIGHTS", "clause": "POPIA data subject rights", "expected": "insufficient", "style": "memo", "scenario": "TODO", "premise": "TODO"}

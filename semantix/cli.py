@@ -491,7 +491,7 @@ def _run_demo(args) -> int:
 
     print(f"{_DIM}Total inference: {total_ms:.1f} ms across {len(_DEMO_SCENARIOS)} checks.{_RESET}")
     print(
-        f"{_DIM}0 API calls. 0 tokens burned. Scores are deterministic (`semantix prove`).{_RESET}"
+        f"{_DIM}0 API calls. 0 tokens burned. Scores repeat on this machine (`semantix prove`).{_RESET}"
     )
     print()
     print("Try your own:")

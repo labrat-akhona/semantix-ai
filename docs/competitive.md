@@ -24,7 +24,7 @@ These are the tools that compete for the same job as semantix on the same princi
 
 | Tool | License | Primary primitive | Deterministic | Audit trail | DSPy native | Notes |
 |---|---|---|---|---|---|---|
-| **semantix-ai** | MIT | NLI-based `Intent` validation | Yes | Yes (hash-chained receipts) | Yes (`semantic_reward`, `semantic_metric`) | Local quantized model, zero API cost |
+| **semantix-ai** | MIT | NLI-based `Intent` validation | On a fixed setup | Yes (hash-chained receipts) | Yes (`semantic_reward`, `semantic_metric`) | Local quantized model, zero API cost |
 | [TruLens](https://github.com/truera/trulens) | MIT | Feedback functions (NLI + LLM-judge) | Partial | No | No (via custom glue) | Snowflake-backed, broader eval framework |
 | [Vectara HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) | Apache 2.0 | NLI hallucination model | Yes | No | No | Model only, not a framework |
 | [DeepEval](https://github.com/confident-ai/deepeval) | Apache 2.0 | pytest-style LLM eval | Partial (LLM-judge drift) | No | No | Strong in test harness space; overlaps with pytest-semantix |
@@ -66,7 +66,7 @@ Two lines, no new dependency, "good enough" on most intents. semantix's real job
 
 ### Where semantix beats LLM-as-judge
 
-- **Determinism** — same input, same score, every time. LLM-judges drift run-to-run.
+- **Repeatability** — on a fixed setup (machine, model file, onnxruntime version), the same input gives the same score. LLM-judges drift run-to-run.
 - **Latency** — typically ~15–70 ms per quantized call, depending on CPU and text length. Remote LLM-judge latency depends on provider, model, and network; benchmark your own configuration.
 - **Cost at scale** — $0 vs ~$0.10+ per 1000 evaluations. Matters for DSPy optimization loops that call the judge thousands of times.
 - **Offline / air-gapped** — runs locally, no API key, no network.

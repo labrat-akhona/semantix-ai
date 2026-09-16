@@ -51,6 +51,8 @@ class GDPRJudge(QuantizedNLIJudge):
             self._tokenizer = _qnli._load_tokenizer(repo_id=self._FALLBACK_REPO_ID)
             self._repo_id = self._FALLBACK_REPO_ID
         self._input_names = {inp.name for inp in self._session.get_inputs()}
+        # GDPRJudge ships no calibration.json, so scores stay raw (temperature 1.0).
+        self._temperature = 1.0
 
     @classmethod
     def clauses(cls) -> list[str]:

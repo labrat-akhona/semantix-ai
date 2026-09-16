@@ -244,10 +244,9 @@ def evaluate_popia(*args, **kwargs):
 
 def _load_popia_judges_for(variant: str):
     """Instantiate POPIAJudge and stock QuantizedNLIJudge from one ONNX file."""
-    from semantix.judges.popia import POPIAJudge
-    from semantix.judges.quantized_nli import QuantizedNLIJudge
+    from semantix.eval.popia import load_judges_for_variant
 
-    return POPIAJudge(model_variant=variant), QuantizedNLIJudge(model_variant=variant)
+    return load_judges_for_variant(variant)
 
 
 def evaluate_popia_matrix(*args, **kwargs):
@@ -273,8 +272,14 @@ def _run_eval_popia(args) -> int:
     if args.all_files:
         return _run_eval_popia_all_files(args, eval_path)
 
-    popia, stock = _load_popia_judges()
-    report = evaluate_popia(eval_path, popia, stock)
+    # Exit 2 means "could not run", 1 means "ran and the gate failed". Loading models
+    # hits the network, so its failures must not be read as a failed release gate.
+    try:
+        popia, stock = _load_popia_judges()
+        report = evaluate_popia(eval_path, popia, stock)
+    except Exception as e:
+        print(f"failed to run the release gate: {e}", file=sys.stderr)
+        return 2
 
     if args.json:
         out = report.as_dict()
@@ -302,7 +307,12 @@ def _run_eval_popia(args) -> int:
 
 def _run_eval_popia_all_files(args, eval_path) -> int:
     """Gate every shipped ONNX file; pass only if all of them pass."""
-    matrix = evaluate_popia_matrix(eval_path, _load_popia_judges_for)
+    # See _run_eval_popia: a download or model-load failure is exit 2, not a failed gate.
+    try:
+        matrix = evaluate_popia_matrix(eval_path, _load_popia_judges_for)
+    except Exception as e:
+        print(f"failed to run the release gate: {e}", file=sys.stderr)
+        return 2
     if args.json:
         print(json.dumps(matrix.as_dict(), indent=2))
         return 0 if matrix.all_passed else 1

@@ -270,3 +270,39 @@ def test_matrix_as_dict_is_json_serialisable(tmp_path):
     assert data["all_passed"] is True
     assert data["results"]["a.onnx"]["threshold"] == 0.5
     assert data["runtime"] == {"onnxruntime": "1.0"}
+
+
+def test_as_dict_reports_the_regressed_clauses(tmp_path):
+    rows = [
+        {"clause": "consent", "premise": "p1", "hypothesis": "h1", "label": "entailment"},
+        {"clause": "minimality", "premise": "p2", "hypothesis": "h2", "label": "entailment"},
+    ]
+    report = evaluate_popia(_write_eval(tmp_path, rows), ConstantJudge(False), ConstantJudge(True))
+    data = json.loads(json.dumps(report.as_dict()))
+    assert data["regressed_clauses"] == ["consent", "minimality"]
+    assert data["regressed_clauses"] == report.regressed_clauses
+
+
+def test_load_judges_for_variant_builds_one_popia_and_one_stock_judge(monkeypatch):
+    # Shared by semantix.cli and scripts/eval_popia.py so both gate the same way.
+    from semantix.eval.popia import load_judges_for_variant
+
+    built: list[tuple[str, str]] = []
+
+    class FakePOPIA:
+        def __init__(self, model_variant=None):
+            built.append(("popia", model_variant))
+
+    class FakeStock:
+        def __init__(self, model_variant=None):
+            built.append(("stock", model_variant))
+
+    monkeypatch.setattr("semantix.judges.popia.POPIAJudge", FakePOPIA)
+    monkeypatch.setattr("semantix.judges.quantized_nli.QuantizedNLIJudge", FakeStock)
+
+    popia, stock = load_judges_for_variant("onnx/model_qint8_arm64.onnx")
+    assert isinstance(popia, FakePOPIA) and isinstance(stock, FakeStock)
+    assert built == [
+        ("popia", "onnx/model_qint8_arm64.onnx"),
+        ("stock", "onnx/model_qint8_arm64.onnx"),
+    ]

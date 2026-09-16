@@ -28,6 +28,9 @@
   Internal plans and working notes are excluded from the published docs site.
 - `GDPRJudge().evaluate()` no longer raises `AttributeError`; the fallback judge never set its
   softmax temperature.
+- `semantix eval popia` exits 2 when it cannot run the gate at all (a model download or load
+  failure) instead of 1, which means the gate ran and failed. Gate reports now name the clauses
+  that regressed below stock, so an uploaded `report.json` explains its own failure.
 - Public wording: "deterministic per CPU architecture" becomes "repeatable on a fixed setup
   (machine, model file, onnxruntime version)". POPIA v1 passes its release gate on three of its
   four ONNX files and fails it on the AVX2 file (minimality), which Windows and Intel macOS always

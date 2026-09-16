@@ -36,6 +36,8 @@ class EvalReport:
     def as_dict(self) -> dict:
         out = asdict(self)
         out["per_clause"] = {k: list(v) for k, v in self.per_clause.items()}
+        # asdict() skips properties, and this is the field that explains a red gate.
+        out["regressed_clauses"] = self.regressed_clauses
         return out
 
 
@@ -116,6 +118,19 @@ def evaluate_popia(
         release_gate_passed=gate_passed,
         threshold=threshold,
     )
+
+
+def load_judges_for_variant(variant: str) -> tuple[Judge, Judge]:
+    """Build ``(POPIAJudge, stock QuantizedNLIJudge)`` from one ONNX file.
+
+    The default ``load_judges`` for :func:`evaluate_popia_matrix`, shared by the CLI
+    and ``scripts/eval_popia.py`` so both gate the same way. Imported inside the
+    function: the core install has no inference dependencies.
+    """
+    from semantix.judges.popia import POPIAJudge
+    from semantix.judges.quantized_nli import QuantizedNLIJudge
+
+    return POPIAJudge(model_variant=variant), QuantizedNLIJudge(model_variant=variant)
 
 
 @dataclass(frozen=True)

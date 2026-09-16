@@ -16,15 +16,11 @@ import json
 import sys
 from pathlib import Path
 
-from semantix.eval.popia import evaluate_popia, evaluate_popia_matrix
+from semantix.eval.popia import evaluate_popia, evaluate_popia_matrix, load_judges_for_variant
 from semantix.judges.popia import POPIAJudge
-from semantix.judges.quantized_nli import QuantizedNLIJudge
+from semantix.judges.quantized_nli import QuantizedNLIJudge, runtime_info
 
 LOCAL_EVAL = Path("data/popia_eval.jsonl")
-
-
-def _load_judges(variant: str):
-    return POPIAJudge(model_variant=variant), QuantizedNLIJudge(model_variant=variant)
 
 
 def main() -> int:
@@ -45,7 +41,7 @@ def main() -> int:
         eval_path = LOCAL_EVAL
 
     if args.all_files:
-        matrix = evaluate_popia_matrix(eval_path, _load_judges)
+        matrix = evaluate_popia_matrix(eval_path, load_judges_for_variant)
         if args.json:
             print(json.dumps(matrix.as_dict(), indent=2))
         else:
@@ -61,7 +57,9 @@ def main() -> int:
     report = evaluate_popia(eval_path, POPIAJudge(), QuantizedNLIJudge())
 
     if args.json:
-        print(json.dumps(report.as_dict(), indent=2))
+        out = report.as_dict()
+        out["runtime"] = runtime_info()
+        print(json.dumps(out, indent=2))
     else:
         print(f"n_pairs={report.n_pairs}")
         print(

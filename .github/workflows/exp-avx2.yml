@@ -13,6 +13,12 @@ jobs:
   compare:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    # The hosted fleet is mixed. Sample several runners per push and only do the expensive
+    # work on the ones without AVX-512, which is the hardware the AVX2 file exists to serve.
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@v4
 
@@ -33,10 +39,11 @@ jobs:
         run: lscpu | grep -E "Model name|Flags" || true
 
       - name: Compare the AVX2 file against a qint8 file
+        if: steps.cpu.outputs.avx512 == 'false'
         run: python scripts/exp_avx2_vs_qint8.py
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: steps.cpu.outputs.avx512 == 'false'
         with:
-          name: exp-avx2-report-${{ github.run_attempt }}
+          name: exp-avx2-report-${{ github.run_attempt }}-${{ matrix.shard }}
           path: exp_avx2_report.json

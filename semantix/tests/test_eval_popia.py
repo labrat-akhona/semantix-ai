@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from semantix.eval.popia import evaluate_popia
+from semantix.eval.popia import GATE_THRESHOLD, evaluate_popia, evaluate_popia_matrix
 from semantix.judges import Judge, Verdict
 
 
@@ -151,3 +151,122 @@ def test_missing_eval_file_raises_filenotfound(tmp_path):
     stock = ScriptedJudge({})
     with pytest.raises(FileNotFoundError):
         evaluate_popia(tmp_path / "nope.jsonl", popia, stock)
+
+
+class RecordingJudge(Judge):
+    """Passes everything and records the threshold it was called with."""
+
+    def __init__(self) -> None:
+        self.thresholds: list[float] = []
+
+    def evaluate(self, output: str, intent_description: str, threshold: float = 0.8) -> Verdict:
+        self.thresholds.append(threshold)
+        return Verdict(passed=True, score=0.9)
+
+
+class ConstantJudge(Judge):
+    def __init__(self, passed: bool) -> None:
+        self._passed = passed
+
+    def evaluate(self, output: str, intent_description: str, threshold: float = 0.8) -> Verdict:
+        return Verdict(passed=self._passed, score=0.9 if self._passed else 0.1)
+
+
+_TWO_ROWS = [
+    {"clause": "POPIA consent", "premise": "p1", "hypothesis": "h1", "label": "entailment"},
+    {"clause": "POPIA consent", "premise": "p2", "hypothesis": "h2", "label": "neutral"},
+]
+
+
+def _entailment_rows():
+    # A judge that passes everything scores macro-F1 1.0 here; one that fails everything, 0.0.
+    return [
+        {
+            "clause": "POPIA consent",
+            "premise": f"p{i}",
+            "hypothesis": f"h{i}",
+            "label": "entailment",
+        }
+        for i in range(4)
+    ]
+
+
+def test_gate_passes_its_threshold_explicitly(tmp_path):
+    popia, stock = RecordingJudge(), RecordingJudge()
+    report = evaluate_popia(_write_eval(tmp_path, _TWO_ROWS), popia, stock)
+    assert popia.thresholds == [GATE_THRESHOLD, GATE_THRESHOLD]
+    assert stock.thresholds == [GATE_THRESHOLD, GATE_THRESHOLD]
+    assert report.threshold == GATE_THRESHOLD == 0.5
+
+
+def test_custom_threshold_is_used_and_recorded(tmp_path):
+    popia, stock = RecordingJudge(), RecordingJudge()
+    report = evaluate_popia(_write_eval(tmp_path, _TWO_ROWS), popia, stock, threshold=0.75)
+    assert set(popia.thresholds) == {0.75}
+    assert report.threshold == 0.75
+
+
+def test_report_as_dict_is_json_serialisable(tmp_path):
+    report = evaluate_popia(_write_eval(tmp_path, _TWO_ROWS), RecordingJudge(), RecordingJudge())
+    data = json.loads(json.dumps(report.as_dict()))
+    assert data["per_clause"]["POPIA consent"] == list(report.per_clause["POPIA consent"])
+
+
+def test_matrix_fails_when_any_file_fails(tmp_path):
+    eval_path = _write_eval(tmp_path, _entailment_rows())
+    good = (ConstantJudge(True), ConstantJudge(False))  # POPIA right, stock wrong
+    bad = (ConstantJudge(False), ConstantJudge(True))  # POPIA worse than stock
+    loaded: list[str] = []
+
+    def load(variant):
+        loaded.append(variant)
+        return bad if variant == "onnx/avx2.onnx" else good
+
+    matrix = evaluate_popia_matrix(
+        eval_path, load, variants=["onnx/avx2.onnx", "onnx/vnni.onnx"], runtime={"os": "test"}
+    )
+    assert loaded == ["onnx/avx2.onnx", "onnx/vnni.onnx"]
+    assert matrix.results["onnx/vnni.onnx"].release_gate_passed is True
+    assert matrix.results["onnx/avx2.onnx"].regressed_clauses == ["POPIA consent"]
+    assert matrix.failing == ["onnx/avx2.onnx"]
+    assert matrix.all_passed is False
+    assert matrix.runtime == {"os": "test"}
+
+
+def test_matrix_passes_when_every_file_passes(tmp_path):
+    matrix = evaluate_popia_matrix(
+        _write_eval(tmp_path, _entailment_rows()),
+        lambda variant: (ConstantJudge(True), ConstantJudge(False)),
+        variants=["a.onnx", "b.onnx"],
+        runtime={},
+    )
+    assert matrix.all_passed is True
+    assert matrix.failing == []
+
+
+def test_matrix_with_no_files_does_not_pass(tmp_path):
+    matrix = evaluate_popia_matrix(
+        _write_eval(tmp_path, _entailment_rows()), lambda v: None, variants=[], runtime={}
+    )
+    assert matrix.all_passed is False
+
+
+def test_matrix_checks_eval_file_before_loading_models(tmp_path):
+    def load(variant):
+        raise AssertionError("models must not load when the eval file is missing")
+
+    with pytest.raises(FileNotFoundError):
+        evaluate_popia_matrix(tmp_path / "nope.jsonl", load, variants=["a.onnx"], runtime={})
+
+
+def test_matrix_as_dict_is_json_serialisable(tmp_path):
+    matrix = evaluate_popia_matrix(
+        _write_eval(tmp_path, _entailment_rows()),
+        lambda v: (ConstantJudge(True), ConstantJudge(False)),
+        variants=["a.onnx"],
+        runtime={"onnxruntime": "1.0"},
+    )
+    data = json.loads(json.dumps(matrix.as_dict()))
+    assert data["all_passed"] is True
+    assert data["results"]["a.onnx"]["threshold"] == 0.5
+    assert data["runtime"] == {"onnxruntime": "1.0"}

@@ -122,8 +122,8 @@ def macro_f1(
 
 def onnx_macro_f1(
     onnx_path, tokenizer, eval_rows: list[dict], batch_size: int = 16
-) -> tuple[float, int]:
-    """Macro F1 for a quantized ONNX artifact + number of distinct predictions.
+) -> tuple[float, int, dict[str, float]]:
+    """Macro F1, distinct-prediction count, and per-clause macro F1 for a quantized ONNX file.
 
     Mirrors ``macro_f1``'s tokenization but runs the SHIPPED file through
     onnxruntime — the artifact users actually load. Quantization can silently
@@ -139,6 +139,8 @@ def onnx_macro_f1(
     innames = {i.name for i in sess.get_inputs()}
     y_true: list[int] = []
     y_pred: list[int] = []
+    per_clause_true: dict[str, list[int]] = defaultdict(list)
+    per_clause_pred: dict[str, list[int]] = defaultdict(list)
     for i in range(0, len(eval_rows), batch_size):
         batch = eval_rows[i : i + batch_size]
         enc = tokenizer(
@@ -156,10 +158,23 @@ def onnx_macro_f1(
         if "token_type_ids" in innames and "token_type_ids" in enc:
             feeds["token_type_ids"] = enc["token_type_ids"].astype(np.int64)
         logits = sess.run(None, feeds)[0]
-        y_pred.extend(int(p) for p in logits.argmax(axis=-1).tolist())
-        y_true.extend(label_to_id(r["label"]) for r in batch)
+        preds = [int(p) for p in logits.argmax(axis=-1).tolist()]
+        for r, p in zip(batch, preds, strict=True):
+            t = label_to_id(r["label"])
+            y_true.append(t)
+            y_pred.append(p)
+            per_clause_true[r["clause"]].append(t)
+            per_clause_pred[r["clause"]].append(p)
     macro = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
-    return macro, len(set(y_pred))
+    per_clause = {
+        clause: float(
+            f1_score(
+                per_clause_true[clause], per_clause_pred[clause], average="macro", zero_division=0
+            )
+        )
+        for clause in per_clause_true
+    }
+    return macro, len(set(y_pred)), per_clause
 
 
 # Max macro-F1 the quantized artifact may lose vs the PyTorch model before we
@@ -176,10 +191,15 @@ def artifact_gate_verdict(
     trained_v1_f1: float,
     trained_v2_f1: float,
     tol: float = ARTIFACT_TOL,
+    *,
+    q_v1_per: dict[str, float] | None = None,
+    q_v2_per: dict[str, float] | None = None,
+    stock_v1_per: dict[str, float] | None = None,
+    stock_v2_per: dict[str, float] | None = None,
 ) -> tuple[bool, str]:
     """Decide whether a quantized ONNX artifact is shippable. Pure + testable.
 
-    Two independent failure modes, both learned the expensive way:
+    Three independent failure modes, all learned the expensive way:
 
     - **Constant predictor** (``distinct <= 1`` on either holdout). Per-tensor
       INT8 can collapse a healthy model into always-one-class. macro-F1 alone
@@ -188,6 +208,11 @@ def artifact_gate_verdict(
     - **Regression** (macro-F1 more than ``tol`` below the PyTorch model on
       either holdout). The file the user loads is materially worse than what the
       upstream release gate scored.
+    - **Per-clause regression vs stock** (any clause where the shipped file scores
+      below the stock model). The library release gate (``semantix eval popia``)
+      applies the same rule; v1's AVX2 file breaks it on minimality, and no
+      training-time gate checked it. Here "stock" is the fp32 stock model scored
+      with the same 3-class macro-F1, so the numbers differ from the library gate's.
 
     Returns ``(passed, reason)``; ``reason`` is empty on pass. This is the exact
     logic the shipped ONNX must clear before upload — extracted from ``main`` so
@@ -197,6 +222,15 @@ def artifact_gate_verdict(
         return False, "CONSTANT PREDICTOR (distinct predictions <= 1)"
     if q_v1_f1 < trained_v1_f1 - tol or q_v2_f1 < trained_v2_f1 - tol:
         return False, f"macro F1 regressed >{tol} from PyTorch"
+    regressed = sorted(
+        clause
+        for q_per, stock_per in ((q_v1_per, stock_v1_per), (q_v2_per, stock_v2_per))
+        if q_per and stock_per
+        for clause, f1 in q_per.items()
+        if clause in stock_per and f1 < stock_per[clause]
+    )
+    if regressed:
+        return False, f"per-clause regression vs stock: {', '.join(regressed)}"
     return True, ""
 
 
@@ -430,10 +464,10 @@ def main() -> int:
     # scores. Score every quantized variant on the real eval and refuse to ship a
     # constant predictor or a >10pp macro-F1 regression from PyTorch.
     for filename in variants:
-        q_v1_f1, q_v1_distinct = onnx_macro_f1(
+        q_v1_f1, q_v1_distinct, q_v1_per = onnx_macro_f1(
             onnx_dir / filename, tokenizer, v1_rows, args.batch_size
         )
-        q_v2_f1, q_v2_distinct = onnx_macro_f1(
+        q_v2_f1, q_v2_distinct, q_v2_per = onnx_macro_f1(
             onnx_dir / filename, tokenizer, v2_rows, args.batch_size
         )
         print(
@@ -442,7 +476,16 @@ def main() -> int:
             f"distinct preds v1={q_v1_distinct} v2={q_v2_distinct}"
         )
         passed, reason = artifact_gate_verdict(
-            q_v1_f1, q_v1_distinct, q_v2_f1, q_v2_distinct, trained_v1_f1, trained_v2_f1
+            q_v1_f1,
+            q_v1_distinct,
+            q_v2_f1,
+            q_v2_distinct,
+            trained_v1_f1,
+            trained_v2_f1,
+            q_v1_per=q_v1_per,
+            q_v2_per=q_v2_per,
+            stock_v1_per=stock_v1_per,
+            stock_v2_per=stock_v2_per,
         )
         if not passed:
             sys.exit(f"ARTIFACT GATE FAIL: {filename} — {reason} — not shipping")

@@ -136,6 +136,46 @@ def _detect_onnx_variant() -> str:
     return "onnx/model_quint8_avx2.onnx"
 
 
+# Every INT8 file shipped in the model repos, in the form _detect_onnx_variant returns.
+ONNX_VARIANTS: tuple[str, ...] = (
+    "onnx/model_quint8_avx2.onnx",
+    "onnx/model_qint8_avx512.onnx",
+    "onnx/model_qint8_avx512_vnni.onnx",
+    "onnx/model_qint8_arm64.onnx",
+)
+
+# CPU flags that decide which file loads and which integer kernels onnxruntime uses.
+_RELEVANT_CPU_FLAGS = ("avx2", "avx512f", "avx512_vnni", "avx512vnni", "avx_vnni")
+
+
+def runtime_info() -> dict[str, str]:
+    """Snapshot of the setup that produced a score.
+
+    Scores depend on the model file, the CPU's integer kernels, and the onnxruntime
+    build, so gate reports record all three.
+    """
+    try:
+        import onnxruntime
+
+        ort_version = onnxruntime.__version__
+    except ImportError:
+        ort_version = "not installed"
+    cpuinfo = _read_cpuinfo()
+    if cpuinfo:
+        tokens = set(cpuinfo.replace(":", " ").split())
+        cpu_flags = " ".join(f for f in _RELEVANT_CPU_FLAGS if f in tokens) or "none"
+    else:
+        cpu_flags = "unavailable (no /proc/cpuinfo)"
+    return {
+        "onnxruntime": ort_version,
+        "python": platform.python_version(),
+        "os": platform.system(),
+        "machine": platform.machine(),
+        "cpu_flags": cpu_flags,
+        "auto_variant": _detect_onnx_variant(),
+    }
+
+
 def _load_session(variant: str, repo_id: str = _REPO_ID):
     """Download the ONNX model and create an InferenceSession."""
     _require_turbo_dep("onnxruntime")

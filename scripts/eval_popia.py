@@ -1,24 +1,24 @@
-"""Reproducibility wrapper: run POPIA eval from the local data/popia_eval.jsonl.
+"""Reproducibility wrapper: run the POPIA release gate on the local data/popia_eval.jsonl.
 
-Unlike `semantix eval popia` which downloads eval.jsonl from HF, this script
-uses the exact file in the repo -- useful for developers validating a
-freshly-trained model before uploading.
+Unlike `semantix eval popia`, which downloads eval.jsonl from HF, this script uses the
+exact file in the repo. Models still load from Hugging Face.
 
 Usage:
-    python scripts/eval_popia.py                        # uses local out/ model if present
-    python scripts/eval_popia.py --use-hf               # downloads from HF instead
+    python scripts/eval_popia.py                 # gate the file this machine auto-selects
+    python scripts/eval_popia.py --all-files     # gate every shipped ONNX file
+    python scripts/eval_popia.py --use-hf        # use HF eval.jsonl instead of the local file
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import sys
-from dataclasses import asdict
 from pathlib import Path
 
-from semantix.eval.popia import evaluate_popia
+from semantix.eval.popia import evaluate_popia, evaluate_popia_matrix, load_judges_for_variant
 from semantix.judges.popia import POPIAJudge
-from semantix.judges.quantized_nli import QuantizedNLIJudge
+from semantix.judges.quantized_nli import QuantizedNLIJudge, runtime_info
 
 LOCAL_EVAL = Path("data/popia_eval.jsonl")
 
@@ -26,6 +26,7 @@ LOCAL_EVAL = Path("data/popia_eval.jsonl")
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--use-hf", action="store_true", help="Use HF eval.jsonl instead of local.")
+    ap.add_argument("--all-files", action="store_true", help="Gate every shipped ONNX file.")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
@@ -39,13 +40,25 @@ def main() -> int:
             return 2
         eval_path = LOCAL_EVAL
 
+    if args.all_files:
+        matrix = evaluate_popia_matrix(eval_path, load_judges_for_variant)
+        if args.json:
+            print(json.dumps(matrix.as_dict(), indent=2))
+        else:
+            print(f"runtime: {matrix.runtime}")
+            for variant, r in matrix.results.items():
+                gate = "PASS" if r.release_gate_passed else "FAIL"
+                print(
+                    f"{variant:<36} stock F1={r.stock_f1_macro:.3f}  "
+                    f"POPIA F1={r.popia_f1_macro:.3f}  delta={r.delta_f1:+.3f}  gate: {gate}"
+                )
+        return 0 if matrix.all_passed else 1
+
     report = evaluate_popia(eval_path, POPIAJudge(), QuantizedNLIJudge())
 
     if args.json:
-        import json
-
-        out = asdict(report)
-        out["per_clause"] = {k: list(v) for k, v in out["per_clause"].items()}
+        out = report.as_dict()
+        out["runtime"] = runtime_info()
         print(json.dumps(out, indent=2))
     else:
         print(f"n_pairs={report.n_pairs}")

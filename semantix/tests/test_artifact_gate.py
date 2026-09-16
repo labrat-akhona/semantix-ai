@@ -86,15 +86,20 @@ def _patch_ort(monkeypatch, predict):
 
 def test_onnx_macro_f1_constant_predictor_has_one_distinct(monkeypatch):
     _patch_ort(monkeypatch, _constant)
-    _f1, distinct = tpv2.onnx_macro_f1("unused.onnx", _fake_tokenizer, _ROWS, batch_size=4)
+    _f1, distinct, _per_clause = tpv2.onnx_macro_f1(
+        "unused.onnx", _fake_tokenizer, _ROWS, batch_size=4
+    )
     assert distinct == 1  # THE tell for a dead artifact
 
 
 def test_onnx_macro_f1_healthy_recovers_full_signal(monkeypatch):
     _patch_ort(monkeypatch, _healthy)
-    f1, distinct = tpv2.onnx_macro_f1("unused.onnx", _fake_tokenizer, _ROWS, batch_size=4)
+    f1, distinct, per_clause = tpv2.onnx_macro_f1(
+        "unused.onnx", _fake_tokenizer, _ROWS, batch_size=4
+    )
     assert distinct == 3
     assert f1 == pytest.approx(1.0)
+    assert per_clause == {"c": pytest.approx(1.0)}
 
 
 # --- artifact_gate_verdict: the ship / no-ship decision ----------------------
@@ -130,3 +135,55 @@ def test_gate_constant_check_precedes_regression_check():
     passed, reason = tpv2.artifact_gate_verdict(0.78, 1, 0.96, 3, 0.78, 0.96)
     assert passed is False
     assert "CONSTANT" in reason.upper()
+
+
+# --- per-clause rule: the shipped file must not fall below stock on any clause ------
+
+
+def test_gate_rejects_per_clause_regression_vs_stock():
+    # v1's AVX2 file in miniature: fine overall, below stock on minimality.
+    passed, reason = tpv2.artifact_gate_verdict(
+        0.80,
+        3,
+        0.96,
+        3,
+        0.81,
+        0.96,
+        q_v1_per={"consent": 0.81, "minimality": 0.70},
+        stock_v1_per={"consent": 0.70, "minimality": 0.74},
+    )
+    assert passed is False
+    assert reason.startswith("per-clause regression vs stock:")
+    assert "minimality" in reason
+    assert "consent" not in reason
+
+
+def test_gate_passes_when_every_clause_matches_or_beats_stock():
+    passed, reason = tpv2.artifact_gate_verdict(
+        0.80,
+        3,
+        0.96,
+        3,
+        0.81,
+        0.96,
+        q_v1_per={"consent": 0.70, "minimality": 0.75},
+        stock_v1_per={"consent": 0.70, "minimality": 0.74},
+        q_v2_per={"children": 0.90},
+        stock_v2_per={"children": 0.50},
+    )
+    assert passed is True
+    assert reason == ""
+
+
+def test_gate_ignores_clauses_stock_was_not_scored_on():
+    passed, _reason = tpv2.artifact_gate_verdict(
+        0.80,
+        3,
+        0.96,
+        3,
+        0.81,
+        0.96,
+        q_v1_per={"new clause": 0.10},
+        stock_v1_per={"consent": 0.50},
+    )
+    assert passed is True

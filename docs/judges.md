@@ -167,6 +167,23 @@ evidence. Validate them with representative, independently labelled scenarios be
 using their verdicts to make decisions; the holdout result does not establish preset
 reliability.
 
+### Release gate by model file
+
+The library loads one of four INT8 files, chosen from the CPU (on Windows and Intel macOS it
+currently always loads the AVX2 file). The files do not score identically. Measured on one Intel
+i5-11320H with the 150-pair v1 holdout at the gate's 0.5 threshold (2026-09-15):
+
+| Model file | Runtime | Stock F1 | POPIA v1 F1 | Release gate |
+|---|---|---|---|---|
+| `model_quint8_avx2.onnx` | Windows, onnxruntime 1.24.4 | 0.551 | 0.802 | Fails: minimality 0.708 vs stock 0.738 |
+| `model_quint8_avx2.onnx` | Linux, onnxruntime 1.18.1 | 0.551 | 0.792 | Fails: minimality |
+| `model_qint8_avx512.onnx`, `model_qint8_avx512_vnni.onnx`, `model_qint8_arm64.onnx` | Windows, onnxruntime 1.24.4 | 0.517 | 0.822 | Passes |
+| `model_qint8_avx512_vnni.onnx` | Linux, onnxruntime 1.18.1 | 0.517 | 0.813 | Passes |
+
+A fix for the AVX2 file is in progress. Run `semantix eval popia --all-files` to gate every file
+on your own machine. On Windows or Intel macOS with an AVX-512 VNNI CPU, you can pass
+`model_variant="onnx/model_qint8_avx512_vnni.onnx"` to load the file Linux would select.
+
 Inference is local after loading. For cached operation without Hub update requests,
 set `HF_HUB_OFFLINE=1` before starting Python. Scores are statistical entailment
 estimates; neither a high score nor a negated low score establishes legal compliance.

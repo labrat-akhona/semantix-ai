@@ -7,6 +7,12 @@ to one of the POPIA concept labels in :meth:`POPIAJudge.clauses`. Use with
 These presets encode an engineering reading of POPIA for the purpose of
 automated output validation. They are not legal advice. Consult your DPIA and
 legal counsel for compliance determinations.
+
+These presets are unvalidated. In a September 2026 review, all three preset integration
+examples failed their expected outcomes with the real v1 model on every shipped model file:
+the descriptions combine several requirements and score low on short or incomplete evidence.
+Validate them on representative, independently labelled scenarios before using their verdicts
+to make decisions.
 """
 
 from __future__ import annotations

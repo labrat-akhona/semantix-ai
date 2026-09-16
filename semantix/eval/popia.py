@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
-from dataclasses import dataclass
+from collections.abc import Callable, Sequence
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from semantix.judges import Judge
 
 DELTA_F1_GATE = 0.10
+# The gate always passes its threshold explicitly, so a change to evaluate()'s
+# default can never move the release gate.
+GATE_THRESHOLD = 0.5
 
 
 @dataclass(frozen=True)
@@ -22,6 +26,19 @@ class EvalReport:
     per_clause: dict[str, tuple[float, float]]
     delta_f1: float
     release_gate_passed: bool
+    threshold: float = GATE_THRESHOLD
+
+    @property
+    def regressed_clauses(self) -> list[str]:
+        """Clauses where the POPIA judge scored below stock."""
+        return [c for c, (stock_f, popia_f) in self.per_clause.items() if popia_f < stock_f]
+
+    def as_dict(self) -> dict:
+        out = asdict(self)
+        out["per_clause"] = {k: list(v) for k, v in self.per_clause.items()}
+        # asdict() skips properties, and this is the field that explains a red gate.
+        out["regressed_clauses"] = self.regressed_clauses
+        return out
 
 
 def _f1(tp: int, fp: int, fn: int) -> float:
@@ -50,6 +67,7 @@ def evaluate_popia(
     eval_path: str | Path,
     popia_judge: Judge,
     base_judge: Judge,
+    threshold: float = GATE_THRESHOLD,
 ) -> EvalReport:
     """Run both judges against a POPIA eval JSONL file; compute report and gate."""
     eval_path = Path(eval_path)
@@ -65,8 +83,8 @@ def evaluate_popia(
 
     for r in rows:
         truth = r["label"] == "entailment"
-        popia_v = popia_judge.evaluate(r["premise"], r["hypothesis"])
-        stock_v = base_judge.evaluate(r["premise"], r["hypothesis"])
+        popia_v = popia_judge.evaluate(r["premise"], r["hypothesis"], threshold)
+        stock_v = base_judge.evaluate(r["premise"], r["hypothesis"], threshold)
         all_popia.append((popia_v.passed, truth))
         all_stock.append((stock_v.passed, truth))
         per_clause_popia[r["clause"]].append((popia_v.passed, truth))
@@ -98,4 +116,72 @@ def evaluate_popia(
         per_clause=per_clause,
         delta_f1=delta_f1,
         release_gate_passed=gate_passed,
+        threshold=threshold,
     )
+
+
+def load_judges_for_variant(variant: str) -> tuple[Judge, Judge]:
+    """Build ``(POPIAJudge, stock QuantizedNLIJudge)`` from one ONNX file.
+
+    The default ``load_judges`` for :func:`evaluate_popia_matrix`, shared by the CLI
+    and ``scripts/eval_popia.py`` so both gate the same way. Imported inside the
+    function: the core install has no inference dependencies.
+    """
+    from semantix.judges.popia import POPIAJudge
+    from semantix.judges.quantized_nli import QuantizedNLIJudge
+
+    return POPIAJudge(model_variant=variant), QuantizedNLIJudge(model_variant=variant)
+
+
+@dataclass(frozen=True)
+class MatrixReport:
+    """Release-gate results for every shipped ONNX file, plus the runtime that produced them."""
+
+    threshold: float
+    runtime: dict[str, str]
+    results: dict[str, EvalReport]
+
+    @property
+    def failing(self) -> list[str]:
+        return [variant for variant, r in self.results.items() if not r.release_gate_passed]
+
+    @property
+    def all_passed(self) -> bool:
+        return bool(self.results) and not self.failing
+
+    def as_dict(self) -> dict:
+        return {
+            "threshold": self.threshold,
+            "runtime": self.runtime,
+            "all_passed": self.all_passed,
+            "failing": self.failing,
+            "results": {variant: r.as_dict() for variant, r in self.results.items()},
+        }
+
+
+def evaluate_popia_matrix(
+    eval_path: str | Path,
+    load_judges: Callable[[str], tuple[Judge, Judge]],
+    variants: Sequence[str] | None = None,
+    threshold: float = GATE_THRESHOLD,
+    runtime: dict[str, str] | None = None,
+) -> MatrixReport:
+    """Run the release gate once per shipped ONNX file.
+
+    ``load_judges(variant)`` returns ``(popia_judge, base_judge)`` loaded from that
+    file. A model passes only when every file passes: scores differ by file, and
+    users on different machines load different files.
+    """
+    eval_path = Path(eval_path)
+    if not eval_path.exists():
+        raise FileNotFoundError(str(eval_path))
+    if variants is None or runtime is None:
+        from semantix.judges.quantized_nli import ONNX_VARIANTS, runtime_info
+
+        variants = ONNX_VARIANTS if variants is None else variants
+        runtime = runtime_info() if runtime is None else runtime
+    results = {}
+    for variant in variants:
+        popia_judge, base_judge = load_judges(variant)
+        results[variant] = evaluate_popia(eval_path, popia_judge, base_judge, threshold)
+    return MatrixReport(threshold=threshold, runtime=runtime, results=results)

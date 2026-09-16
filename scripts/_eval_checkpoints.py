@@ -75,7 +75,7 @@ def main():
             print(f"{name}: load failed -- {e}", file=sys.stderr)
             continue
         report = evaluate_popia(EVAL_PATH, judge, stock)
-        regressions = sum(1 for s, p in report.per_clause.values() if p < s)
+        regressions = len(report.regressed_clauses)
         results.append(
             (name, report.popia_f1_macro, report.delta_f1, regressions, report.release_gate_passed)
         )

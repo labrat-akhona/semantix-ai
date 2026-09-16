@@ -208,7 +208,7 @@ qa = dspy.ChainOfThought("question -> answer")
 refined = dspy.Refine(module=qa, N=3, reward_fn=semantic_reward(Polite))
 ```
 
-`semantic_reward` / `semantic_metric` also plug into `dspy.BestOfN`, `dspy.Evaluate`, and MIPROv2 — local, no API calls, ~15 ms per eval. See [`benchmarks/`](benchmarks/) for reproducible comparisons against LLM-judge reward functions.
+`semantic_reward` / `semantic_metric` also plug into `dspy.BestOfN`, `dspy.Evaluate`, and MIPROv2 — local, no API calls, ~15–70 ms per eval (varies by CPU). See [`benchmarks/`](benchmarks/) for reproducible comparisons against LLM-judge reward functions.
 
 <details>
 <summary><strong>LangChain</strong></summary>
@@ -292,7 +292,7 @@ Choose the speed / accuracy / reasoning trade-off:
 ```python
 from semantix import NLIJudge, EmbeddingJudge, LLMJudge, CachingJudge
 
-@validate_intent(judge=NLIJudge())                           # local, ~15 ms, deterministic
+@validate_intent(judge=NLIJudge())                           # local, ~15–70 ms (varies by CPU)
 @validate_intent(judge=EmbeddingJudge())                     # local, ~5 ms, similarity-based
 @validate_intent(judge=LLMJudge(model="gpt-4o-mini"))        # reasoning, ~500 ms, API
 @validate_intent(judge=CachingJudge(NLIJudge(), maxsize=256))  # LRU-wrapped
@@ -326,7 +326,7 @@ See [Where semantix fits](https://labrat-akhona.github.io/semantix-ai/competitiv
 ## Key properties
 
 - **Local inference** — NLI model runs on CPU, no data leaves your machine.
-- **Deterministic per CPU architecture** — same input, same score, every time on a given machine (single-threaded ONNX inference). A different pre-quantized INT8 variant loads per architecture (AVX2 / AVX-512 / ARM64), so scores and latency vary across hardware.
+- **Repeatable on a fixed setup** — the same input gives the same score on the same machine, model file, and onnxruntime version (single-threaded ONNX inference). Scores differ across setups: a different pre-quantized INT8 file loads per CPU (on Windows and Intel macOS the library currently always loads the AVX2 file), and onnxruntime versions and platforms can differ numerically. POPIA v1 passes its release gate on three of its four files and fails it on the AVX2 file; see [POPIA model versions](https://labrat-akhona.github.io/semantix-ai/judges/#popia-model-versions).
 - **Fast** — ~15–70 ms per check with the quantized judge, depending on CPU.
 - **Zero API cost** — no tokens burned for validation.
 - **Auditable** — explicit hash-chained JSON-LD records via `AuditEngine.record()`.

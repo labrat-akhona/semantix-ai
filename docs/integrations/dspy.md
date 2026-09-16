@@ -105,7 +105,7 @@ The reward/metric function extracts text from the prediction's specified field (
 
 | Dimension | semantix (local NLI) | Groq Llama 3.3 70B |
 |---|---|---|
-| Avg latency per evaluation | ~15 ms | ~500-900 ms |
+| Avg latency per evaluation | ~15–70 ms (varies by CPU) | ~500-900 ms |
 | Cost per 1,000 evaluations | $0 | ~$0.13 |
 | API key required | No | Yes |
 | Reward-agreement with Gemini 2.5 Flash proxy | <!-- paste Pearson r when results land --> | <!-- paste --> |
@@ -121,7 +121,7 @@ Full methodology, raw CSVs, run metadata, and notebooks (which render on GitHub)
 ### When to prefer semantix over an LLM-judge reward
 
 - You're iterating on a DSPy program and want reward evaluation to not gate your feedback loop.
-- You need repeatable rewards on the same CPU architecture and model configuration; cross-architecture quantization variants can produce different scores.
+- You need repeatable rewards on a fixed setup (same machine, model file, and onnxruntime version); different quantized files and runtimes can produce different scores.
 - You want to run optimization on CI without API costs or rate limits.
 
 ### When to prefer an LLM-judge

@@ -1,0 +1,42 @@
+name: EXPERIMENT AVX2 vs qint8
+
+# Throwaway: roadmap Now item 3. Runs on every push to exp/avx2-comparison so the runner
+# lottery can be re-rolled (an empty commit is enough) until it lands on a CPU without
+# avx512f. Never merge this workflow to master.
+on:
+  push:
+    branches:
+      - 'exp/avx2-comparison'
+  workflow_dispatch:
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache HuggingFace hub
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: hf-${{ runner.os }}-nli-popia-v1-all-files
+
+      - name: Install
+        run: pip install -e ".[popia]"
+
+      - name: Runner CPU
+        run: lscpu | grep -E "Model name|Flags" || true
+
+      - name: Compare the AVX2 file against a qint8 file
+        run: python scripts/exp_avx2_vs_qint8.py
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exp-avx2-report-${{ github.run_attempt }}
+          path: exp_avx2_report.json

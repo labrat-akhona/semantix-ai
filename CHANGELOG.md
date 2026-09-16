@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased — usability and verification fixes (2026-09-14)
+## v0.3.3 — Usability fixes and a release gate over every model file (2026-09-16)
+
+### Added
+- `semantix eval popia --all-files` (and `scripts/eval_popia.py --all-files`) runs the POPIA
+  release gate on every shipped ONNX file and passes only if all of them pass. Reports record the
+  gate threshold (now always passed explicitly as 0.5) and the runtime: onnxruntime version, OS,
+  CPU flags, and the auto-selected file. The `popia-eval` workflow uses it.
+- The training-time artifact gate in `scripts/train_popia_v2.py` rejects a quantized file that
+  scores below the stock model on any clause.
 
 ### Fixed
 - Documented `@validate_intent(MyIntent)` syntax now validates plain-string
@@ -18,6 +26,13 @@
 - Setup, judge sizes/defaults, offline behavior, audit schema and integrity limits,
   test instructions, and package documentation link now match the implementation.
   Internal plans and working notes are excluded from the published docs site.
+- `GDPRJudge().evaluate()` no longer raises `AttributeError`; the fallback judge never set its
+  softmax temperature.
+- Public wording: "deterministic per CPU architecture" becomes "repeatable on a fixed setup
+  (machine, model file, onnxruntime version)". POPIA v1 passes its release gate on three of its
+  four ONNX files and fails it on the AVX2 file (minimality), which Windows and Intel macOS always
+  load; the Judges page lists the per-file results. Three flat "~15 ms" latency claims now read
+  "~15–70 ms (varies by CPU)".
 
 ### Tests
 - Regression coverage for explicit intents, async retries, reset references,

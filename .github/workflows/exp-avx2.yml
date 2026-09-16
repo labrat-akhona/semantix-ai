@@ -1,8 +1,10 @@
 name: EXPERIMENT AVX2 vs qint8
 
-# Throwaway: roadmap Now item 3. Runs on every push to exp/avx2-comparison so the runner
-# lottery can be re-rolled (an empty commit is enough) until it lands on a CPU without
-# avx512f. Never merge this workflow to master.
+# Throwaway: roadmap Now item 3. The hosted fleet is mixed, so each push samples several
+# runners and only the ones WITHOUT avx512f do the measurement -- that is the hardware the
+# AVX2 file exists to serve. AMD EPYC 7763 (Zen 3) runners are the target; Xeon Platinum
+# 8370C/8573C and EPYC 9V74 all have AVX-512 and are skipped cheaply.
+# Never merge this workflow to master.
 on:
   push:
     branches:
@@ -13,8 +15,6 @@ jobs:
   compare:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    # The hosted fleet is mixed. Sample several runners per push and only do the expensive
-    # work on the ones without AVX-512, which is the hardware the AVX2 file exists to serve.
     strategy:
       fail-fast: false
       matrix:
@@ -22,21 +22,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Runner CPU
+        id: cpu
+        run: |
+          lscpu | grep -E "Model name" || true
+          if grep -qw avx512f /proc/cpuinfo; then
+            echo "avx512=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::shard ${{ matrix.shard }} SKIP: AVX-512 runner"
+          else
+            echo "avx512=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::shard ${{ matrix.shard }} TARGET: AVX2-only runner, measuring"
+          fi
+          grep -m1 "^flags" /proc/cpuinfo | tr ' ' '\n' \
+            | grep -E "^(avx2|avx512f|avx512_vnni|avx_vnni)$" | sort -u | tr '\n' ' '
+
       - uses: actions/setup-python@v5
+        if: steps.cpu.outputs.avx512 == 'false'
         with:
           python-version: '3.11'
 
       - name: Cache HuggingFace hub
+        if: steps.cpu.outputs.avx512 == 'false'
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface/hub
           key: hf-${{ runner.os }}-nli-popia-v1-all-files
 
       - name: Install
+        if: steps.cpu.outputs.avx512 == 'false'
         run: pip install -e ".[popia]"
-
-      - name: Runner CPU
-        run: lscpu | grep -E "Model name|Flags" || true
 
       - name: Compare the AVX2 file against a qint8 file
         if: steps.cpu.outputs.avx512 == 'false'
@@ -45,5 +59,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: steps.cpu.outputs.avx512 == 'false'
         with:
-          name: exp-avx2-report-${{ github.run_attempt }}-${{ matrix.shard }}
+          name: exp-avx2-report-${{ github.run_id }}-${{ matrix.shard }}
           path: exp_avx2_report.json

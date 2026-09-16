@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - 'semantix/judges/popia.py'
+      - 'semantix/judges/quantized_nli.py'
       - 'semantix/presets/popia.py'
       - 'semantix/eval/popia.py'
   workflow_dispatch:
@@ -18,7 +19,7 @@ on:
 jobs:
   eval:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -30,15 +31,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface/hub
-          key: hf-${{ runner.os }}-nli-popia-v1
+          key: hf-${{ runner.os }}-nli-popia-v1-all-files
 
       - name: Install
         run: pip install -e ".[popia]"
 
-      - name: Run release gate
+      - name: Log the runner CPU
+        run: lscpu | grep -E "Model name|Flags" || true
+
+      - name: Run the release gate on every shipped ONNX file
         run: |
-          python -m semantix.cli eval popia --json | tee report.json
-          python -c "import json; r=json.load(open('report.json')); import sys; sys.exit(0 if r['release_gate_passed'] else 1)"
+          python -m semantix.cli eval popia --all-files --json | tee report.json
+          python -c "import json, sys; r = json.load(open('report.json')); sys.exit(0 if r['all_passed'] else 1)"
 
       - uses: actions/upload-artifact@v4
         if: always()

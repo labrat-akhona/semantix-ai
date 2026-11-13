@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- **`POPIAJudge` v1 loads the same model file on every CPU** (`onnx/model_qint8_avx512_vnni.onnx`)
+  instead of choosing one from the CPU. **Scores change on Windows, Intel macOS, and AVX2-only
+  Linux**, which previously loaded `onnx/model_quint8_avx2.onnx`; that file fails the release
+  gate on minimality and was slower and less accurate on every CPU tested. Linux with AVX-512
+  and ARM64 load the same bytes as before. Pass `model_variant="onnx/model_quint8_avx2.onnx"` to
+  reproduce older scores. `POPIAJudge(version="v2")` and the stock `QuantizedNLIJudge` are
+  unchanged. `GDPRJudge` uses v1's file while it falls back to the POPIA v1 weights.
+- `semantix eval popia --all-files` gates the files this version can select. The AVX2 file stays
+  in the model repo for semantix 0.3.3 and earlier, is still scored, and is reported as legacy
+  (`legacy` and `legacy_failing` in the JSON report) without deciding the result.
+
+### Added
+- `judge.model_file` on `QuantizedNLIJudge`, `POPIAJudge`, and `GDPRJudge` names the ONNX file the
+  judge loaded. `semantix eval popia --json` records it for both judges under `model_files`.
+- `POPIAJudge.gated_variants(version)` and `POPIAJudge.legacy_variants(version)`.
+
 ## v0.3.3 — Usability fixes and a release gate over every model file (2026-09-16)
 
 ### Added

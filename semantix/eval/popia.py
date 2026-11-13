@@ -135,19 +135,38 @@ def load_judges_for_variant(variant: str) -> tuple[Judge, Judge]:
 
 @dataclass(frozen=True)
 class MatrixReport:
-    """Release-gate results for every shipped ONNX file, plus the runtime that produced them."""
+    """Release-gate results for every shipped ONNX file, plus the runtime that produced them.
+
+    ``legacy`` names files that are still published but that this library no longer
+    selects. They are scored and reported, and do not decide ``all_passed``.
+    """
 
     threshold: float
     runtime: dict[str, str]
     results: dict[str, EvalReport]
+    legacy: tuple[str, ...] = ()
 
     @property
     def failing(self) -> list[str]:
-        return [variant for variant, r in self.results.items() if not r.release_gate_passed]
+        """Selectable files that failed the gate."""
+        return [
+            variant
+            for variant, r in self.results.items()
+            if variant not in self.legacy and not r.release_gate_passed
+        ]
+
+    @property
+    def legacy_failing(self) -> list[str]:
+        return [
+            variant
+            for variant, r in self.results.items()
+            if variant in self.legacy and not r.release_gate_passed
+        ]
 
     @property
     def all_passed(self) -> bool:
-        return bool(self.results) and not self.failing
+        gated = [variant for variant in self.results if variant not in self.legacy]
+        return bool(gated) and not self.failing
 
     def as_dict(self) -> dict:
         return {
@@ -155,6 +174,8 @@ class MatrixReport:
             "runtime": self.runtime,
             "all_passed": self.all_passed,
             "failing": self.failing,
+            "legacy": list(self.legacy),
+            "legacy_failing": self.legacy_failing,
             "results": {variant: r.as_dict() for variant, r in self.results.items()},
         }
 
@@ -165,23 +186,31 @@ def evaluate_popia_matrix(
     variants: Sequence[str] | None = None,
     threshold: float = GATE_THRESHOLD,
     runtime: dict[str, str] | None = None,
+    legacy: Sequence[str] | None = None,
 ) -> MatrixReport:
     """Run the release gate once per shipped ONNX file.
 
     ``load_judges(variant)`` returns ``(popia_judge, base_judge)`` loaded from that
-    file. A model passes only when every file passes: scores differ by file, and
-    users on different machines load different files.
+    file. ``variants`` are the files the library can select; the model passes only
+    when every one of them passes. ``legacy`` files are scored and reported but do
+    not decide the result. Both default to POPIA v1's sets.
     """
     eval_path = Path(eval_path)
     if not eval_path.exists():
         raise FileNotFoundError(str(eval_path))
-    if variants is None or runtime is None:
-        from semantix.judges.quantized_nli import ONNX_VARIANTS, runtime_info
+    if variants is None:
+        from semantix.judges.popia import POPIAJudge
 
-        variants = ONNX_VARIANTS if variants is None else variants
-        runtime = runtime_info() if runtime is None else runtime
+        variants = POPIAJudge.gated_variants("v1")
+        if legacy is None:
+            legacy = POPIAJudge.legacy_variants("v1")
+    legacy = tuple(legacy or ())
+    if runtime is None:
+        from semantix.judges.quantized_nli import runtime_info
+
+        runtime = runtime_info()
     results = {}
-    for variant in variants:
+    for variant in [*variants, *(v for v in legacy if v not in variants)]:
         popia_judge, base_judge = load_judges(variant)
         results[variant] = evaluate_popia(eval_path, popia_judge, base_judge, threshold)
-    return MatrixReport(threshold=threshold, runtime=runtime, results=results)
+    return MatrixReport(threshold=threshold, runtime=runtime, results=results, legacy=legacy)

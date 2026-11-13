@@ -4,8 +4,8 @@ Unlike `semantix eval popia`, which downloads eval.jsonl from HF, this script us
 exact file in the repo. Models still load from Hugging Face.
 
 Usage:
-    python scripts/eval_popia.py                 # gate the file this machine auto-selects
-    python scripts/eval_popia.py --all-files     # gate every shipped ONNX file
+    python scripts/eval_popia.py                 # gate the files this machine loads
+    python scripts/eval_popia.py --all-files     # score every shipped ONNX file
     python scripts/eval_popia.py --use-hf        # use HF eval.jsonl instead of the local file
 """
 
@@ -26,7 +26,7 @@ LOCAL_EVAL = Path("data/popia_eval.jsonl")
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--use-hf", action="store_true", help="Use HF eval.jsonl instead of local.")
-    ap.add_argument("--all-files", action="store_true", help="Gate every shipped ONNX file.")
+    ap.add_argument("--all-files", action="store_true", help="Score every shipped ONNX file.")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
@@ -48,17 +48,21 @@ def main() -> int:
             print(f"runtime: {matrix.runtime}")
             for variant, r in matrix.results.items():
                 gate = "PASS" if r.release_gate_passed else "FAIL"
+                if variant in matrix.legacy:
+                    gate += " (legacy, not selected by this version)"
                 print(
                     f"{variant:<36} stock F1={r.stock_f1_macro:.3f}  "
                     f"POPIA F1={r.popia_f1_macro:.3f}  delta={r.delta_f1:+.3f}  gate: {gate}"
                 )
         return 0 if matrix.all_passed else 1
 
-    report = evaluate_popia(eval_path, POPIAJudge(), QuantizedNLIJudge())
+    popia, stock = POPIAJudge(), QuantizedNLIJudge()
+    report = evaluate_popia(eval_path, popia, stock)
 
     if args.json:
         out = report.as_dict()
         out["runtime"] = runtime_info()
+        out["model_files"] = {"popia": popia.model_file, "stock": stock.model_file}
         print(json.dumps(out, indent=2))
     else:
         print(f"n_pairs={report.n_pairs}")

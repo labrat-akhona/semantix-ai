@@ -306,3 +306,67 @@ def test_load_judges_for_variant_builds_one_popia_and_one_stock_judge(monkeypatc
         ("popia", "onnx/model_qint8_arm64.onnx"),
         ("stock", "onnx/model_qint8_arm64.onnx"),
     ]
+
+
+def test_matrix_failing_legacy_file_does_not_fail_the_gate(tmp_path):
+    good = (ConstantJudge(True), ConstantJudge(False))
+    bad = (ConstantJudge(False), ConstantJudge(True))
+    loaded: list[str] = []
+
+    def load(variant):
+        loaded.append(variant)
+        return bad if variant == "onnx/old.onnx" else good
+
+    matrix = evaluate_popia_matrix(
+        _write_eval(tmp_path, _entailment_rows()),
+        load,
+        variants=["onnx/new.onnx"],
+        legacy=["onnx/old.onnx"],
+        runtime={},
+    )
+    assert loaded == ["onnx/new.onnx", "onnx/old.onnx"]
+    assert matrix.all_passed is True
+    assert matrix.failing == []
+    assert matrix.legacy_failing == ["onnx/old.onnx"]
+    data = matrix.as_dict()
+    assert data["legacy"] == ["onnx/old.onnx"]
+    assert data["legacy_failing"] == ["onnx/old.onnx"]
+    assert set(data["results"]) == {"onnx/new.onnx", "onnx/old.onnx"}
+
+
+def test_matrix_failing_selectable_file_still_fails_with_a_passing_legacy_file(tmp_path):
+    good = (ConstantJudge(True), ConstantJudge(False))
+    bad = (ConstantJudge(False), ConstantJudge(True))
+    matrix = evaluate_popia_matrix(
+        _write_eval(tmp_path, _entailment_rows()),
+        lambda variant: bad if variant == "onnx/new.onnx" else good,
+        variants=["onnx/new.onnx"],
+        legacy=["onnx/old.onnx"],
+        runtime={},
+    )
+    assert matrix.all_passed is False
+    assert matrix.failing == ["onnx/new.onnx"]
+    assert matrix.legacy_failing == []
+
+
+def test_matrix_with_only_legacy_files_does_not_pass(tmp_path):
+    matrix = evaluate_popia_matrix(
+        _write_eval(tmp_path, _entailment_rows()),
+        lambda variant: (ConstantJudge(True), ConstantJudge(False)),
+        variants=[],
+        legacy=["onnx/old.onnx"],
+        runtime={},
+    )
+    assert matrix.all_passed is False
+
+
+def test_matrix_defaults_to_popia_v1_selectable_and_legacy_files(tmp_path):
+    loaded: list[str] = []
+
+    def load(variant):
+        loaded.append(variant)
+        return ConstantJudge(True), ConstantJudge(False)
+
+    matrix = evaluate_popia_matrix(_write_eval(tmp_path, _entailment_rows()), load, runtime={})
+    assert loaded == ["onnx/model_qint8_avx512_vnni.onnx", "onnx/model_quint8_avx2.onnx"]
+    assert matrix.legacy == ("onnx/model_quint8_avx2.onnx",)

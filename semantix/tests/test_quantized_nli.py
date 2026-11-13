@@ -508,3 +508,31 @@ class TestTurboDepHint:
     def test_popia_extra_named_in_docstring(self):
         # #9: the extra should be discoverable from the judge's own docs.
         assert "[popia]" in QuantizedNLIJudge.__doc__
+
+
+class TestModelFile:
+    """The judge names the ONNX file it loaded."""
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    @patch(
+        "semantix.judges.quantized_nli._detect_onnx_variant",
+        return_value="onnx/model_quint8_avx2.onnx",
+    )
+    def test_stock_judge_reports_the_cpu_selected_file(self, _detect, load_session, _tok):
+        load_session.return_value = _mock_session([0.0, 1.0, 0.0])
+        judge = QuantizedNLIJudge()
+        assert judge.model_file == "onnx/model_quint8_avx2.onnx"
+        assert load_session.call_args.args[0] == "onnx/model_quint8_avx2.onnx"
+
+    @patch("semantix.judges.quantized_nli._load_tokenizer")
+    @patch("semantix.judges.quantized_nli._load_session")
+    def test_override_is_reported(self, load_session, _tok):
+        load_session.return_value = _mock_session([0.0, 1.0, 0.0])
+        judge = QuantizedNLIJudge(model_variant="onnx/model_qint8_arm64.onnx")
+        assert judge.model_file == "onnx/model_qint8_arm64.onnx"
+
+    def test_pinned_qint8_name_is_a_shipped_file(self):
+        from semantix.judges.quantized_nli import ONNX_VARIANTS, QINT8_VARIANT
+
+        assert QINT8_VARIANT in ONNX_VARIANTS

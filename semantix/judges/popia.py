@@ -1,8 +1,9 @@
 """POPIA-fine-tuned NLI judge.
 
 Loads a ``labrat-aiko/nli-popia-v{N}`` quantized ONNX model from HuggingFace.
-Inherits inference, CPU variant detection, and caching logic from
-:class:`semantix.judges.quantized_nli.QuantizedNLIJudge`.
+Inherits inference and caching logic from
+:class:`semantix.judges.quantized_nli.QuantizedNLIJudge`. ``v1`` loads the same
+qint8 file on every CPU; ``v2`` still selects a file from the CPU.
 
 Versions:
 
@@ -43,6 +44,20 @@ _VERSION_TO_REPO: dict[str, str] = {
     "v2": "labrat-aiko/nli-popia-v2",
 }
 
+# Versions that load one file on every CPU instead of selecting by CPU flags. v1 was
+# measured on AVX2-only and VNNI hardware (docs/experiments/2026-09-16-avx2-vs-qint8.md):
+# the qint8 file is more accurate and faster on both. v2 has no such measurement yet.
+_VERSION_TO_VARIANT: dict[str, str] = {
+    "v1": _qnli.QINT8_VARIANT,
+}
+
+# Files still in a model repo that this library no longer selects. v1's AVX2 file fails the
+# release gate (minimality) and stays published only because semantix <= 0.3.3 requests it
+# by name on Windows, Intel macOS, and AVX2-only Linux.
+_LEGACY_VARIANTS: dict[str, tuple[str, ...]] = {
+    "v1": ("onnx/model_quint8_avx2.onnx",),
+}
+
 
 class POPIAJudge(QuantizedNLIJudge):
     """Semantic judge fine-tuned on POPIA (Protection of Personal Information Act).
@@ -58,7 +73,9 @@ class POPIAJudge(QuantizedNLIJudge):
         AI-critical clauses (children's data, special PI, automated
         decision-making).
     model_variant:
-        Optional override for the ONNX quantization variant to load.
+        Optional override for the ONNX file to load. By default ``v1`` loads
+        ``onnx/model_qint8_avx512_vnni.onnx`` on every CPU and ``v2`` selects a
+        file from the CPU flags.
     calibrated:
         When ``True``, fetch the temperature constant from the model's
         ``calibration.json`` on HF and apply it at softmax so
@@ -87,7 +104,8 @@ class POPIAJudge(QuantizedNLIJudge):
         self._version = version
         repo_id = _VERSION_TO_REPO[version]
         self._REPO_ID = repo_id  # let inherited _load_temperature_constant find the right repo
-        variant = model_variant or _qnli._detect_onnx_variant()
+        variant = model_variant or _VERSION_TO_VARIANT.get(version) or _qnli._detect_onnx_variant()
+        self._model_file = variant
         self._session = _qnli._load_session(variant, repo_id=repo_id)
         self._tokenizer = _qnli._load_tokenizer(repo_id=repo_id)
         self._input_names = {inp.name for inp in self._session.get_inputs()}
@@ -96,6 +114,25 @@ class POPIAJudge(QuantizedNLIJudge):
     @property
     def version(self) -> str:
         return self._version
+
+    @classmethod
+    def gated_variants(cls, version: str = "v1") -> tuple[str, ...]:
+        """ONNX files this library can select for ``version`` without an override.
+
+        These are the files the release gate must pass on.
+        """
+        if version not in _VERSION_TO_REPO:
+            raise ValueError(f"unknown POPIAJudge version {version!r}")
+        if version in _VERSION_TO_VARIANT:
+            return (_VERSION_TO_VARIANT[version],)
+        return _qnli.ONNX_VARIANTS
+
+    @classmethod
+    def legacy_variants(cls, version: str = "v1") -> tuple[str, ...]:
+        """Files still published for ``version`` that only older releases select."""
+        if version not in _VERSION_TO_REPO:
+            raise ValueError(f"unknown POPIAJudge version {version!r}")
+        return _LEGACY_VARIANTS.get(version, ())
 
     @classmethod
     def clauses(cls, version: str = "v1") -> list[str]:

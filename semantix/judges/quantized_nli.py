@@ -144,6 +144,10 @@ ONNX_VARIANTS: tuple[str, ...] = (
     "onnx/model_qint8_arm64.onnx",
 )
 
+# The qint8 file. Its three names above are byte-identical copies in the model repos, so
+# judges that pin one file for every CPU (POPIAJudge v1) load it under this name.
+QINT8_VARIANT = "onnx/model_qint8_avx512_vnni.onnx"
+
 # CPU flags that decide which file loads and which integer kernels onnxruntime uses.
 _RELEVANT_CPU_FLAGS = ("avx2", "avx512f", "avx512_vnni", "avx512vnni", "avx_vnni")
 
@@ -255,11 +259,21 @@ class QuantizedNLIJudge(Judge):
 
     def __init__(self, model_variant: str | None = None, *, calibrated: bool = False) -> None:
         variant = model_variant or _detect_onnx_variant()
+        self._model_file = variant
         self._session = _load_session(variant, repo_id=self._REPO_ID)
         self._tokenizer = _load_tokenizer(repo_id=self._REPO_ID)
         # Discover which inputs the ONNX graph actually accepts.
         self._input_names = {inp.name for inp in self._session.get_inputs()}
         self._temperature = _resolve_temperature(self._REPO_ID, calibrated)
+
+    @property
+    def model_file(self) -> str:
+        """The ONNX file this judge loaded, as a path inside its model repo.
+
+        Scores depend on the file, so anything that reports a score should be able
+        to name it.
+        """
+        return self._model_file
 
     @property
     def calibrated(self) -> bool:

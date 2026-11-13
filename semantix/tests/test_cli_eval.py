@@ -102,13 +102,13 @@ def test_all_files_exits_one_and_names_the_failing_file(tmp_path, capsys, monkey
     _patch_all_files(monkeypatch, tmp_path, _fake_matrix(_AVX2))
     assert cli_main(["eval", "popia", "--all-files"]) == 1
     out = capsys.readouterr().out
-    assert f"Release gate across all files: FAIL ({_AVX2})" in out
+    assert f"Release gate across the files this version selects: FAIL ({_AVX2})" in out
 
 
 def test_all_files_exits_zero_when_every_file_passes(tmp_path, capsys, monkeypatch):
     _patch_all_files(monkeypatch, tmp_path, _fake_matrix(None))
     assert cli_main(["eval", "popia", "--all-files"]) == 0
-    assert "Release gate across all files: PASS" in capsys.readouterr().out
+    assert "Release gate across the files this version selects: PASS" in capsys.readouterr().out
 
 
 def test_all_files_json_lists_every_file_and_the_runtime(tmp_path, capsys, monkeypatch):
@@ -174,3 +174,45 @@ def test_all_files_json_names_the_regressed_clause(tmp_path, capsys, monkeypatch
     data = json.loads(capsys.readouterr().out)
     assert data["results"][_AVX2]["regressed_clauses"] == ["POPIA minimality"]
     assert data["results"][_VNNI]["regressed_clauses"] == []
+
+
+def test_all_files_failing_legacy_file_is_reported_but_does_not_fail(tmp_path, capsys, monkeypatch):
+    base = _fake_matrix(_AVX2)
+    matrix = MatrixReport(
+        threshold=0.5, runtime=base.runtime, results=base.results, legacy=(_AVX2,)
+    )
+    _patch_all_files(monkeypatch, tmp_path, matrix)
+    assert cli_main(["eval", "popia", "--all-files"]) == 0
+    out = capsys.readouterr().out
+    assert "Release gate across the files this version selects: PASS" in out
+    assert "LEGACY (not selected by this version)" in out
+    assert f"Legacy files failing the gate: {_AVX2}" in out
+
+
+def test_all_files_json_separates_legacy_from_gated(tmp_path, capsys, monkeypatch):
+    base = _fake_matrix(_AVX2)
+    matrix = MatrixReport(
+        threshold=0.5, runtime=base.runtime, results=base.results, legacy=(_AVX2,)
+    )
+    _patch_all_files(monkeypatch, tmp_path, matrix)
+    assert cli_main(["eval", "popia", "--all-files", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["all_passed"] is True
+    assert data["failing"] == []
+    assert data["legacy"] == [_AVX2]
+    assert data["legacy_failing"] == [_AVX2]
+    assert set(data["results"]) == {_AVX2, _VNNI}
+
+
+def test_eval_popia_json_names_the_file_each_judge_loaded(tmp_path, capsys, monkeypatch):
+    class Loaded:
+        def __init__(self, model_file):
+            self.model_file = model_file
+
+    monkeypatch.setattr("semantix.cli._download_popia_eval", lambda: tmp_path / "eval.jsonl")
+    monkeypatch.setattr("semantix.cli._load_popia_judges", lambda: (Loaded(_VNNI), Loaded(_AVX2)))
+    monkeypatch.setattr("semantix.cli.evaluate_popia", lambda *a, **k: _fake_report(True))
+    monkeypatch.setattr("semantix.cli._runtime_info", lambda: {})
+    assert cli_main(["eval", "popia", "--json"]) == 0
+    data = json.loads(capsys.readouterr().out)
+    assert data["model_files"] == {"popia": _VNNI, "stock": _AVX2}

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.3.4 — POPIA v1 loads one model file on every CPU (2026-11-24)
 
 ### Changed
 - **`POPIAJudge` v1 loads the same model file on every CPU** (`onnx/model_qint8_avx512_vnni.onnx`)

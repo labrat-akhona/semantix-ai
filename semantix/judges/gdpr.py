@@ -35,6 +35,7 @@ class GDPRJudge(QuantizedNLIJudge):
 
     def __init__(self, model_variant: str | None = None) -> None:
         variant = model_variant or _qnli._detect_onnx_variant()
+        self._model_file = variant
         try:
             self._session = _qnli._load_session(variant, repo_id=self._REPO_ID)
             self._tokenizer = _qnli._load_tokenizer(repo_id=self._REPO_ID)
@@ -47,6 +48,9 @@ class GDPRJudge(QuantizedNLIJudge):
                 RuntimeWarning,
                 stacklevel=2,
             )
+            # The fallback weights are POPIA v1, which loads one file on every CPU.
+            variant = model_variant or _qnli.QINT8_VARIANT
+            self._model_file = variant
             self._session = _qnli._load_session(variant, repo_id=self._FALLBACK_REPO_ID)
             self._tokenizer = _qnli._load_tokenizer(repo_id=self._FALLBACK_REPO_ID)
             self._repo_id = self._FALLBACK_REPO_ID

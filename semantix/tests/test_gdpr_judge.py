@@ -72,3 +72,36 @@ def test_falls_back_to_popia_weights_when_gdpr_repo_is_missing(monkeypatch):
         judge = GDPRJudge()
     assert judge._repo_id == "labrat-aiko/nli-popia-v1"
     assert judge.evaluate("premise", "hypothesis", threshold=0.5).passed is True
+
+
+def test_fallback_loads_popia_v1s_pinned_file_whatever_the_cpu(monkeypatch):
+    requested: list[tuple[str, str]] = []
+
+    def load_session(variant, repo_id=None):
+        requested.append((repo_id, variant))
+        if repo_id == "labrat-aiko/nli-gdpr-v1":
+            raise FileNotFoundError("repo not published")
+        return _fake_session()
+
+    avx2 = "onnx/model_quint8_avx2.onnx"
+    monkeypatch.setattr("semantix.judges.quantized_nli._detect_onnx_variant", lambda: avx2)
+    monkeypatch.setattr("semantix.judges.quantized_nli._load_session", load_session)
+    monkeypatch.setattr(
+        "semantix.judges.quantized_nli._load_tokenizer",
+        lambda repo_id=None: _fake_tokenizer(),
+    )
+    from semantix.judges.gdpr import GDPRJudge
+
+    with pytest.warns(RuntimeWarning, match="falling back"):
+        judge = GDPRJudge()
+    qint8 = "onnx/model_qint8_avx512_vnni.onnx"
+    assert requested[-1] == ("labrat-aiko/nli-popia-v1", qint8)
+    assert judge.model_file == qint8
+
+
+def test_model_file_is_set_when_the_gdpr_repo_loads(mocked_models, monkeypatch):
+    avx2 = "onnx/model_quint8_avx2.onnx"
+    monkeypatch.setattr("semantix.judges.quantized_nli._detect_onnx_variant", lambda: avx2)
+    from semantix.judges.gdpr import GDPRJudge
+
+    assert GDPRJudge().model_file == avx2

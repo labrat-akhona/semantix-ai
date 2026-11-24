@@ -169,20 +169,38 @@ reliability.
 
 ### Release gate by model file
 
-The library loads one of four INT8 files, chosen from the CPU (on Windows and Intel macOS it
-currently always loads the AVX2 file). The files do not score identically. Measured on one Intel
-i5-11320H with the 150-pair v1 holdout at the gate's 0.5 threshold (2026-09-15):
+`POPIAJudge` v1 loads the same file, `onnx/model_qint8_avx512_vnni.onnx`, on every CPU. The model
+repo publishes it under three names (`model_qint8_avx512.onnx`, `model_qint8_avx512_vnni.onnx`,
+`model_qint8_arm64.onnx`); they are byte-identical copies. `judge.model_file` returns the file a
+judge loaded.
+
+semantix 0.3.3 and earlier chose a file from the CPU and, on Windows, Intel macOS, and AVX2-only
+Linux, loaded `onnx/model_quint8_avx2.onnx`. That file scores differently and fails the release
+gate. It is still published, because those versions request it by name, but this version never
+selects it. Upgrading therefore changes POPIA v1 scores on those machines.
+
+Measured on one Intel i5-11320H with the 150-pair v1 holdout at the gate's 0.5 threshold
+(2026-09-15):
 
 | Model file | Runtime | Stock F1 | POPIA v1 F1 | Release gate |
 |---|---|---|---|---|
-| `model_quint8_avx2.onnx` | Windows, onnxruntime 1.24.4 | 0.551 | 0.802 | Fails: minimality 0.708 vs stock 0.738 |
-| `model_quint8_avx2.onnx` | Linux, onnxruntime 1.18.1 | 0.551 | 0.792 | Fails: minimality |
-| `model_qint8_avx512.onnx`, `model_qint8_avx512_vnni.onnx`, `model_qint8_arm64.onnx` | Windows, onnxruntime 1.24.4 | 0.517 | 0.822 | Passes |
+| `model_qint8_avx512_vnni.onnx` and its two copies (loaded by this version) | Windows, onnxruntime 1.24.4 | 0.517 | 0.822 | Passes |
 | `model_qint8_avx512_vnni.onnx` | Linux, onnxruntime 1.18.1 | 0.517 | 0.813 | Passes |
+| `model_quint8_avx2.onnx` (legacy, 0.3.3 and earlier) | Windows, onnxruntime 1.24.4 | 0.551 | 0.802 | Fails: minimality 0.708 vs stock 0.738 |
+| `model_quint8_avx2.onnx` (legacy, 0.3.3 and earlier) | Linux, onnxruntime 1.18.1 | 0.551 | 0.792 | Fails: minimality |
 
-A fix for the AVX2 file is in progress. Run `semantix eval popia --all-files` to gate every file
-on your own machine. On Windows or Intel macOS with an AVX-512 VNNI CPU, you can pass
-`model_variant="onnx/model_qint8_avx512_vnni.onnx"` to load the file Linux would select.
+On AVX2-only GitHub runners (2026-09-16) the qint8 file scored 0.800 against the AVX2 file's
+0.773 and was about 20% faster. On those CPUs the stock baseline on the qint8 file drops to 0.246,
+so the gate's margin over stock there is not evidence of fine-tune quality; read the absolute
+POPIA score instead.
+
+`semantix eval popia --all-files` scores both files on your own machine. The gate result covers
+the file this version selects, and the legacy file is reported separately. Pass
+`model_variant="onnx/model_quint8_avx2.onnx"` only to reproduce scores from 0.3.3 or earlier.
+
+The single-file policy applies to v1 only. `POPIAJudge(version="v2")` and the stock
+`QuantizedNLIJudge` still choose a file from the CPU, and `GDPRJudge` uses v1's file while it
+falls back to the POPIA v1 weights.
 
 Inference is local after loading. For cached operation without Hub update requests,
 set `HF_HUB_OFFLINE=1` before starting Python. Scores are statistical entailment

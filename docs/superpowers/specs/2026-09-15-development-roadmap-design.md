@@ -184,8 +184,8 @@ paper names its file and runtime.
 ## Open questions (resolved in the relevant spec)
 
 - ~~AVX2 path: (a), (b), or (c)~~ — **decided 2026-09-16: (a)**, one qint8 file everywhere.
-  Evidence: `docs/experiments/2026-09-16-avx2-vs-qint8.md`. Implementation shape (a1 vs a2)
-  is still open; see that report.
+  Evidence: `docs/experiments/2026-09-16-avx2-vs-qint8.md`. Implementation shape decided
+  2026-11-13: (a1).
 - Audit sink: one certificate per attempt or per call? Leaning per attempt, linked by a call id,
   since rejected outputs are evidence the guard worked.
 - Audit sink: singleton or injected engine? Leaning both, with `audit=True` meaning the singleton.
@@ -194,6 +194,14 @@ paper names its file and runtime.
 
 ## Decision log
 
+- 2026-11-13: **AVX2 implementation shape decided — (a1).** `POPIAJudge` v1 loads
+  `onnx/model_qint8_avx512_vnni.onnx` on every CPU; the gate covers the files the library can
+  select; the AVX2 file stays published for semantix <= 0.3.3 and is reported as legacy. No
+  re-quantization or upload. Three things narrowed the scope: the three qint8 names are
+  byte-identical files (one SHA-256), so ARM64 is unaffected; the stock judge keeps CPU selection
+  because its qint8 file collapses without VNNI; v2 keeps CPU selection until it is measured per
+  file (E4). `judge.model_file` was added as the first piece of 0.5's `judge.identity`. Now
+  item 3 is done.
 - 2026-09-16: **AVX2 path decided — option (a), one qint8 file everywhere.** Measured on four
   AVX2-only GitHub runners plus a VNNI control (`docs/experiments/2026-09-16-avx2-vs-qint8.md`):
   `model_quint8_avx2.onnx` is worse on both accuracy and latency on both CPU classes (AVX2-only

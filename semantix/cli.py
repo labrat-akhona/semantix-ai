@@ -284,6 +284,11 @@ def _run_eval_popia(args) -> int:
     if args.json:
         out = report.as_dict()
         out["runtime"] = _runtime_info()
+        # POPIA v1 and the stock judge can load different files on one machine.
+        out["model_files"] = {
+            "popia": getattr(popia, "model_file", None),
+            "stock": getattr(stock, "model_file", None),
+        }
         print(json.dumps(out, indent=2))
     else:
         print("\n                    stock    POPIA    Delta")
@@ -300,13 +305,13 @@ def _run_eval_popia(args) -> int:
             print(f"  {clause:<30} {stock_f:.2f}     {popia_f:.2f}     {popia_f - stock_f:+.2f}")
         verdict = "PASS" if report.release_gate_passed else "FAIL"
         print(f"\nRelease gate (>= 0.10 F1 delta, no per-clause regression): {verdict}")
-        print("Gated the one model file this machine loads; --all-files gates every shipped file.")
+        print("Gated the model files this machine loads; --all-files scores every shipped file.")
 
     return 0 if report.release_gate_passed else 1
 
 
 def _run_eval_popia_all_files(args, eval_path) -> int:
-    """Gate every shipped ONNX file; pass only if all of them pass."""
+    """Score every shipped ONNX file; pass only if every selectable file passes."""
     # See _run_eval_popia: a download or model-load failure is exit 2, not a failed gate.
     try:
         matrix = evaluate_popia_matrix(eval_path, _load_popia_judges_for)
@@ -324,6 +329,8 @@ def _run_eval_popia_all_files(args, eval_path) -> int:
     )
     for variant, r in matrix.results.items():
         tag = "PASS" if r.release_gate_passed else "FAIL"
+        if variant in matrix.legacy:
+            tag += "  LEGACY (not selected by this version)"
         print(
             f"  {variant:<36} stock {r.stock_f1_macro:.4f}  POPIA {r.popia_f1_macro:.4f}  "
             f"delta {r.delta_f1:+.4f}  {tag}"
@@ -331,7 +338,9 @@ def _run_eval_popia_all_files(args, eval_path) -> int:
         if r.regressed_clauses:
             print(f"      regressed vs stock: {', '.join(r.regressed_clauses)}")
     verdict = "PASS" if matrix.all_passed else f"FAIL ({', '.join(matrix.failing)})"
-    print(f"\nRelease gate across all files: {verdict}")
+    print(f"\nRelease gate across the files this version selects: {verdict}")
+    if matrix.legacy_failing:
+        print(f"Legacy files failing the gate: {', '.join(matrix.legacy_failing)}")
     return 0 if matrix.all_passed else 1
 
 

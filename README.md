@@ -326,7 +326,7 @@ See [Where semantix fits](https://labrat-akhona.github.io/semantix-ai/competitiv
 ## Key properties
 
 - **Local inference** — NLI model runs on CPU, no data leaves your machine.
-- **Repeatable on a fixed setup** — the same input gives the same score on the same machine, model file, and onnxruntime version (single-threaded ONNX inference). Scores differ across setups: a different pre-quantized INT8 file loads per CPU (on Windows and Intel macOS the library currently always loads the AVX2 file), and onnxruntime versions and platforms can differ numerically. POPIA v1 passes its release gate on three of its four files and fails it on the AVX2 file; see [POPIA model versions](https://labrat-akhona.github.io/semantix-ai/judges/#popia-model-versions).
+- **Repeatable on a fixed setup** — the same input gives the same score on the same machine, model file, and onnxruntime version (single-threaded ONNX inference). Scores differ across setups: onnxruntime versions, platforms, and CPU integer kernels can differ numerically, and the stock `QuantizedNLIJudge` loads a different pre-quantized INT8 file per CPU (on Windows and Intel macOS it always loads the AVX2 file). `POPIAJudge` v1 loads the same model file on every CPU, and that file passes the release gate. An older AVX2 file that fails the gate is still published for semantix 0.3.3 and earlier; see [POPIA model versions](https://labrat-akhona.github.io/semantix-ai/judges/#popia-model-versions).
 - **Fast** — ~15–70 ms per check with the quantized judge, depending on CPU.
 - **Zero API cost** — no tokens burned for validation.
 - **Auditable** — explicit hash-chained JSON-LD records via `AuditEngine.record()`.

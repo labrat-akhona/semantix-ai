@@ -143,3 +143,70 @@ def test_unknown_version_raises(mocked_onnx):
 
     with pytest.raises(ValueError, match="unknown POPIAJudge version"):
         POPIAJudge(version="v3")
+
+
+_QINT8 = "onnx/model_qint8_avx512_vnni.onnx"
+_AVX2 = "onnx/model_quint8_avx2.onnx"
+
+
+@pytest.fixture
+def requested_files(monkeypatch):
+    """Record the ONNX file each judge asks for, without loading anything."""
+    requested: list[tuple[str, str]] = []
+
+    def load_session(variant, repo_id=None):
+        requested.append((repo_id, variant))
+        session = MagicMock()
+        session.get_inputs.return_value = []
+        return session
+
+    monkeypatch.setattr("semantix.judges.quantized_nli._load_session", load_session)
+    monkeypatch.setattr(
+        "semantix.judges.quantized_nli._load_tokenizer", lambda repo_id=None: MagicMock()
+    )
+    return requested
+
+
+@pytest.mark.parametrize(
+    "detected", [_AVX2, "onnx/model_qint8_avx512.onnx", "onnx/model_qint8_arm64.onnx"]
+)
+def test_v1_loads_the_same_file_on_every_cpu(requested_files, monkeypatch, detected):
+    monkeypatch.setattr("semantix.judges.quantized_nli._detect_onnx_variant", lambda: detected)
+    from semantix.judges.popia import POPIAJudge
+
+    judge = POPIAJudge()
+    assert requested_files == [("labrat-aiko/nli-popia-v1", _QINT8)]
+    assert judge.model_file == _QINT8
+
+
+def test_v2_still_selects_its_file_from_the_cpu(requested_files, monkeypatch):
+    monkeypatch.setattr("semantix.judges.quantized_nli._detect_onnx_variant", lambda: _AVX2)
+    from semantix.judges.popia import POPIAJudge
+
+    judge = POPIAJudge(version="v2")
+    assert requested_files == [("labrat-aiko/nli-popia-v2", _AVX2)]
+    assert judge.model_file == _AVX2
+
+
+def test_explicit_model_variant_still_loads_the_legacy_file(requested_files):
+    from semantix.judges.popia import POPIAJudge
+
+    judge = POPIAJudge(model_variant=_AVX2)
+    assert requested_files == [("labrat-aiko/nli-popia-v1", _AVX2)]
+    assert judge.model_file == _AVX2
+
+
+def test_gated_and_legacy_variants_by_version():
+    from semantix.judges.popia import POPIAJudge
+    from semantix.judges.quantized_nli import ONNX_VARIANTS
+
+    assert POPIAJudge.gated_variants("v1") == (_QINT8,)
+    assert POPIAJudge.legacy_variants("v1") == (_AVX2,)
+    assert POPIAJudge.gated_variants("v2") == ONNX_VARIANTS
+    assert POPIAJudge.legacy_variants("v2") == ()
+    # A version's selectable and legacy files never overlap.
+    assert not set(POPIAJudge.gated_variants("v1")) & set(POPIAJudge.legacy_variants("v1"))
+    with pytest.raises(ValueError, match="unknown POPIAJudge version"):
+        POPIAJudge.gated_variants("v3")
+    with pytest.raises(ValueError, match="unknown POPIAJudge version"):
+        POPIAJudge.legacy_variants("v3")

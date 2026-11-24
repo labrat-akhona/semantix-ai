@@ -183,7 +183,9 @@ paper names its file and runtime.
 
 ## Open questions (resolved in the relevant spec)
 
-- AVX2 path: (a), (b), or (c) — decided by the Now experiment.
+- ~~AVX2 path: (a), (b), or (c)~~ — **decided 2026-09-16: (a)**, one qint8 file everywhere.
+  Evidence: `docs/experiments/2026-09-16-avx2-vs-qint8.md`. Implementation shape (a1 vs a2)
+  is still open; see that report.
 - Audit sink: one certificate per attempt or per call? Leaning per attempt, linked by a call id,
   since rejected outputs are evidence the guard worked.
 - Audit sink: singleton or injected engine? Leaning both, with `audit=True` meaning the singleton.
@@ -192,6 +194,16 @@ paper names its file and runtime.
 
 ## Decision log
 
+- 2026-09-16: **AVX2 path decided — option (a), one qint8 file everywhere.** Measured on four
+  AVX2-only GitHub runners plus a VNNI control (`docs/experiments/2026-09-16-avx2-vs-qint8.md`):
+  `model_quint8_avx2.onnx` is worse on both accuracy and latency on both CPU classes (AVX2-only
+  +0.0277 F1 and ~20% faster for qint8; VNNI +0.0452 F1 and 2.8× faster), and it fails the
+  per-clause rule on minimality everywhere. The file stays in the model repo because installed
+  versions <= 0.3.3 request it by name, so this does not by itself turn `popia-eval` green — the
+  a1/a2 choice does. Also recorded: the stock qint8 baseline collapses without VNNI
+  (0.4991 -> 0.2462) while POPIA holds (0.8115 -> 0.8004), so the gate's delta must not be quoted
+  as fine-tune evidence on AVX2-only hardware.
+- 2026-09-16: v0.3.3 shipped Now items 1 and 2 (all-files gate, GDPRJudge fix, wording).
 - 2026-09-15: Horizon is Now / Next / Later. Next is built around a trustworthy POPIA stack.
   Akhona writes the preset labels; the set is 10 per preset (70). The quarter runs as two lanes
   with claims gated on evidence. 0.3.3 discloses v1's AVX2 gate failure before the fix is chosen.
